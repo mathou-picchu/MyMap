@@ -16,6 +16,9 @@ function getDB(): Promise<IDBPDatabase<MyMapDB>> {
         }
       },
     });
+    dbPromise.catch(() => {
+      dbPromise = null;
+    });
   }
   return dbPromise;
 }
@@ -39,9 +42,21 @@ export async function deletePlace(id: string): Promise<void> {
 export async function replaceAllPlaces(places: Place[]): Promise<void> {
   const db = await getDB();
   const tx = db.transaction('places', 'readwrite');
-  await tx.store.clear();
-  for (const place of places) {
-    await tx.store.put(place);
+  try {
+    await tx.store.clear();
+    for (const place of places) {
+      await tx.store.put(place);
+    }
+  } catch (err) {
+    tx.done.catch(() => {
+      // transaction annulée : la rejection de done est attendue
+    });
+    try {
+      tx.abort();
+    } catch {
+      // la transaction était déjà terminée
+    }
+    throw err;
   }
   await tx.done;
 }

@@ -58,4 +58,12 @@ describe('db', () => {
     await replaceAllPlaces([makePlace({ id: 'x' }), makePlace({ id: 'y' })]);
     expect((await listPlaces()).map((p) => p.id).sort()).toEqual(['x', 'y']);
   });
+
+  it('annule la transaction si un point est invalide (données intactes)', async () => {
+    await savePlace(makePlace());
+    await expect(
+      replaceAllPlaces([makePlace({ id: undefined as unknown as string })]),
+    ).rejects.toThrow();
+    expect((await listPlaces()).map((p) => p.id)).toEqual(['p1']);
+  });
 });
