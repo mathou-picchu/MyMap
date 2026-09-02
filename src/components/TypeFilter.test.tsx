@@ -2,12 +2,14 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { PLACE_TYPES } from '../constants';
-import type { PlaceTypeId } from '../types';
+import type { MilieuId, PlaceTypeId } from '../types';
 import TypeFilter from './TypeFilter';
 
 function renderFilter(
   active: PlaceTypeId[],
   onToggle = vi.fn(),
+  activeMilieu: MilieuId[] = ['outdoor', 'indoor'],
+  onToggleMilieu = vi.fn(),
   hideDone = false,
   onToggleHideDone = vi.fn(),
 ) {
@@ -15,11 +17,13 @@ function renderFilter(
     <TypeFilter
       active={new Set(active)}
       onToggle={onToggle}
+      activeMilieu={new Set(activeMilieu)}
+      onToggleMilieu={onToggleMilieu}
       hideDone={hideDone}
       onToggleHideDone={onToggleHideDone}
     />,
   );
-  return { onToggle, onToggleHideDone };
+  return { onToggle, onToggleMilieu, onToggleHideDone };
 }
 
 describe('TypeFilter', () => {
@@ -55,8 +59,21 @@ describe('TypeFilter', () => {
     expect(pill).toHaveAttribute('aria-pressed', 'false');
   });
 
+  it('affiche les pilules de milieu actives par défaut', () => {
+    renderFilter(PLACE_TYPES.map((t) => t.id));
+    expect(screen.getByRole('button', { name: /extérieur/i })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: /intérieur/i })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('déclenche onToggleMilieu au clic', async () => {
+    const { onToggleMilieu } = renderFilter([], vi.fn(), ['indoor']);
+    expect(screen.getByRole('button', { name: /extérieur/i })).toHaveAttribute('aria-pressed', 'false');
+    await userEvent.click(screen.getByRole('button', { name: /extérieur/i }));
+    expect(onToggleMilieu).toHaveBeenCalledWith('outdoor');
+  });
+
   it('déclenche onToggleHideDone au clic', async () => {
-    const { onToggleHideDone } = renderFilter(['restaurant'], vi.fn(), true);
+    const { onToggleHideDone } = renderFilter(['restaurant'], vi.fn(), ['outdoor', 'indoor'], vi.fn(), true);
     const pill = screen.getByRole('button', { name: /masquer les faits/i });
     expect(pill).toHaveClass('active');
     await userEvent.click(pill);

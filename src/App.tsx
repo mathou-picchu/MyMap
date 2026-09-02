@@ -12,7 +12,7 @@ import { deletePlace, listPlaces, replaceAllPlaces, savePlace } from './db';
 import { buildExportFileName, exportPlaces, ImportError, parseImportFile } from './exportImport';
 import type { GeoResult } from './geocoding';
 import { loadJSON, saveJSON } from './storage';
-import type { MapState, Place, PlaceDraft, PlaceTypeId } from './types';
+import type { MapState, MilieuId, Place, PlaceDraft, PlaceTypeId } from './types';
 import './App.css';
 
 const PARIS_MAP_STATE: MapState = { lat: 48.8566, lng: 2.3522, zoom: 12 };
@@ -22,6 +22,13 @@ export default function App() {
   const [activeTypes, setActiveTypes] = useState<Set<PlaceTypeId>>(() =>
     new Set(loadJSON<PlaceTypeId[]>('mymap.filters', PLACE_TYPE_IDS)),
   );
+  const [activeMilieu, setActiveMilieu] = useState<Set<MilieuId>>(() => {
+    const stored = loadJSON<unknown>('mymap.milieu', null);
+    const milieux = Array.isArray(stored)
+      ? stored.filter((m): m is MilieuId => m === 'outdoor' || m === 'indoor')
+      : ['outdoor', 'indoor'];
+    return new Set<MilieuId>(milieux);
+  });
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [draft, setDraft] = useState<PlaceDraft | null>(null);
   const [editing, setEditing] = useState<Place | null>(null);
@@ -53,11 +60,18 @@ export default function App() {
   }, [activeTypes]);
 
   useEffect(() => {
+    saveJSON('mymap.milieu', [...activeMilieu]);
+  }, [activeMilieu]);
+
+  useEffect(() => {
     saveJSON('mymap.hidedone', hideDone);
   }, [hideDone]);
 
   const filteredPlaces = places.filter(
-    (p) => activeTypes.has(p.type) && !(hideDone && p.isDone),
+    (p) =>
+      activeTypes.has(p.type) &&
+      activeMilieu.has(p.isOutdoor ? 'outdoor' : 'indoor') &&
+      !(hideDone && p.isDone),
   );
   const emptyHint =
     hideDone && places.some((p) => p.isDone)
@@ -77,6 +91,18 @@ export default function App() {
         next.delete(type);
       } else {
         next.add(type);
+      }
+      return next;
+    });
+  }
+
+  function handleToggleMilieu(milieu: MilieuId) {
+    setActiveMilieu((prev) => {
+      const next = new Set(prev);
+      if (next.has(milieu)) {
+        next.delete(milieu);
+      } else {
+        next.add(milieu);
       }
       return next;
     });
@@ -185,6 +211,8 @@ export default function App() {
       <TypeFilter
         active={activeTypes}
         onToggle={handleToggleType}
+        activeMilieu={activeMilieu}
+        onToggleMilieu={handleToggleMilieu}
         hideDone={hideDone}
         onToggleHideDone={() => setHideDone((v) => !v)}
       />

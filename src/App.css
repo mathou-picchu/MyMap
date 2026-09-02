@@ -149,6 +149,14 @@
   margin-left: 12px;
 }
 
+.filter-pill.milieu {
+  margin-left: 12px;
+}
+
+.filter-pill.milieu + .filter-pill.milieu {
+  margin-left: 0;
+}
+
 .storage-banner {
   padding: 10px 16px;
   background: #fef3c7;

@@ -1,17 +1,26 @@
 import type { CSSProperties } from 'react';
-import { PLACE_TYPES } from '../constants';
-import type { PlaceTypeId } from '../types';
+import { MILIEUS, PLACE_TYPES } from '../constants';
+import type { MilieuId, PlaceTypeId } from '../types';
 
 interface TypeFilterProps {
   active: Set<PlaceTypeId>;
   onToggle: (type: PlaceTypeId) => void;
+  activeMilieu: Set<MilieuId>;
+  onToggleMilieu: (milieu: MilieuId) => void;
   hideDone: boolean;
   onToggleHideDone: () => void;
 }
 
-export default function TypeFilter({ active, onToggle, hideDone, onToggleHideDone }: TypeFilterProps) {
+export default function TypeFilter({
+  active,
+  onToggle,
+  activeMilieu,
+  onToggleMilieu,
+  hideDone,
+  onToggleHideDone,
+}: TypeFilterProps) {
   return (
-    <div className="type-filter" role="group" aria-label="Filtrer par type">
+    <div className="type-filter" role="group" aria-label="Filtrer par type et milieu">
       {PLACE_TYPES.map((t) => (
         <button
           key={t.id}
@@ -22,6 +31,18 @@ export default function TypeFilter({ active, onToggle, hideDone, onToggleHideDon
           aria-pressed={active.has(t.id)}
         >
           <span aria-hidden="true">{t.emoji}</span> {t.label}
+        </button>
+      ))}
+      {MILIEUS.map((m) => (
+        <button
+          key={m.id}
+          type="button"
+          className={`filter-pill milieu${activeMilieu.has(m.id) ? ' active' : ''}`}
+          style={{ '--pill-color': m.color } as CSSProperties}
+          onClick={() => onToggleMilieu(m.id)}
+          aria-pressed={activeMilieu.has(m.id)}
+        >
+          <span aria-hidden="true">{m.emoji}</span> {m.label}
         </button>
       ))}
       <button

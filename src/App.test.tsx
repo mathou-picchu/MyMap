@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 import { listPlaces } from './db';
-import type { MapState, Place } from './types';
+import type { MapState, Place, PlaceTypeId } from './types';
 
 vi.mock('./db', () => ({
   listPlaces: vi.fn(async () => []),
@@ -23,7 +23,13 @@ vi.mock('./components/MapView', () => ({
   ),
 }));
 
-function makeAppPlace(id: string, name: string, isDone: boolean): Place {
+function makeAppPlace(
+  id: string,
+  name: string,
+  isDone: boolean,
+  type: PlaceTypeId = 'restaurant',
+  isOutdoor?: boolean,
+): Place {
   return {
     id,
     name,
@@ -31,9 +37,10 @@ function makeAppPlace(id: string, name: string, isDone: boolean): Place {
     lat: 48.85,
     lng: 2.35,
     isFree: true,
-    type: 'restaurant',
+    type,
     photos: [],
     isDone,
+    isOutdoor,
     createdAt: 1,
     updatedAt: 1,
   };
@@ -86,5 +93,18 @@ describe('App', () => {
     await userEvent.click(screen.getByRole('button', { name: /masquer les faits/i }));
     expect(screen.queryByText('Musée fait')).not.toBeInTheDocument();
     expect(screen.getByText('Café à faire')).toBeInTheDocument();
+  });
+
+  it('filtre par milieu extérieur / intérieur', async () => {
+    vi.mocked(listPlaces).mockResolvedValueOnce([
+      makeAppPlace('p1', 'Jardin partagé', false, 'balade', true),
+      makeAppPlace('p2', 'Bibliothèque', false, 'visit', false),
+    ]);
+    render(<App />);
+    expect(await screen.findByText('Jardin partagé')).toBeInTheDocument();
+    expect(screen.getByText('Bibliothèque')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /extérieur/i }));
+    expect(screen.queryByText('Jardin partagé')).not.toBeInTheDocument();
+    expect(screen.getByText('Bibliothèque')).toBeInTheDocument();
   });
 });
