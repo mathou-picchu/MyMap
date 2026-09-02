@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 import { listPlaces } from './db';
-import type { MapState } from './types';
+import type { MapState, Place } from './types';
 
 vi.mock('./db', () => ({
   listPlaces: vi.fn(async () => []),
@@ -21,6 +22,22 @@ vi.mock('./components/MapView', () => ({
     />
   ),
 }));
+
+function makeAppPlace(id: string, name: string, isDone: boolean): Place {
+  return {
+    id,
+    name,
+    address: 'Paris',
+    lat: 48.85,
+    lng: 2.35,
+    isFree: true,
+    type: 'food',
+    photos: [],
+    isDone,
+    createdAt: 1,
+    updatedAt: 1,
+  };
+}
 
 afterEach(() => {
   localStorage.clear();
@@ -61,5 +78,18 @@ describe('App', () => {
     localStorage.setItem('mymap.mapstate', JSON.stringify({ lat: 48.85, lng: 2.35, zoom: 15 }));
     render(<App />);
     expect(screen.getByTestId('map-view-mock')).toHaveAttribute('data-zoom', '15');
+  });
+
+  it('masque les points faits quand le filtre est actif', async () => {
+    vi.mocked(listPlaces).mockResolvedValueOnce([
+      makeAppPlace('p1', 'Musée fait', true),
+      makeAppPlace('p2', 'Café à faire', false),
+    ]);
+    render(<App />);
+    expect(await screen.findByText('Café à faire')).toBeInTheDocument();
+    expect(screen.getByText('Musée fait')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /masquer les faits/i }));
+    expect(screen.queryByText('Musée fait')).not.toBeInTheDocument();
+    expect(screen.getByText('Café à faire')).toBeInTheDocument();
   });
 });

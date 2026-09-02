@@ -41,6 +41,10 @@ export default function App() {
   const [addMode, setAddMode] = useState(false);
   const [mobileView, setMobileView] = useState<'map' | 'list'>('map');
   const [storageError, setStorageError] = useState(false);
+  const [hideDone, setHideDone] = useState(() => {
+    const stored = loadJSON<unknown>('mymap.hidedone', false);
+    return typeof stored === 'boolean' ? stored : false;
+  });
   const [initialMapState] = useState(loadInitialMapState);
   const mapRef = useRef<LeafletMap | null>(null);
 
@@ -62,7 +66,17 @@ export default function App() {
     saveJSON('mymap.filters', [...activeTypes]);
   }, [activeTypes]);
 
-  const filteredPlaces = places.filter((p) => activeTypes.has(p.type));
+  useEffect(() => {
+    saveJSON('mymap.hidedone', hideDone);
+  }, [hideDone]);
+
+  const filteredPlaces = places.filter(
+    (p) => activeTypes.has(p.type) && !(hideDone && p.isDone),
+  );
+  const emptyHint =
+    hideDone && places.some((p) => p.isDone)
+      ? 'Tous vos points sont faits ! Décochez « Masquer les faits » pour les revoir.'
+      : undefined;
   const selectedPlace = places.find((p) => p.id === selectedPlaceId) ?? null;
 
   function flyTo(lat: number, lng: number) {
@@ -117,6 +131,13 @@ export default function App() {
     await deletePlace(id);
     await refreshPlaces();
     setSelectedPlaceId(null);
+  }
+
+  async function handleToggleDone(id: string) {
+    const place = places.find((p) => p.id === id);
+    if (!place) return;
+    await savePlace({ ...place, isDone: !place.isDone, updatedAt: Date.now() });
+    await refreshPlaces();
   }
 
   async function handleExport() {
@@ -175,7 +196,12 @@ export default function App() {
           ＋ Ajouter un lieu
         </button>
       </header>
-      <TypeFilter active={activeTypes} onToggle={handleToggleType} />
+      <TypeFilter
+        active={activeTypes}
+        onToggle={handleToggleType}
+        hideDone={hideDone}
+        onToggleHideDone={() => setHideDone((v) => !v)}
+      />
       {storageError && (
         <div className="storage-banner" role="alert">
           ⚠️ Stockage indisponible : impossible d'enregistrer tes points dans ce navigateur (mode
@@ -203,12 +229,15 @@ export default function App() {
               onBack={() => setSelectedPlaceId(null)}
               onEdit={() => setEditing(selectedPlace)}
               onDelete={handleDeletePlace}
+              onToggleDone={handleToggleDone}
             />
           ) : (
             <PlaceList
               places={filteredPlaces}
               selectedId={selectedPlaceId}
               onSelect={handleSelect}
+              onToggleDone={handleToggleDone}
+              emptyHint={emptyHint}
             />
           )}
         </section>
