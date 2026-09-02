@@ -13,7 +13,6 @@ interface MapViewProps {
   mapRef: { current: LeafletMap | null };
   onMapClick: (lat: number, lng: number) => void;
   onMarkerClick: (id: string) => void;
-  onMoveEnd: (state: MapState) => void;
   initialMapState?: MapState;
 }
 
@@ -34,22 +33,10 @@ const draftIcon = divIcon({
   iconAnchor: [18, 42],
 });
 
-function MapEvents({
-  addMode,
-  onMapClick,
-  onMoveEnd,
-}: Pick<MapViewProps, 'addMode' | 'onMapClick' | 'onMoveEnd'>) {
+function MapEvents({ addMode, onMapClick }: Pick<MapViewProps, 'addMode' | 'onMapClick'>) {
   useMapEvents({
     click(e) {
       if (addMode) onMapClick(e.latlng.lat, e.latlng.lng);
-    },
-    moveend(e) {
-      const map = e.target as LeafletMap;
-      onMoveEnd({
-        lat: map.getCenter().lat,
-        lng: map.getCenter().lng,
-        zoom: map.getZoom(),
-      });
     },
   });
   return null;
@@ -63,7 +50,6 @@ export default function MapView({
   mapRef,
   onMapClick,
   onMarkerClick,
-  onMoveEnd,
   initialMapState,
 }: MapViewProps) {
   const initial = initialMapState ?? { lat: 48.8566, lng: 2.3522, zoom: 12 };
@@ -78,7 +64,7 @@ export default function MapView({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MapEvents addMode={addMode} onMapClick={onMapClick} onMoveEnd={onMoveEnd} />
+      <MapEvents addMode={addMode} onMapClick={onMapClick} />
       {places.map((place) => (
         <Marker
           key={place.id}

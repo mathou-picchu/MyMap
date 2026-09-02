@@ -66,18 +66,13 @@ describe('App', () => {
     expect(map).toHaveAttribute('data-zoom', '12');
   });
 
-  it('centre sur Paris si l\'ancienne vue France par défaut est mémorisée', () => {
-    localStorage.setItem('mymap.mapstate', JSON.stringify({ lat: 46.6, lng: 2.4, zoom: 5 }));
+  it('ignore toute position mémorisée et ouvre sur Paris', () => {
+    localStorage.setItem('mymap.mapstate', JSON.stringify({ lat: 48.85, lng: 2.35, zoom: 15 }));
     render(<App />);
     const map = screen.getByTestId('map-view-mock');
     expect(map).toHaveAttribute('data-lat', '48.8566');
+    expect(map).toHaveAttribute('data-lng', '2.3522');
     expect(map).toHaveAttribute('data-zoom', '12');
-  });
-
-  it('respecte la position de carte mémorisée', () => {
-    localStorage.setItem('mymap.mapstate', JSON.stringify({ lat: 48.85, lng: 2.35, zoom: 15 }));
-    render(<App />);
-    expect(screen.getByTestId('map-view-mock')).toHaveAttribute('data-zoom', '15');
   });
 
   it('masque les points faits quand le filtre est actif', async () => {

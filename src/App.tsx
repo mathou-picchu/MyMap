@@ -15,20 +15,7 @@ import { loadJSON, saveJSON } from './storage';
 import type { MapState, Place, PlaceDraft, PlaceTypeId } from './types';
 import './App.css';
 
-const DEFAULT_MAP_STATE: MapState = { lat: 48.8566, lng: 2.3522, zoom: 12 };
-const LEGACY_MAP_STATE: MapState = { lat: 46.6, lng: 2.4, zoom: 5 };
-
-function loadInitialMapState(): MapState {
-  const stored = loadJSON<MapState>('mymap.mapstate', DEFAULT_MAP_STATE);
-  if (
-    stored.lat === LEGACY_MAP_STATE.lat &&
-    stored.lng === LEGACY_MAP_STATE.lng &&
-    stored.zoom === LEGACY_MAP_STATE.zoom
-  ) {
-    return DEFAULT_MAP_STATE;
-  }
-  return stored;
-}
+const PARIS_MAP_STATE: MapState = { lat: 48.8566, lng: 2.3522, zoom: 12 };
 
 export default function App() {
   const [places, setPlaces] = useState<Place[]>([]);
@@ -45,7 +32,6 @@ export default function App() {
     const stored = loadJSON<unknown>('mymap.hidedone', false);
     return typeof stored === 'boolean' ? stored : false;
   });
-  const [initialMapState] = useState(loadInitialMapState);
   const mapRef = useRef<LeafletMap | null>(null);
 
   const refreshPlaces = useCallback(async () => {
@@ -216,10 +202,9 @@ export default function App() {
             addMode={addMode}
             draftPos={draft ? { lat: draft.lat, lng: draft.lng } : null}
             mapRef={mapRef}
-            initialMapState={initialMapState}
+            initialMapState={PARIS_MAP_STATE}
             onMapClick={handleMapClick}
             onMarkerClick={handleSelect}
-            onMoveEnd={(state) => saveJSON('mymap.mapstate', state)}
           />
         </div>
         <section className="side-column">
