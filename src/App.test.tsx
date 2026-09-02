@@ -2,14 +2,14 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
-import { listPlaces } from './db';
+import { listPlaces, replaceAllPlaces } from './db';
 import type { MapState, Place, PlaceTypeId } from './types';
 
 vi.mock('./db', () => ({
   listPlaces: vi.fn(async () => []),
   savePlace: vi.fn(),
   deletePlace: vi.fn(),
-  replaceAllPlaces: vi.fn(),
+  replaceAllPlaces: vi.fn(async () => {}),
 }));
 
 vi.mock('./components/MapView', () => ({
@@ -106,5 +106,45 @@ describe('App', () => {
     await userEvent.click(screen.getByRole('button', { name: /extérieur/i }));
     expect(screen.queryByText('Jardin partagé')).not.toBeInTheDocument();
     expect(screen.getByText('Bibliothèque')).toBeInTheDocument();
+  });
+
+  it('migre les anciens types au démarrage et les enregistre', async () => {
+    vi.mocked(replaceAllPlaces).mockClear();
+    vi.mocked(listPlaces).mockResolvedValueOnce([
+      makeAppPlace('p1', 'Parc Monceau', false, 'outdoor' as PlaceTypeId),
+      makeAppPlace('p2', 'Vieux café', false, 'food' as PlaceTypeId),
+    ]);
+    render(<App />);
+    await screen.findByText('Parc Monceau');
+    expect(replaceAllPlaces).toHaveBeenCalledTimes(1);
+    expect(replaceAllPlaces).toHaveBeenCalledWith([
+      expect.objectContaining({ id: 'p1', type: 'balade', isOutdoor: true }),
+      expect.objectContaining({ id: 'p2', type: 'restaurant', isOutdoor: false }),
+    ]);
+  });
+
+  it('n\'enregistre rien quand les points sont déjà à jour', async () => {
+    vi.mocked(replaceAllPlaces).mockClear();
+    vi.mocked(listPlaces).mockResolvedValueOnce([
+      makeAppPlace('p1', 'Café moderne', false, 'restaurant', false),
+    ]);
+    render(<App />);
+    await screen.findByText('Café moderne');
+    expect(replaceAllPlaces).not.toHaveBeenCalled();
+  });
+
+  it('convertit les anciens filtres mémorisés', () => {
+    localStorage.setItem('mymap.filters', JSON.stringify(['outdoor', 'food', 'museum']));
+    render(<App />);
+    expect(screen.getByRole('button', { name: /balade/i })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: /restaurant/i })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: /visite/i })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('écarte les valeurs de milieu invalides', () => {
+    localStorage.setItem('mymap.milieu', JSON.stringify(['outdoor', 'nimporte']));
+    render(<App />);
+    expect(screen.getByRole('button', { name: /extérieur/i })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: /intérieur/i })).toHaveAttribute('aria-pressed', 'false');
   });
 });

@@ -11,6 +11,7 @@ import { PLACE_TYPE_IDS } from './constants';
 import { deletePlace, listPlaces, replaceAllPlaces, savePlace } from './db';
 import { buildExportFileName, exportPlaces, ImportError, parseImportFile } from './exportImport';
 import type { GeoResult } from './geocoding';
+import { isKnownTypeId, migratePlace, migrateTypeId } from './migrations';
 import { loadJSON, saveJSON } from './storage';
 import type { MapState, MilieuId, Place, PlaceDraft, PlaceTypeId } from './types';
 import './App.css';
@@ -19,15 +20,19 @@ const PARIS_MAP_STATE: MapState = { lat: 48.8566, lng: 2.3522, zoom: 12 };
 
 export default function App() {
   const [places, setPlaces] = useState<Place[]>([]);
-  const [activeTypes, setActiveTypes] = useState<Set<PlaceTypeId>>(() =>
-    new Set(loadJSON<PlaceTypeId[]>('mymap.filters', PLACE_TYPE_IDS)),
-  );
+  const [activeTypes, setActiveTypes] = useState<Set<PlaceTypeId>>(() => {
+    const stored = loadJSON<unknown>('mymap.filters', null);
+    const ids = Array.isArray(stored)
+      ? stored.filter(isKnownTypeId).map(migrateTypeId)
+      : [...PLACE_TYPE_IDS];
+    return new Set<PlaceTypeId>(ids);
+  });
   const [activeMilieu, setActiveMilieu] = useState<Set<MilieuId>>(() => {
     const stored = loadJSON<unknown>('mymap.milieu', null);
-    const milieux = Array.isArray(stored)
+    const milieux: MilieuId[] = Array.isArray(stored)
       ? stored.filter((m): m is MilieuId => m === 'outdoor' || m === 'indoor')
       : ['outdoor', 'indoor'];
-    return new Set<MilieuId>(milieux);
+    return new Set(milieux);
   });
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [draft, setDraft] = useState<PlaceDraft | null>(null);
@@ -51,7 +56,13 @@ export default function App() {
 
   useEffect(() => {
     listPlaces()
-      .then(setPlaces)
+      .then((places) => {
+        const migrated = places.map(migratePlace);
+        setPlaces(migrated);
+        if (migrated.some((p, i) => p !== places[i])) {
+          void replaceAllPlaces(migrated).catch(() => setStorageError(true));
+        }
+      })
       .catch(() => setStorageError(true));
   }, []);
 
