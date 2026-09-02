@@ -145,6 +145,10 @@
   opacity: 1;
 }
 
+.filter-pill.hide-done {
+  margin-left: 12px;
+}
+
 .storage-banner {
   padding: 10px 16px;
   background: #fef3c7;

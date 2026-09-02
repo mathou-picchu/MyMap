@@ -5,9 +5,21 @@ import { PLACE_TYPES } from '../constants';
 import type { PlaceTypeId } from '../types';
 import TypeFilter from './TypeFilter';
 
-function renderFilter(active: PlaceTypeId[], onToggle = vi.fn()) {
-  render(<TypeFilter active={new Set(active)} onToggle={onToggle} />);
-  return { onToggle };
+function renderFilter(
+  active: PlaceTypeId[],
+  onToggle = vi.fn(),
+  hideDone = false,
+  onToggleHideDone = vi.fn(),
+) {
+  render(
+    <TypeFilter
+      active={new Set(active)}
+      onToggle={onToggle}
+      hideDone={hideDone}
+      onToggleHideDone={onToggleHideDone}
+    />,
+  );
+  return { onToggle, onToggleHideDone };
 }
 
 describe('TypeFilter', () => {
@@ -35,5 +47,19 @@ describe('TypeFilter', () => {
     renderFilter(['food']);
     expect(screen.getByRole('button', { name: /nourriture/i })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: /visite/i })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('affiche la pilule « Masquer les faits » avec son état', () => {
+    renderFilter(PLACE_TYPES.map((t) => t.id));
+    const pill = screen.getByRole('button', { name: /masquer les faits/i });
+    expect(pill).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('déclenche onToggleHideDone au clic', async () => {
+    const { onToggleHideDone } = renderFilter(['food'], vi.fn(), true);
+    const pill = screen.getByRole('button', { name: /masquer les faits/i });
+    expect(pill).toHaveClass('active');
+    await userEvent.click(pill);
+    expect(onToggleHideDone).toHaveBeenCalled();
   });
 });

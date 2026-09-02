@@ -5,9 +5,11 @@ import type { PlaceTypeId } from '../types';
 interface TypeFilterProps {
   active: Set<PlaceTypeId>;
   onToggle: (type: PlaceTypeId) => void;
+  hideDone: boolean;
+  onToggleHideDone: () => void;
 }
 
-export default function TypeFilter({ active, onToggle }: TypeFilterProps) {
+export default function TypeFilter({ active, onToggle, hideDone, onToggleHideDone }: TypeFilterProps) {
   return (
     <div className="type-filter" role="group" aria-label="Filtrer par type">
       {PLACE_TYPES.map((t) => (
@@ -22,6 +24,15 @@ export default function TypeFilter({ active, onToggle }: TypeFilterProps) {
           <span aria-hidden="true">{t.emoji}</span> {t.label}
         </button>
       ))}
+      <button
+        type="button"
+        className={`filter-pill hide-done${hideDone ? ' active' : ''}`}
+        style={{ '--pill-color': '#16a34a' } as CSSProperties}
+        onClick={onToggleHideDone}
+        aria-pressed={hideDone}
+      >
+        <span aria-hidden="true">✓</span> Masquer les faits
+      </button>
     </div>
   );
 }
