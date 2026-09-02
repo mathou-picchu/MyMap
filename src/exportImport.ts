@@ -47,6 +47,9 @@ function base64ToBlob(data: string): Blob {
   for (let i = 0; i < binary.length; i++) {
     bytes[i] = binary.charCodeAt(i);
   }
+  if (bytes.length < 2 || bytes[0] !== 0xff || bytes[1] !== 0xd8) {
+    throw new Error('données photo invalides');
+  }
   return new Blob([bytes], { type: 'image/jpeg' });
 }
 
