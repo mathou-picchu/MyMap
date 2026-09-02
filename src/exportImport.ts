@@ -1,7 +1,7 @@
 import { PLACE_TYPE_IDS } from './constants';
 import type { Place, PlacePhoto, PlaceTypeId } from './types';
 
-const EXPORT_VERSION = 1;
+const EXPORT_VERSION = 2;
 
 export class ImportError extends Error {}
 
@@ -19,6 +19,7 @@ interface SerializedPlace {
   hours?: string;
   isFree: boolean;
   price?: string;
+  isDone?: boolean;
   type: PlaceTypeId;
   photos: SerializedPhoto[];
   createdAt: number;
@@ -60,6 +61,7 @@ export async function exportPlaces(places: Place[]): Promise<string> {
     places: await Promise.all(
       places.map(async (place): Promise<SerializedPlace> => ({
         ...place,
+        isDone: place.isDone ?? false,
         photos: await Promise.all(
           place.photos.map(async (photo): Promise<SerializedPhoto> => ({
             id: photo.id,
@@ -83,7 +85,7 @@ export function parseImportFile(text: string): Place[] {
     throw new ImportError('structure de fichier inattendue.');
   }
   const file = parsed as Partial<ExportFile>;
-  if (file.version !== EXPORT_VERSION) {
+  if (file.version !== 1 && file.version !== EXPORT_VERSION) {
     throw new ImportError(`version du fichier non supportée (${String(file.version)}).`);
   }
   if (!Array.isArray(file.places)) {
@@ -127,6 +129,9 @@ function parsePlace(place: SerializedPlace, index: number): Place {
   if (place.price !== undefined && typeof place.price !== 'string') {
     throw new ImportError(`${prefix} : prix invalide.`);
   }
+  if (place.isDone !== undefined && typeof place.isDone !== 'boolean') {
+    throw new ImportError(`${prefix} : champ « fait » invalide.`);
+  }
   if (!Array.isArray(place.photos)) {
     throw new ImportError(`${prefix} : photos invalides.`);
   }
@@ -154,6 +159,7 @@ function parsePlace(place: SerializedPlace, index: number): Place {
     hours: place.hours,
     isFree: place.isFree,
     price: place.price,
+    isDone: place.isDone ?? false,
     type: place.type,
     photos,
     createdAt: place.createdAt,

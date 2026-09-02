@@ -47,7 +47,11 @@ Dans le test `écrit un JSON versionné avec les photos en base64`, remplacer `e
   });
 
   it('accepte un fichier v1 sans champ isDone', () => {
-    const file = JSON.stringify({ version: 1, exportedAt: 0, places: [makePlace()] });
+    const file = JSON.stringify({
+      version: 1,
+      exportedAt: 0,
+      places: [makePlace({ photos: [] })],
+    });
     const restored = parseImportFile(file);
     expect(restored[0].isDone).toBe(false);
   });

@@ -30,6 +30,7 @@ async function project(places: Place[]) {
       lng: p.lng,
       hours: p.hours,
       isFree: p.isFree,
+      isDone: p.isDone ?? false,
       price: p.price,
       type: p.type,
       createdAt: p.createdAt,
@@ -52,10 +53,38 @@ describe('exportImport', () => {
     expect(await project(restored)).toEqual(await project(original));
   });
 
+  it('fait un aller-retour avec le statut fait', async () => {
+    const original = [makePlace(), makePlace({ id: 'p2', photos: [], isDone: true })];
+    const json = await exportPlaces(original);
+    const restored = parseImportFile(json);
+    expect(restored[0].isDone).toBe(false);
+    expect(restored[1].isDone).toBe(true);
+  });
+
+  it('accepte un fichier v1 sans champ isDone', () => {
+    const file = JSON.stringify({
+      version: 1,
+      exportedAt: 0,
+      places: [makePlace({ photos: [] })],
+    });
+    const restored = parseImportFile(file);
+    expect(restored[0].isDone).toBe(false);
+  });
+
+  it('rejette un isDone invalide', () => {
+    const file = JSON.stringify({
+      version: 2,
+      exportedAt: 0,
+      places: [{ ...makePlace(), isDone: 'oui' }],
+    });
+    expect(() => parseImportFile(file)).toThrow(/fait/);
+  });
+
   it('écrit un JSON versionné avec les photos en base64', async () => {
     const json = await exportPlaces([makePlace()]);
     const parsed = JSON.parse(json);
-    expect(parsed.version).toBe(1);
+    expect(parsed.version).toBe(2);
+    expect(parsed.places[0].isDone).toBe(false);
     expect(typeof parsed.exportedAt).toBe('number');
     const data = parsed.places[0].photos[0].data as string;
     const bytes = Array.from(atob(data), (c) => c.charCodeAt(0));

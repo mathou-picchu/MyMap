@@ -74,6 +74,7 @@ describe('PlaceForm', () => {
     });
     expect(saved.id).toBeTruthy();
     expect(saved.createdAt).toBeGreaterThan(0);
+    expect(saved.isDone).toBe(false);
   });
 
   it('pré-remplit le formulaire en édition', () => {
@@ -95,6 +96,29 @@ describe('PlaceForm', () => {
     });
     expect(screen.getByLabelText(/nom \*/i)).toHaveValue('Musée d\'Orsay');
     expect(screen.getByRole('button', { name: /enregistrer/i })).toBeInTheDocument();
+  });
+
+  it('conserve le statut fait en édition', async () => {
+    const { onSave } = renderForm({
+      place: {
+        id: 'p1',
+        name: 'Musée d\'Orsay',
+        address: 'Paris',
+        lat: 1,
+        lng: 2,
+        isFree: false,
+        price: '16 €',
+        type: 'visit',
+        photos: [],
+        isDone: true,
+        createdAt: 1000,
+        updatedAt: 1000,
+      },
+      draft: null,
+    });
+    await userEvent.click(screen.getByRole('button', { name: /enregistrer/i }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
+    expect((onSave.mock.calls[0][0] as Place).isDone).toBe(true);
   });
 
   it('ajoute une photo compressée avec miniature', async () => {

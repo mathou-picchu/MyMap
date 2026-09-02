@@ -14,6 +14,7 @@ export interface Place {
   hours?: string;
   isFree: boolean;
   price?: string;
+  isDone?: boolean;
   type: PlaceTypeId;
   photos: PlacePhoto[];
   createdAt: number;

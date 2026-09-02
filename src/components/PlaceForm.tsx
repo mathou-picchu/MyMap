@@ -71,6 +71,7 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
         isFree,
         price: !isFree ? price.trim() || undefined : undefined,
         type,
+        isDone: place?.isDone ?? false,
         photos,
         createdAt: place?.createdAt ?? now,
         updatedAt: now,
