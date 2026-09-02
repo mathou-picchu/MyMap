@@ -7,8 +7,9 @@ afterEach(() => {
 
 describe('searchAddress', () => {
   it('mappe les résultats Nominatim', async () => {
+    const controller = new AbortController();
     const fetchMock = vi.fn(
-      async () =>
+      async (_input: RequestInfo | URL, _init?: RequestInit) =>
         ({
           ok: true,
           json: async () => [
@@ -22,7 +23,7 @@ describe('searchAddress', () => {
         }) as Response,
     );
     vi.stubGlobal('fetch', fetchMock);
-    const results = await searchAddress('tour eiffel');
+    const results = await searchAddress('tour eiffel', controller.signal);
     expect(results).toEqual([
       {
         name: 'Tour Eiffel',
@@ -35,6 +36,7 @@ describe('searchAddress', () => {
     expect(url.searchParams.get('q')).toBe('tour eiffel');
     expect(url.searchParams.get('format')).toBe('jsonv2');
     expect(url.searchParams.get('accept-language')).toBe('fr');
+    expect(fetchMock.mock.calls[0][1]?.signal).toBe(controller.signal);
   });
 
   it('retombe sur le premier segment du display_name si name est absent', async () => {
