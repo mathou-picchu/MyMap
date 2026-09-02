@@ -1,0 +1,34 @@
+export type PlaceTypeId = 'outdoor' | 'visit' | 'food' | 'drink' | 'shopping' | 'lodging' | 'other';
+
+export interface PlacePhoto {
+  id: string;
+  blob: Blob;
+}
+
+export interface Place {
+  id: string;
+  name: string;
+  address: string;
+  lat: number;
+  lng: number;
+  hours?: string;
+  isFree: boolean;
+  price?: string;
+  type: PlaceTypeId;
+  photos: PlacePhoto[];
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface PlaceDraft {
+  lat: number;
+  lng: number;
+  name?: string;
+  address?: string;
+}
+
+export interface MapState {
+  lat: number;
+  lng: number;
+  zoom: number;
+}
