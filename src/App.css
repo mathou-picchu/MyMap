@@ -379,6 +379,11 @@
   border-color: var(--danger);
 }
 
+.details-actions .done-toggle.done {
+  color: #16a34a;
+  border-color: #16a34a;
+}
+
 .confirm-label {
   font-size: 14px;
   color: var(--danger);

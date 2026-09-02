@@ -9,9 +9,10 @@ interface PlaceDetailsProps {
   onBack: () => void;
   onEdit: () => void;
   onDelete: (id: string) => void;
+  onToggleDone: (id: string) => void;
 }
 
-export default function PlaceDetails({ place, onBack, onEdit, onDelete }: PlaceDetailsProps) {
+export default function PlaceDetails({ place, onBack, onEdit, onDelete, onToggleDone }: PlaceDetailsProps) {
   const def = getPlaceTypeDef(place.type);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
@@ -56,6 +57,13 @@ export default function PlaceDetails({ place, onBack, onEdit, onDelete }: PlaceD
         </div>
       </dl>
       <div className="details-actions">
+        <button
+          type="button"
+          className={`done-toggle${place.isDone ? ' done' : ''}`}
+          onClick={() => onToggleDone(place.id)}
+        >
+          {place.isDone ? '✓ Fait' : '✓ Marquer comme fait'}
+        </button>
         <button type="button" onClick={onEdit}>
           Modifier
         </button>

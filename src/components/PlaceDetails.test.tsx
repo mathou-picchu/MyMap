@@ -23,8 +23,17 @@ function renderDetails() {
   const onBack = vi.fn();
   const onEdit = vi.fn();
   const onDelete = vi.fn();
-  render(<PlaceDetails place={place} onBack={onBack} onEdit={onEdit} onDelete={onDelete} />);
-  return { onBack, onEdit, onDelete };
+  const onToggleDone = vi.fn();
+  render(
+    <PlaceDetails
+      place={place}
+      onBack={onBack}
+      onEdit={onEdit}
+      onDelete={onDelete}
+      onToggleDone={onToggleDone}
+    />,
+  );
+  return { onBack, onEdit, onDelete, onToggleDone };
 }
 
 describe('PlaceDetails', () => {
@@ -49,6 +58,25 @@ describe('PlaceDetails', () => {
     const { onEdit } = renderDetails();
     await userEvent.click(screen.getByRole('button', { name: /modifier/i }));
     expect(onEdit).toHaveBeenCalled();
+  });
+
+  it('bascule le statut fait depuis la fiche', async () => {
+    const { onToggleDone } = renderDetails();
+    await userEvent.click(screen.getByRole('button', { name: '✓ Marquer comme fait' }));
+    expect(onToggleDone).toHaveBeenCalledWith('p1');
+  });
+
+  it('affiche « ✓ Fait » pour un lieu déjà coché', () => {
+    render(
+      <PlaceDetails
+        place={{ ...place, isDone: true }}
+        onBack={() => {}}
+        onEdit={() => {}}
+        onDelete={() => {}}
+        onToggleDone={() => {}}
+      />,
+    );
+    expect(screen.getByRole('button', { name: '✓ Fait' })).toBeInTheDocument();
   });
 
   it('ouvre et ferme la visionneuse photo', async () => {
