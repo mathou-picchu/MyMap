@@ -1,7 +1,7 @@
-import { PLACE_TYPE_IDS } from './constants';
-import type { Place, PlacePhoto, PlaceTypeId } from './types';
+import { isKnownTypeId, migrateTypeId } from './migrations';
+import type { Place, PlacePhoto } from './types';
 
-const EXPORT_VERSION = 2;
+const EXPORT_VERSION = 3;
 
 export class ImportError extends Error {}
 
@@ -20,7 +20,8 @@ interface SerializedPlace {
   isFree: boolean;
   price?: string;
   isDone?: boolean;
-  type: PlaceTypeId;
+  isOutdoor?: boolean;
+  type: string;
   photos: SerializedPhoto[];
   createdAt: number;
   updatedAt: number;
@@ -62,6 +63,7 @@ export async function exportPlaces(places: Place[]): Promise<string> {
       places.map(async (place): Promise<SerializedPlace> => ({
         ...place,
         isDone: place.isDone ?? false,
+        isOutdoor: place.isOutdoor ?? false,
         photos: await Promise.all(
           place.photos.map(async (photo): Promise<SerializedPhoto> => ({
             id: photo.id,
@@ -85,7 +87,7 @@ export function parseImportFile(text: string): Place[] {
     throw new ImportError('structure de fichier inattendue.');
   }
   const file = parsed as Partial<ExportFile>;
-  if (file.version !== 1 && file.version !== EXPORT_VERSION) {
+  if (file.version !== 1 && file.version !== 2 && file.version !== EXPORT_VERSION) {
     throw new ImportError(`version du fichier non supportée (${String(file.version)}).`);
   }
   if (!Array.isArray(file.places)) {
@@ -99,6 +101,7 @@ function parsePlace(place: SerializedPlace, index: number): Place {
   if (typeof place !== 'object' || place === null) {
     throw new ImportError(`${prefix} : données invalides.`);
   }
+  const rawType = place.type;
   if (typeof place.id !== 'string' || place.id.length === 0) {
     throw new ImportError(`${prefix} : identifiant manquant.`);
   }
@@ -117,7 +120,7 @@ function parsePlace(place: SerializedPlace, index: number): Place {
   if (typeof place.isFree !== 'boolean') {
     throw new ImportError(`${prefix} : champ « gratuit » invalide.`);
   }
-  if (typeof place.type !== 'string' || !PLACE_TYPE_IDS.includes(place.type)) {
+  if (typeof place.type !== 'string' || !isKnownTypeId(place.type)) {
     throw new ImportError(`${prefix} : type inconnu (${String(place.type)}).`);
   }
   if (typeof place.createdAt !== 'number' || typeof place.updatedAt !== 'number') {
@@ -131,6 +134,9 @@ function parsePlace(place: SerializedPlace, index: number): Place {
   }
   if (place.isDone !== undefined && typeof place.isDone !== 'boolean') {
     throw new ImportError(`${prefix} : champ « fait » invalide.`);
+  }
+  if (place.isOutdoor !== undefined && typeof place.isOutdoor !== 'boolean') {
+    throw new ImportError(`${prefix} : champ « extérieur » invalide.`);
   }
   if (!Array.isArray(place.photos)) {
     throw new ImportError(`${prefix} : photos invalides.`);
@@ -160,7 +166,8 @@ function parsePlace(place: SerializedPlace, index: number): Place {
     isFree: place.isFree,
     price: place.price,
     isDone: place.isDone ?? false,
-    type: place.type,
+    isOutdoor: place.isOutdoor ?? rawType === 'outdoor',
+    type: migrateTypeId(rawType),
     photos,
     createdAt: place.createdAt,
     updatedAt: place.updatedAt,

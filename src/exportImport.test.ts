@@ -31,6 +31,7 @@ async function project(places: Place[]) {
       hours: p.hours,
       isFree: p.isFree,
       isDone: p.isDone ?? false,
+      isOutdoor: p.isOutdoor ?? false,
       price: p.price,
       type: p.type,
       createdAt: p.createdAt,
@@ -83,12 +84,49 @@ describe('exportImport', () => {
   it('écrit un JSON versionné avec les photos en base64', async () => {
     const json = await exportPlaces([makePlace()]);
     const parsed = JSON.parse(json);
-    expect(parsed.version).toBe(2);
+    expect(parsed.version).toBe(3);
     expect(parsed.places[0].isDone).toBe(false);
+    expect(parsed.places[0].isOutdoor).toBe(false);
     expect(typeof parsed.exportedAt).toBe('number');
     const data = parsed.places[0].photos[0].data as string;
     const bytes = Array.from(atob(data), (c) => c.charCodeAt(0));
     expect(bytes).toEqual([0xff, 0xd8, 0x01, 0x02, 0x03]);
+  });
+
+  it('accepte un fichier v2 avec les anciens types et les convertit', () => {
+    const file = JSON.stringify({
+      version: 2,
+      exportedAt: 0,
+      places: [
+        { ...makePlace(), type: 'outdoor', photos: [] },
+        { ...makePlace({ id: 'p2' }), type: 'drink', photos: [] },
+        { ...makePlace({ id: 'p3' }), type: 'food', photos: [] },
+      ],
+    });
+    const restored = parseImportFile(file);
+    expect(restored[0]).toMatchObject({ type: 'balade', isOutdoor: true });
+    expect(restored[1]).toMatchObject({ type: 'gourmandise', isOutdoor: false });
+    expect(restored[2]).toMatchObject({ type: 'restaurant', isOutdoor: false });
+  });
+
+  it('rejette un isOutdoor invalide', () => {
+    const file = JSON.stringify({
+      version: 3,
+      exportedAt: 0,
+      places: [{ ...makePlace(), isOutdoor: 'oui' }],
+    });
+    expect(() => parseImportFile(file)).toThrow(/extérieur/);
+  });
+
+  it('fait un aller-retour avec le milieu', async () => {
+    const original = [
+      makePlace({ type: 'balade', isOutdoor: true }),
+      makePlace({ id: 'p2', photos: [], isOutdoor: false }),
+    ];
+    const json = await exportPlaces(original);
+    const restored = parseImportFile(json);
+    expect(restored[0].isOutdoor).toBe(true);
+    expect(restored[1].isOutdoor).toBe(false);
   });
 
   it('rejette un fichier qui n\'est pas du JSON valide', () => {
