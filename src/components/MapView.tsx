@@ -66,7 +66,7 @@ export default function MapView({
   onMoveEnd,
   initialMapState,
 }: MapViewProps) {
-  const initial = initialMapState ?? { lat: 46.6, lng: 2.4, zoom: 5 };
+  const initial = initialMapState ?? { lat: 48.8566, lng: 2.3522, zoom: 12 };
   return (
     <MapContainer
       center={[initial.lat, initial.lng]}
