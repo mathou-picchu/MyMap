@@ -6,16 +6,28 @@ interface PlaceListProps {
   places: Place[];
   selectedId: string | null;
   onSelect: (id: string) => void;
+  onToggleDone: (id: string) => void;
+  emptyHint?: string;
 }
 
-export default function PlaceList({ places, selectedId, onSelect }: PlaceListProps) {
+export default function PlaceList({
+  places,
+  selectedId,
+  onSelect,
+  onToggleDone,
+  emptyHint,
+}: PlaceListProps) {
   if (places.length === 0) {
     return (
       <div className="place-list empty">
         <p>
-          Aucun point pour l'instant.
-          <br />
-          Utilise la recherche ou le bouton « ＋ Ajouter un lieu ».
+          {emptyHint ?? (
+            <>
+              Aucun point pour l'instant.
+              <br />
+              Utilise la recherche ou le bouton « ＋ Ajouter un lieu ».
+            </>
+          )}
         </p>
       </div>
     );
@@ -23,7 +35,13 @@ export default function PlaceList({ places, selectedId, onSelect }: PlaceListPro
   return (
     <ul className="place-list">
       {places.map((place) => (
-        <PlaceCard key={place.id} place={place} selected={place.id === selectedId} onSelect={onSelect} />
+        <PlaceCard
+          key={place.id}
+          place={place}
+          selected={place.id === selectedId}
+          onSelect={onSelect}
+          onToggleDone={onToggleDone}
+        />
       ))}
     </ul>
   );
@@ -33,15 +51,18 @@ function PlaceCard({
   place,
   selected,
   onSelect,
+  onToggleDone,
 }: {
   place: Place;
   selected: boolean;
   onSelect: (id: string) => void;
+  onToggleDone: (id: string) => void;
 }) {
   const def = getPlaceTypeDef(place.type);
+  const done = place.isDone === true;
   return (
-    <li className={`place-card${selected ? ' selected' : ''}`}>
-      <button type="button" onClick={() => onSelect(place.id)}>
+    <li className={`place-card${selected ? ' selected' : ''}${done ? ' done' : ''}`}>
+      <button type="button" className="card-select" onClick={() => onSelect(place.id)}>
         <span className="card-thumb">
           <ImgThumb
             blob={place.photos[0]?.blob ?? null}
@@ -63,6 +84,15 @@ function PlaceCard({
             {place.hours ? ` · ${place.hours}` : ''}
           </span>
         </span>
+      </button>
+      <button
+        type="button"
+        className={`card-done${done ? ' done' : ''}`}
+        aria-pressed={done}
+        aria-label={done ? 'Marquer comme à faire' : 'Marquer comme fait'}
+        onClick={() => onToggleDone(place.id)}
+      >
+        ✓
       </button>
     </li>
   );

@@ -203,7 +203,11 @@
   padding: 24px;
 }
 
-.place-card button {
+.place-card {
+  position: relative;
+}
+
+.place-card .card-select {
   display: flex;
   gap: 12px;
   width: 100%;
@@ -214,13 +218,50 @@
   background: #fff;
 }
 
-.place-card button:hover {
+.place-card .card-select:hover {
   border-color: var(--primary);
 }
 
-.place-card.selected button {
+.place-card.selected .card-select {
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+}
+
+.place-card .card-done {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  color: #94a3b8;
+  font-size: 14px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.place-card .card-done.done {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #fff;
+}
+
+.place-card .card-done:hover {
+  border-color: #16a34a;
+  color: #16a34a;
+}
+
+.place-card .card-done.done:hover {
+  color: #fff;
+}
+
+.place-card.done .card-select {
+  opacity: 0.55;
 }
 
 .card-thumb {
