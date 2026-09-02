@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import { searchAddress, type GeoResult } from '../geocoding';
 
 interface SearchBarProps {
@@ -14,13 +15,9 @@ export default function SearchBar({ onSelect }: SearchBarProps) {
   useEffect(() => {
     const q = query.trim();
     if (q.length < 3) {
-      setResults([]);
-      setStatus('idle');
-      setOpen(false);
       return;
     }
     const controller = new AbortController();
-    setStatus('loading');
     const timer = setTimeout(() => {
       searchAddress(q, controller.signal)
         .then((found) => {
@@ -40,11 +37,21 @@ export default function SearchBar({ onSelect }: SearchBarProps) {
     };
   }, [query]);
 
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    setQuery(value);
+    if (value.trim().length < 3) {
+      setResults([]);
+      setStatus('idle');
+      setOpen(false);
+    }
+  }
+
   return (
     <div className="searchbar">
       <input
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={handleChange}
         placeholder="Rechercher une adresse ou un lieu…"
         type="search"
         aria-label="Rechercher une adresse ou un lieu"
