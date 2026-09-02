@@ -79,6 +79,24 @@ describe('PlaceDetails', () => {
     expect(screen.getByRole('button', { name: '✓ Fait' })).toBeInTheDocument();
   });
 
+  it('affiche le badge milieu intérieur par défaut', () => {
+    renderDetails();
+    expect(screen.getByText(/intérieur/i)).toBeInTheDocument();
+  });
+
+  it('affiche le badge milieu extérieur', () => {
+    render(
+      <PlaceDetails
+        place={{ ...place, isOutdoor: true }}
+        onBack={() => {}}
+        onEdit={() => {}}
+        onDelete={() => {}}
+        onToggleDone={() => {}}
+      />,
+    );
+    expect(screen.getByText(/extérieur/i)).toBeInTheDocument();
+  });
+
   it('ouvre et ferme la visionneuse photo', async () => {
     renderDetails();
     await userEvent.click(screen.getByRole('button', { name: /^voir la photo/i }));

@@ -75,6 +75,7 @@ describe('PlaceForm', () => {
     expect(saved.id).toBeTruthy();
     expect(saved.createdAt).toBeGreaterThan(0);
     expect(saved.isDone).toBe(false);
+    expect(saved.isOutdoor).toBe(false);
   });
 
   it('pré-remplit le formulaire en édition', () => {
@@ -119,6 +120,39 @@ describe('PlaceForm', () => {
     await userEvent.click(screen.getByRole('button', { name: /enregistrer/i }));
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
     expect((onSave.mock.calls[0][0] as Place).isDone).toBe(true);
+  });
+
+  it('enregistre le milieu extérieur', async () => {
+    const { onSave } = renderForm({
+      draft: { ...draft, name: 'Parc des Buttes-Chaumont', address: 'Paris' },
+    });
+    await userEvent.click(screen.getByLabelText(/extérieur/i));
+    await userEvent.click(screen.getByRole('button', { name: /créer/i }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
+    expect((onSave.mock.calls[0][0] as Place).isOutdoor).toBe(true);
+  });
+
+  it('pré-coche le milieu extérieur en édition et le conserve', async () => {
+    const { onSave } = renderForm({
+      place: {
+        id: 'p1',
+        name: 'Parc Montsouris',
+        address: 'Paris',
+        lat: 1,
+        lng: 2,
+        isFree: true,
+        type: 'balade',
+        photos: [],
+        isOutdoor: true,
+        createdAt: 1000,
+        updatedAt: 1000,
+      },
+      draft: null,
+    });
+    expect(screen.getByLabelText(/extérieur/i)).toBeChecked();
+    await userEvent.click(screen.getByRole('button', { name: /enregistrer/i }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
+    expect((onSave.mock.calls[0][0] as Place).isOutdoor).toBe(true);
   });
 
   it('ajoute une photo compressée avec miniature', async () => {

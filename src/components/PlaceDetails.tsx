@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getPlaceTypeDef } from '../constants';
+import { getMilieuDef, getPlaceTypeDef } from '../constants';
 import { useObjectUrl } from '../hooks/useObjectUrl';
 import type { Place, PlacePhoto } from '../types';
 import ImgThumb from './ImgThumb';
@@ -14,6 +14,7 @@ interface PlaceDetailsProps {
 
 export default function PlaceDetails({ place, onBack, onEdit, onDelete, onToggleDone }: PlaceDetailsProps) {
   const def = getPlaceTypeDef(place.type);
+  const milieu = getMilieuDef(place.isOutdoor ?? false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
 
@@ -23,9 +24,14 @@ export default function PlaceDetails({ place, onBack, onEdit, onDelete, onToggle
         ← Retour à la liste
       </button>
       <header className="details-header">
-        <span className="type-badge" style={{ background: def.color }}>
-          {def.emoji} {def.label}
-        </span>
+        <div className="details-badges">
+          <span className="type-badge" style={{ background: def.color }}>
+            {def.emoji} {def.label}
+          </span>
+          <span className="type-badge" style={{ background: milieu.color }}>
+            {milieu.emoji} {milieu.label}
+          </span>
+        </div>
         <h2>{place.name}</h2>
         <p className="details-address">{place.address}</p>
       </header>

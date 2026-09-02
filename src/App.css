@@ -335,6 +335,12 @@
   width: fit-content;
 }
 
+.details-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
 .place-details {
   padding: 16px;
   display: flex;

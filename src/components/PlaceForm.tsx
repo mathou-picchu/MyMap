@@ -24,6 +24,7 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
   const [hours, setHours] = useState(place?.hours ?? '');
   const [isFree, setIsFree] = useState(place?.isFree ?? true);
   const [price, setPrice] = useState(place?.price ?? '');
+  const [isOutdoor, setIsOutdoor] = useState(place?.isOutdoor ?? false);
   const [photos, setPhotos] = useState<PlacePhoto[]>(place?.photos ?? []);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -72,6 +73,7 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
         price: !isFree ? price.trim() || undefined : undefined,
         type,
         isDone: place?.isDone ?? false,
+        isOutdoor,
         photos,
         createdAt: place?.createdAt ?? now,
         updatedAt: now,
@@ -123,6 +125,10 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
             <input value={price} onChange={(e) => setPrice(e.target.value)} placeholder="ex : 12 €" />
           </label>
         )}
+        <label className="checkbox">
+          <input type="checkbox" checked={isOutdoor} onChange={(e) => setIsOutdoor(e.target.checked)} />
+          Extérieur
+        </label>
         <label>
           Photos
           <input
