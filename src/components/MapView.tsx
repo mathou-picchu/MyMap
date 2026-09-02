@@ -17,11 +17,11 @@ interface MapViewProps {
   initialMapState?: MapState;
 }
 
-function placeIcon(type: PlaceTypeId, selected: boolean) {
+function placeIcon(type: PlaceTypeId, selected: boolean, done: boolean) {
   const def = getPlaceTypeDef(type);
   return divIcon({
     className: 'marker-wrapper',
-    html: `<div class="marker-pin${selected ? ' selected' : ''}" style="background:${def.color}"><span>${def.emoji}</span></div>`,
+    html: `<div class="marker-pin${selected ? ' selected' : ''}${done ? ' done' : ''}" style="background:${def.color}"><span>${def.emoji}</span>${done ? '<span class="marker-check">✓</span>' : ''}</div>`,
     iconSize: [36, 44],
     iconAnchor: [18, 42],
   });
@@ -83,7 +83,7 @@ export default function MapView({
         <Marker
           key={place.id}
           position={[place.lat, place.lng]}
-          icon={placeIcon(place.type, place.id === selectedId)}
+          icon={placeIcon(place.type, place.id === selectedId, place.isDone === true)}
           zIndexOffset={place.id === selectedId ? 1000 : 0}
           eventHandlers={{ click: () => onMarkerClick(place.id) }}
         />
