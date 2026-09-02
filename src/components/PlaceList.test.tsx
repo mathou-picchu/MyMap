@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Place, PlaceTypeId } from '../types';
 import PlaceList from './PlaceList';
 
-function makePlace(id: string, name: string, type: PlaceTypeId = 'food'): Place {
+function makePlace(id: string, name: string, type: PlaceTypeId = 'restaurant'): Place {
   return {
     id,
     name,

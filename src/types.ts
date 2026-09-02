@@ -1,4 +1,6 @@
-export type PlaceTypeId = 'outdoor' | 'visit' | 'food' | 'drink' | 'shopping' | 'lodging' | 'other';
+export type PlaceTypeId = 'visit' | 'balade' | 'restaurant' | 'gourmandise' | 'lodging' | 'shopping' | 'other';
+
+export type MilieuId = 'outdoor' | 'indoor';
 
 export interface PlacePhoto {
   id: string;
@@ -15,6 +17,7 @@ export interface Place {
   isFree: boolean;
   price?: string;
   isDone?: boolean;
+  isOutdoor?: boolean;
   type: PlaceTypeId;
   photos: PlacePhoto[];
   createdAt: number;

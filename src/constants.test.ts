@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getPlaceTypeDef, PLACE_TYPES } from './constants';
+import { getMilieuDef, getPlaceTypeDef, MILIEUS, PLACE_TYPES } from './constants';
 
 describe('constants', () => {
   it('définit exactement 7 types', () => {
@@ -19,10 +19,19 @@ describe('constants', () => {
   });
 
   it('retourne la définition d\'un type', () => {
-    expect(getPlaceTypeDef('food').label).toBe('Nourriture');
+    expect(getPlaceTypeDef('restaurant').label).toBe('Restaurant');
   });
 
   it('retombe sur « Autre » pour un type inconnu', () => {
     expect(getPlaceTypeDef('unknown' as never).id).toBe('other');
+  });
+
+  it('définit exactement 2 milieux', () => {
+    expect(MILIEUS).toHaveLength(2);
+  });
+
+  it('retourne la définition d\'un milieu', () => {
+    expect(getMilieuDef(true).id).toBe('outdoor');
+    expect(getMilieuDef(false).id).toBe('indoor');
   });
 });

@@ -31,21 +31,21 @@ describe('TypeFilter', () => {
   });
 
   it('marque les pastilles actives', () => {
-    renderFilter(['food', 'visit']);
-    expect(screen.getByRole('button', { name: /nourriture/i })).toHaveClass('active');
-    expect(screen.getByRole('button', { name: /extérieur/i })).not.toHaveClass('active');
+    renderFilter(['restaurant', 'visit']);
+    expect(screen.getByRole('button', { name: /restaurant/i })).toHaveClass('active');
+    expect(screen.getByRole('button', { name: /balade/i })).not.toHaveClass('active');
   });
 
   it('appelle onToggle avec le type cliqué', async () => {
     const onToggle = vi.fn();
-    renderFilter(['food'], onToggle);
-    await userEvent.click(screen.getByRole('button', { name: /boisson/i }));
-    expect(onToggle).toHaveBeenCalledWith('drink');
+    renderFilter(['restaurant'], onToggle);
+    await userEvent.click(screen.getByRole('button', { name: /gourmandise/i }));
+    expect(onToggle).toHaveBeenCalledWith('gourmandise');
   });
 
   it('indique l\'état pressé', () => {
-    renderFilter(['food']);
-    expect(screen.getByRole('button', { name: /nourriture/i })).toHaveAttribute('aria-pressed', 'true');
+    renderFilter(['restaurant']);
+    expect(screen.getByRole('button', { name: /restaurant/i })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: /visite/i })).toHaveAttribute('aria-pressed', 'false');
   });
 
@@ -56,7 +56,7 @@ describe('TypeFilter', () => {
   });
 
   it('déclenche onToggleHideDone au clic', async () => {
-    const { onToggleHideDone } = renderFilter(['food'], vi.fn(), true);
+    const { onToggleHideDone } = renderFilter(['restaurant'], vi.fn(), true);
     const pill = screen.getByRole('button', { name: /masquer les faits/i });
     expect(pill).toHaveClass('active');
     await userEvent.click(pill);

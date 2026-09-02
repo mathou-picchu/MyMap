@@ -31,7 +31,7 @@ function makeAppPlace(id: string, name: string, isDone: boolean): Place {
     lat: 48.85,
     lng: 2.35,
     isFree: true,
-    type: 'food',
+    type: 'restaurant',
     photos: [],
     isDone,
     createdAt: 1,
