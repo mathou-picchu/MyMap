@@ -12,6 +12,6 @@ export function saveJSON(key: string, value: unknown): void {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch {
-    // quota dépassé ou stockage indisponible : on ignore volontairement
+    // quota exceeded or storage unavailable: deliberately ignored
   }
 }

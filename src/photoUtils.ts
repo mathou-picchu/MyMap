@@ -25,12 +25,12 @@ export async function compressPhoto(file: Blob): Promise<Blob> {
     canvas.height = height;
     const ctx = canvas.getContext('2d');
     if (!ctx) {
-      throw new Error('Canvas indisponible');
+      throw new Error('Canvas unavailable');
     }
     ctx.drawImage(bitmap, 0, 0, width, height);
     return await new Promise<Blob>((resolve, reject) => {
       canvas.toBlob(
-        (blob) => (blob ? resolve(blob) : reject(new Error('Compression de la photo échouée'))),
+        (blob) => (blob ? resolve(blob) : reject(new Error('Photo compression failed'))),
         'image/jpeg',
         JPEG_QUALITY,
       );

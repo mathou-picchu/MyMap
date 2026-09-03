@@ -55,29 +55,29 @@ export function buildImportFile(manifestPath: string): string {
   try {
     manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
   } catch {
-    throw new Error('manifeste illisible : JSON invalide.');
+    throw new Error('unreadable manifest: invalid JSON.');
   }
   if (!Array.isArray(manifest?.places)) {
-    throw new Error('manifeste invalide : « places » doit être une liste.');
+    throw new Error('invalid manifest: "places" must be a list.');
   }
   const now = Date.now();
   const places: SerializedPlace[] = manifest.places.map((place, index) => {
-    const prefix = `point n°${index + 1}${typeof place?.name === 'string' ? ` (${place.name})` : ''}`;
+    const prefix = `place #${index + 1}${typeof place?.name === 'string' ? ` (${place.name})` : ''}`;
     if (typeof place?.name !== 'string' || !place.name.trim()) {
-      throw new Error(`${prefix} : nom manquant.`);
+      throw new Error(`${prefix}: missing name.`);
     }
     if (typeof place.address !== 'string' || !place.address.trim()) {
-      throw new Error(`${prefix} : adresse manquante.`);
+      throw new Error(`${prefix}: missing address.`);
     }
     if (typeof place.lat !== 'number' || !Number.isFinite(place.lat)) {
-      throw new Error(`${prefix} : latitude invalide.`);
+      throw new Error(`${prefix}: invalid latitude.`);
     }
     if (typeof place.lng !== 'number' || !Number.isFinite(place.lng)) {
-      throw new Error(`${prefix} : longitude invalide.`);
+      throw new Error(`${prefix}: invalid longitude.`);
     }
     if (typeof place.type !== 'string' || !(PLACE_TYPE_IDS as string[]).includes(place.type)) {
       throw new Error(
-        `${prefix} : type inconnu (${String(place?.type)}). Types valides : ${PLACE_TYPE_IDS.join(', ')}.`,
+        `${prefix}: unknown type (${String(place?.type)}). Valid types: ${PLACE_TYPE_IDS.join(', ')}.`,
       );
     }
     const photos = (place.photos ?? []).map((photo) =>
@@ -106,7 +106,7 @@ export function buildImportFile(manifestPath: string): string {
 
 function photoToJpegBase64(photoPath: string): string {
   if (!existsSync(photoPath)) {
-    throw new Error(`photo introuvable : ${photoPath}`);
+    throw new Error(`photo not found: ${photoPath}`);
   }
   const tmpDir = mkdtempSync(join(tmpdir(), 'mymap-import-'));
   try {
@@ -119,7 +119,7 @@ function photoToJpegBase64(photoPath: string): string {
     try {
       execFileSync('sips', args, { stdio: ['ignore', 'ignore', 'ignore'] });
     } catch {
-      throw new Error(`conversion impossible (sips) : ${photoPath}`);
+      throw new Error(`conversion failed (sips): ${photoPath}`);
     }
     return readFileSync(dest).toString('base64');
   } finally {
@@ -139,8 +139,8 @@ function maxPhotoEdge(photoPath: string): number {
 function main() {
   const manifestPath = process.argv[2] ?? 'import-data/manifest.json';
   if (!existsSync(manifestPath)) {
-    console.error(`Manifeste introuvable : ${manifestPath}`);
-    console.error('Usage : node scripts/build-import-from-folder.ts [chemin/du/manifest.json]');
+    console.error(`Manifest not found: ${manifestPath}`);
+    console.error('Usage: node scripts/build-import-from-folder.ts [path/to/manifest.json]');
     process.exit(1);
   }
   const json = buildImportFile(manifestPath);
@@ -148,8 +148,8 @@ function main() {
   writeFileSync(outPath, json);
   const places = (JSON.parse(json) as { places: SerializedPlace[] }).places;
   const photoCount = places.reduce((sum, p) => sum + p.photos.length, 0);
-  console.log(`✓ ${places.length} point(s), ${photoCount} photo(s) → ${outPath}`);
-  console.log('Importez-le dans MyMap via ⬆️ Importer (attention : remplace tous les points existants).');
+  console.log(`✓ ${places.length} place(s), ${photoCount} photo(s) → ${outPath}`);
+  console.log('Import it into MyMap via ⬆️ Import (warning: replaces all existing places).');
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

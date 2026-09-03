@@ -22,7 +22,7 @@ function cleanup(manifestPath: string) {
 }
 
 describe('build-import-from-folder', () => {
-  it('génère un import valide avec la photo convertie en JPEG', () => {
+  it('generates a valid import with the photo converted to JPEG', () => {
     const manifestPath = writeManifest(
       {
         places: [
@@ -61,7 +61,7 @@ describe('build-import-from-folder', () => {
     }
   });
 
-  it('applique les valeurs par défaut sans photos', () => {
+  it('applies default values without photos', () => {
     const manifestPath = writeManifest({
       places: [{ name: 'Balade', address: 'Paris', lat: 48.85, lng: 2.35, type: 'balade' }],
     });
@@ -78,52 +78,52 @@ describe('build-import-from-folder', () => {
     }
   });
 
-  it('préserve l\'ordre du manifeste (points les plus récents d\'abord)', () => {
+  it('preserves the manifest order (most recent places first)', () => {
     const manifestPath = writeManifest({
       places: [
-        { name: 'Premier', address: 'Paris', lat: 1, lng: 2, type: 'visit' },
-        { name: 'Deuxième', address: 'Paris', lat: 1, lng: 2, type: 'visit' },
+        { name: 'First', address: 'Paris', lat: 1, lng: 2, type: 'visit' },
+        { name: 'Second', address: 'Paris', lat: 1, lng: 2, type: 'visit' },
       ],
     });
     try {
       const places = parseImportFile(buildImportFile(manifestPath));
-      expect(places.map((p) => p.name)).toEqual(['Premier', 'Deuxième']);
+      expect(places.map((p) => p.name)).toEqual(['First', 'Second']);
       expect(places[0].createdAt).toBeGreaterThan(places[1].createdAt);
     } finally {
       cleanup(manifestPath);
     }
   });
 
-  it('rejette un type inconnu', () => {
+  it('rejects an unknown type', () => {
     const manifestPath = writeManifest({
       places: [{ name: 'X', address: 'Paris', lat: 1, lng: 2, type: 'museum' }],
     });
     try {
-      expect(() => buildImportFile(manifestPath)).toThrow(/type inconnu/);
+      expect(() => buildImportFile(manifestPath)).toThrow(/unknown type/);
     } finally {
       cleanup(manifestPath);
     }
   });
 
-  it('rejette un nom manquant', () => {
+  it('rejects a missing name', () => {
     const manifestPath = writeManifest({
       places: [{ address: 'Paris', lat: 1, lng: 2, type: 'visit' }],
     });
     try {
-      expect(() => buildImportFile(manifestPath)).toThrow(/nom manquant/);
+      expect(() => buildImportFile(manifestPath)).toThrow(/missing name/);
     } finally {
       cleanup(manifestPath);
     }
   });
 
-  it('rejette une photo introuvable', () => {
+  it('rejects a missing photo', () => {
     const manifestPath = writeManifest({
       places: [
         { name: 'X', address: 'Paris', lat: 1, lng: 2, type: 'visit', photos: ['absente.png'] },
       ],
     });
     try {
-      expect(() => buildImportFile(manifestPath)).toThrow(/photo introuvable/);
+      expect(() => buildImportFile(manifestPath)).toThrow(/photo not found/);
     } finally {
       cleanup(manifestPath);
     }

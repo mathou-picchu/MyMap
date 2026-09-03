@@ -49,12 +49,12 @@ export async function replaceAllPlaces(places: Place[]): Promise<void> {
     }
   } catch (err) {
     tx.done.catch(() => {
-      // transaction annulée : la rejection de done est attendue
+      // transaction aborted: the done rejection is expected
     });
     try {
       tx.abort();
     } catch {
-      // la transaction était déjà terminée
+      // the transaction was already finished
     }
     throw err;
   }

@@ -26,20 +26,20 @@ beforeEach(async () => {
 });
 
 describe('db', () => {
-  it('enregistre puis liste les points', async () => {
+  it('saves then lists places', async () => {
     await savePlace(makePlace());
     const places = await listPlaces();
     expect(places).toHaveLength(1);
     expect(places[0].name).toBe('Tour Eiffel');
   });
 
-  it('liste les points les plus récents en premier', async () => {
+  it('lists the most recent places first', async () => {
     await savePlace(makePlace({ id: 'old', createdAt: 1000 }));
     await savePlace(makePlace({ id: 'new', createdAt: 2000 }));
     expect((await listPlaces()).map((p) => p.id)).toEqual(['new', 'old']);
   });
 
-  it('met à jour un point existant', async () => {
+  it('updates an existing place', async () => {
     await savePlace(makePlace());
     await savePlace(makePlace({ name: 'La Tour Eiffel', updatedAt: 1500 }));
     const places = await listPlaces();
@@ -47,19 +47,19 @@ describe('db', () => {
     expect(places[0].name).toBe('La Tour Eiffel');
   });
 
-  it('supprime un point', async () => {
+  it('deletes a place', async () => {
     await savePlace(makePlace());
     await deletePlace('p1');
     expect(await listPlaces()).toHaveLength(0);
   });
 
-  it('remplace tous les points', async () => {
+  it('replaces all places', async () => {
     await savePlace(makePlace());
     await replaceAllPlaces([makePlace({ id: 'x' }), makePlace({ id: 'y' })]);
     expect((await listPlaces()).map((p) => p.id).sort()).toEqual(['x', 'y']);
   });
 
-  it('annule la transaction si un point est invalide (données intactes)', async () => {
+  it('aborts the transaction when a place is invalid (data intact)', async () => {
     await savePlace(makePlace());
     await expect(
       replaceAllPlaces([makePlace({ id: undefined as unknown as string })]),

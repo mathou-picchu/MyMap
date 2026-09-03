@@ -7,24 +7,24 @@ describe('storage', () => {
     vi.restoreAllMocks();
   });
 
-  it('retourne le fallback si rien n\'est stocké', () => {
-    expect(loadJSON('absent', ['food'])).toEqual(['food']);
+  it('returns the fallback when nothing is stored', () => {
+    expect(loadJSON('missing', ['food'])).toEqual(['food']);
   });
 
-  it('sauvegarde puis recharge une valeur', () => {
-    saveJSON('cle', { a: 1 });
-    expect(loadJSON('cle', null)).toEqual({ a: 1 });
+  it('saves then reloads a value', () => {
+    saveJSON('key', { a: 1 });
+    expect(loadJSON('key', null)).toEqual({ a: 1 });
   });
 
-  it('retourne le fallback si le JSON stocké est corrompu', () => {
-    localStorage.setItem('corrompu', '{pas json');
-    expect(loadJSON('corrompu', 'defaut')).toBe('defaut');
+  it('returns the fallback when the stored JSON is corrupted', () => {
+    localStorage.setItem('corrupt', '{not json');
+    expect(loadJSON('corrupt', 'default')).toBe('default');
   });
 
-  it('ignore les erreurs d\'écriture (quota, navigation privée)', () => {
+  it('ignores write errors (quota, private browsing)', () => {
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-      throw new Error('quota dépassé');
+      throw new Error('quota exceeded');
     });
-    expect(() => saveJSON('cle', { a: 1 })).not.toThrow();
+    expect(() => saveJSON('key', { a: 1 })).not.toThrow();
   });
 });

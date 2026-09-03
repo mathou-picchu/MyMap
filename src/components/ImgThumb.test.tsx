@@ -3,18 +3,18 @@ import { describe, expect, it, vi } from 'vitest';
 import ImgThumb from './ImgThumb';
 
 describe('ImgThumb', () => {
-  it('affiche une image depuis un Blob', () => {
+  it('renders an image from a Blob', () => {
     render(<ImgThumb blob={new Blob(['x'])} />);
     const img = screen.getByAltText('');
     expect(img.getAttribute('src')).toMatch(/^blob:/);
   });
 
-  it('affiche le contenu de secours sans Blob', () => {
-    render(<ImgThumb blob={null} fallback={<span>secours</span>} />);
-    expect(screen.getByText('secours')).toBeInTheDocument();
+  it('renders the fallback without a Blob', () => {
+    render(<ImgThumb blob={null} fallback={<span>fallback</span>} />);
+    expect(screen.getByText('fallback')).toBeInTheDocument();
   });
 
-  it('révoque l\'object URL au démontage', () => {
+  it('revokes the object URL on unmount', () => {
     const revoke = vi.spyOn(URL, 'revokeObjectURL');
     const { unmount } = render(<ImgThumb blob={new Blob(['x'])} />);
     unmount();

@@ -47,14 +47,14 @@ async function project(places: Place[]) {
 }
 
 describe('exportImport', () => {
-  it('fait un aller-retour export → import sans perte', async () => {
+  it('round-trips export → import without loss', async () => {
     const original = [makePlace(), makePlace({ id: 'p2', photos: [] })];
     const json = await exportPlaces(original);
     const restored = parseImportFile(json);
     expect(await project(restored)).toEqual(await project(original));
   });
 
-  it('fait un aller-retour avec le statut fait', async () => {
+  it('round-trips the done status', async () => {
     const original = [makePlace(), makePlace({ id: 'p2', photos: [], isDone: true })];
     const json = await exportPlaces(original);
     const restored = parseImportFile(json);
@@ -62,7 +62,7 @@ describe('exportImport', () => {
     expect(restored[1].isDone).toBe(true);
   });
 
-  it('accepte un fichier v1 sans champ isDone', () => {
+  it('accepts a v1 file without isDone', () => {
     const file = JSON.stringify({
       version: 1,
       exportedAt: 0,
@@ -72,16 +72,16 @@ describe('exportImport', () => {
     expect(restored[0].isDone).toBe(false);
   });
 
-  it('rejette un isDone invalide', () => {
+  it('rejects an invalid isDone', () => {
     const file = JSON.stringify({
       version: 2,
       exportedAt: 0,
       places: [{ ...makePlace(), isDone: 'oui' }],
     });
-    expect(() => parseImportFile(file)).toThrow(/fait/);
+    expect(() => parseImportFile(file)).toThrow(/isDone/);
   });
 
-  it('écrit un JSON versionné avec les photos en base64', async () => {
+  it('writes versioned JSON with base64 photos', async () => {
     const json = await exportPlaces([makePlace()]);
     const parsed = JSON.parse(json);
     expect(parsed.version).toBe(3);
@@ -93,7 +93,7 @@ describe('exportImport', () => {
     expect(bytes).toEqual([0xff, 0xd8, 0x01, 0x02, 0x03]);
   });
 
-  it('accepte un fichier v2 avec les anciens types et les convertit', () => {
+  it('accepts a v2 file with legacy types and converts them', () => {
     const file = JSON.stringify({
       version: 2,
       exportedAt: 0,
@@ -109,16 +109,16 @@ describe('exportImport', () => {
     expect(restored[2]).toMatchObject({ type: 'restaurant', isOutdoor: false });
   });
 
-  it('rejette un isOutdoor invalide', () => {
+  it('rejects an invalid isOutdoor', () => {
     const file = JSON.stringify({
       version: 3,
       exportedAt: 0,
       places: [{ ...makePlace(), isOutdoor: 'oui' }],
     });
-    expect(() => parseImportFile(file)).toThrow(/extérieur/);
+    expect(() => parseImportFile(file)).toThrow(/isOutdoor/);
   });
 
-  it('fait un aller-retour avec le milieu', async () => {
+  it('round-trips the setting', async () => {
     const original = [
       makePlace({ type: 'balade', isOutdoor: true }),
       makePlace({ id: 'p2', photos: [], isOutdoor: false }),
@@ -129,30 +129,30 @@ describe('exportImport', () => {
     expect(restored[1].isOutdoor).toBe(false);
   });
 
-  it('rejette un fichier qui n\'est pas du JSON valide', () => {
-    expect(() => parseImportFile('pas du json')).toThrow(ImportError);
+  it('rejects a file that is not valid JSON', () => {
+    expect(() => parseImportFile('not json')).toThrow(ImportError);
   });
 
-  it('rejette une version non supportée', () => {
+  it('rejects an unsupported version', () => {
     const file = JSON.stringify({ version: 99, exportedAt: 0, places: [] });
     expect(() => parseImportFile(file)).toThrow(/version/);
   });
 
-  it('rejette un point sans nom', () => {
+  it('rejects a place without a name', () => {
     const file = JSON.stringify({ version: 1, exportedAt: 0, places: [makePlace({ name: '' })] });
-    expect(() => parseImportFile(file)).toThrow(/nom manquant/);
+    expect(() => parseImportFile(file)).toThrow(/missing name/);
   });
 
-  it('rejette un type inconnu', () => {
+  it('rejects an unknown type', () => {
     const file = JSON.stringify({
       version: 1,
       exportedAt: 0,
       places: [{ ...makePlace(), type: 'museum', photos: [] }],
     });
-    expect(() => parseImportFile(file)).toThrow(/type inconnu/);
+    expect(() => parseImportFile(file)).toThrow(/unknown type/);
   });
 
-  it('rejette une photo illisible', () => {
+  it('rejects an unreadable photo', () => {
     const file = JSON.stringify({
       version: 1,
       exportedAt: 0,
@@ -161,16 +161,16 @@ describe('exportImport', () => {
     expect(() => parseImportFile(file)).toThrow(/photo/);
   });
 
-  it('rejette une photo dont les données ne sont pas une image JPEG', () => {
+  it('rejects a photo whose data is not a JPEG image', () => {
     const file = JSON.stringify({
       version: 1,
       exportedAt: 0,
-      places: [{ ...makePlace(), photos: [{ id: 'ph1', data: btoa('pas-un-jpeg') }] }],
+      places: [{ ...makePlace(), photos: [{ id: 'ph1', data: btoa('not-a-jpeg') }] }],
     });
     expect(() => parseImportFile(file)).toThrow(/photo/);
   });
 
-  it('rejette une photo avec des données vides', () => {
+  it('rejects a photo with empty data', () => {
     const file = JSON.stringify({
       version: 1,
       exportedAt: 0,
@@ -179,7 +179,7 @@ describe('exportImport', () => {
     expect(() => parseImportFile(file)).toThrow(/photo/);
   });
 
-  it('rejette les données structurellement invalides', () => {
+  it('rejects structurally invalid data', () => {
     const cases: unknown[][] = [
       [null],
       [{ ...makePlace(), id: '' }],
@@ -193,7 +193,7 @@ describe('exportImport', () => {
     }
   });
 
-  it('génère un nom de fichier daté', () => {
+  it('generates a dated file name', () => {
     expect(buildExportFileName(new Date('2026-09-02T12:00:00Z'))).toBe('mymap-export-2026-09-02.json');
   });
 });

@@ -19,13 +19,13 @@ function makePlace(overrides: Partial<Place> = {}): Place {
 }
 
 describe('migrations', () => {
-  it('convertit les anciens types', () => {
+  it('converts legacy types', () => {
     expect(migrateTypeId('outdoor')).toBe('balade');
     expect(migrateTypeId('food')).toBe('restaurant');
     expect(migrateTypeId('drink')).toBe('gourmandise');
   });
 
-  it('garde les types actuels', () => {
+  it('keeps current types', () => {
     expect(migrateTypeId('visit')).toBe('visit');
     expect(migrateTypeId('balade')).toBe('balade');
     expect(migrateTypeId('restaurant')).toBe('restaurant');
@@ -35,7 +35,7 @@ describe('migrations', () => {
     expect(migrateTypeId('other')).toBe('other');
   });
 
-  it('reconnaît les types connus, actuels et anciens', () => {
+  it('recognizes known types, current and legacy', () => {
     expect(isKnownTypeId('visit')).toBe(true);
     expect(isKnownTypeId('outdoor')).toBe(true);
     expect(isKnownTypeId('food')).toBe(true);
@@ -44,31 +44,31 @@ describe('migrations', () => {
     expect(isKnownTypeId('')).toBe(false);
   });
 
-  it('remplace un type inconnu par « autre »', () => {
+  it('replaces an unknown type with “other”', () => {
     expect(migrateTypeId('museum')).toBe('other');
   });
 
-  it('ne confond pas « constructor » avec un ancien type', () => {
+  it('does not confuse “constructor” with a legacy type', () => {
     expect(isKnownTypeId('constructor')).toBe(false);
     expect(migrateTypeId('constructor')).toBe('other');
   });
 
-  it('marque extérieur un ancien point « outdoor »', () => {
+  it('marks a legacy “outdoor” place as outdoor', () => {
     const migrated = migratePlace(makePlace({ type: 'outdoor' as PlaceTypeId }));
     expect(migrated).toMatchObject({ type: 'balade', isOutdoor: true });
   });
 
-  it('convertit un ancien type en intérieur', () => {
+  it('converts a legacy type to indoor', () => {
     const migrated = migratePlace(makePlace({ type: 'food' as PlaceTypeId }));
     expect(migrated).toMatchObject({ type: 'restaurant', isOutdoor: false });
   });
 
-  it('complète un isOutdoor manquant', () => {
+  it('fills in a missing isOutdoor', () => {
     const migrated = migratePlace(makePlace());
     expect(migrated.isOutdoor).toBe(false);
   });
 
-  it('renvoie la même référence si rien ne change', () => {
+  it('returns the same reference when nothing changes', () => {
     const place = makePlace({ isOutdoor: false });
     expect(migratePlace(place)).toBe(place);
     const balade = makePlace({ type: 'balade', isOutdoor: true });

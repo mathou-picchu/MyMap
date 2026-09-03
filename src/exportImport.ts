@@ -50,7 +50,7 @@ function base64ToBlob(data: string): Blob {
     bytes[i] = binary.charCodeAt(i);
   }
   if (bytes.length < 2 || bytes[0] !== 0xff || bytes[1] !== 0xd8) {
-    throw new Error('données photo invalides');
+    throw new Error('invalid photo data');
   }
   return new Blob([bytes], { type: 'image/jpeg' });
 }
@@ -81,65 +81,65 @@ export function parseImportFile(text: string): Place[] {
   try {
     parsed = JSON.parse(text);
   } catch {
-    throw new ImportError('le fichier n\'est pas un JSON valide.');
+    throw new ImportError('the file is not valid JSON.');
   }
   if (typeof parsed !== 'object' || parsed === null) {
-    throw new ImportError('structure de fichier inattendue.');
+    throw new ImportError('unexpected file structure.');
   }
   const file = parsed as Partial<ExportFile>;
   if (file.version !== 1 && file.version !== 2 && file.version !== EXPORT_VERSION) {
-    throw new ImportError(`version du fichier non supportée (${String(file.version)}).`);
+    throw new ImportError(`unsupported file version (${String(file.version)}).`);
   }
   if (!Array.isArray(file.places)) {
-    throw new ImportError('liste des points manquante.');
+    throw new ImportError('missing places list.');
   }
   return file.places.map((place, index) => parsePlace(place, index));
 }
 
 function parsePlace(place: SerializedPlace, index: number): Place {
-  const prefix = `point n°${index + 1}`;
+  const prefix = `place #${index + 1}`;
   if (typeof place !== 'object' || place === null) {
-    throw new ImportError(`${prefix} : données invalides.`);
+    throw new ImportError(`${prefix}: invalid data.`);
   }
   const rawType = place.type;
   if (typeof place.id !== 'string' || place.id.length === 0) {
-    throw new ImportError(`${prefix} : identifiant manquant.`);
+    throw new ImportError(`${prefix}: missing id.`);
   }
   if (typeof place.name !== 'string' || place.name.trim().length === 0) {
-    throw new ImportError(`${prefix} : nom manquant.`);
+    throw new ImportError(`${prefix}: missing name.`);
   }
   if (typeof place.address !== 'string' || place.address.trim().length === 0) {
-    throw new ImportError(`${prefix} : adresse manquante.`);
+    throw new ImportError(`${prefix}: missing address.`);
   }
   if (typeof place.lat !== 'number' || !Number.isFinite(place.lat)) {
-    throw new ImportError(`${prefix} : latitude invalide.`);
+    throw new ImportError(`${prefix}: invalid latitude.`);
   }
   if (typeof place.lng !== 'number' || !Number.isFinite(place.lng)) {
-    throw new ImportError(`${prefix} : longitude invalide.`);
+    throw new ImportError(`${prefix}: invalid longitude.`);
   }
   if (typeof place.isFree !== 'boolean') {
-    throw new ImportError(`${prefix} : champ « gratuit » invalide.`);
+    throw new ImportError(`${prefix} : invalid “isFree” field.`);
   }
   if (typeof place.type !== 'string' || !isKnownTypeId(place.type)) {
-    throw new ImportError(`${prefix} : type inconnu (${String(place.type)}).`);
+    throw new ImportError(`${prefix}: unknown type (${String(place.type)}).`);
   }
   if (typeof place.createdAt !== 'number' || typeof place.updatedAt !== 'number') {
-    throw new ImportError(`${prefix} : dates invalides.`);
+    throw new ImportError(`${prefix}: invalid dates.`);
   }
   if (place.hours !== undefined && typeof place.hours !== 'string') {
-    throw new ImportError(`${prefix} : horaires invalides.`);
+    throw new ImportError(`${prefix}: invalid hours.`);
   }
   if (place.price !== undefined && typeof place.price !== 'string') {
-    throw new ImportError(`${prefix} : prix invalide.`);
+    throw new ImportError(`${prefix}: invalid price.`);
   }
   if (place.isDone !== undefined && typeof place.isDone !== 'boolean') {
-    throw new ImportError(`${prefix} : champ « fait » invalide.`);
+    throw new ImportError(`${prefix} : invalid “isDone” field.`);
   }
   if (place.isOutdoor !== undefined && typeof place.isOutdoor !== 'boolean') {
-    throw new ImportError(`${prefix} : champ « extérieur » invalide.`);
+    throw new ImportError(`${prefix} : invalid “isOutdoor” field.`);
   }
   if (!Array.isArray(place.photos)) {
-    throw new ImportError(`${prefix} : photos invalides.`);
+    throw new ImportError(`${prefix}: invalid photos.`);
   }
   const photos: PlacePhoto[] = place.photos.map((photo, photoIndex) => {
     if (
@@ -148,12 +148,12 @@ function parsePlace(place: SerializedPlace, index: number): Place {
       typeof photo.id !== 'string' ||
       typeof photo.data !== 'string'
     ) {
-      throw new ImportError(`${prefix} : photo n°${photoIndex + 1} invalide.`);
+      throw new ImportError(`${prefix}: photo #${photoIndex + 1} invalid.`);
     }
     try {
       return { id: photo.id, blob: base64ToBlob(photo.data) };
     } catch {
-      throw new ImportError(`${prefix} : photo n°${photoIndex + 1} illisible.`);
+      throw new ImportError(`${prefix}: photo #${photoIndex + 1} unreadable.`);
     }
   });
   return {

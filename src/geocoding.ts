@@ -17,10 +17,10 @@ export async function searchAddress(query: string, signal?: AbortSignal): Promis
   url.searchParams.set('format', 'jsonv2');
   url.searchParams.set('q', query);
   url.searchParams.set('limit', '6');
-  url.searchParams.set('accept-language', 'fr');
+  url.searchParams.set('accept-language', 'en');
   const res = await fetch(url, { signal });
   if (!res.ok) {
-    throw new Error('Recherche indisponible');
+    throw new Error('Search unavailable');
   }
   const raw = (await res.json()) as NominatimResult[];
   return raw.map((r) => ({
