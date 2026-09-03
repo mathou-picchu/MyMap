@@ -1,0 +1,145 @@
+.place-details {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.details-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: none;
+  color: var(--ha-iris);
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.details-back:hover {
+  text-decoration: underline;
+}
+
+.details-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.details-title {
+  margin: 8px 0 4px;
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -1.2px;
+  color: var(--ha-navy);
+}
+
+.details-address {
+  margin: 0;
+  color: var(--ha-muted);
+  font-size: 14px;
+}
+
+.details-gallery {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.gallery-thumb {
+  border: none;
+  background: none;
+  padding: 0;
+  border-radius: var(--radius-thumb);
+  overflow: hidden;
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+}
+
+.gallery-thumb .img-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.details-info {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.details-info dt {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ha-muted);
+}
+
+.details-info dd {
+  margin: 2px 0 0;
+}
+
+.details-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.confirm-label {
+  font-size: 14px;
+  color: var(--ha-danger);
+}
+
+.photo-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: rgba(19, 20, 69, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-viewer img {
+  max-width: 92vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: var(--radius-thumb);
+}
+
+.viewer-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: #fff;
+  display: flex;
+}
+
+.viewer-nav {
+  position: absolute;
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 16px;
+  display: flex;
+}
+
+.viewer-nav.prev {
+  left: 8px;
+}
+
+.viewer-nav.next {
+  right: 8px;
+}
