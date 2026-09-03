@@ -96,7 +96,7 @@ describe('PlaceForm', () => {
       },
       draft: null,
     });
-    expect(screen.getByLabelText(/nom \*/i)).toHaveValue('Musée d\'Orsay');
+    expect(screen.getByLabelText(/name \*/i)).toHaveValue('Musée d\'Orsay');
     expect(screen.getByLabelText(/description/i)).toHaveValue('Les horloges géantes');
     expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument();
   });
