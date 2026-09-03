@@ -25,3 +25,10 @@
 .ha-textarea::placeholder {
   color: var(--ha-muted);
 }
+
+.ha-input:disabled,
+.ha-textarea:disabled,
+.ha-select:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
