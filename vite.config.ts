@@ -9,14 +9,14 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'MyMap — Ma carte de lieux',
+        name: 'MyMap — My Places Map',
         short_name: 'MyMap',
-        description: 'Carte personnelle de points d\'intérêt : créez vos lieux sur la carte.',
+        description: 'Personal map of places of interest: create your places on the map.',
         theme_color: '#4f46e5',
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '/',
-        lang: 'fr',
+        lang: 'en',
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },

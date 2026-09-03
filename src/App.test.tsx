@@ -51,21 +51,21 @@ afterEach(() => {
 });
 
 describe('App', () => {
-  it('affiche l\'en-tête, la recherche et la liste vide', () => {
+  it('renders the header, search and empty list', () => {
     render(<App />);
     expect(screen.getByRole('heading', { name: 'MyMap' })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/rechercher/i)).toBeInTheDocument();
-    expect(screen.getByText(/aucun point/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /ajouter un lieu/i })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/search an address/i)).toBeInTheDocument();
+    expect(screen.getByText(/no places yet/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /add a place/i })).toBeInTheDocument();
   });
 
-  it('affiche un bandeau si le stockage est indisponible', async () => {
-    vi.mocked(listPlaces).mockRejectedValueOnce(new Error('IndexedDB indisponible'));
+  it('renders a banner when storage is unavailable', async () => {
+    vi.mocked(listPlaces).mockRejectedValueOnce(new Error('IndexedDB unavailable'));
     render(<App />);
-    expect(await screen.findByText(/stockage indisponible/i)).toBeInTheDocument();
+    expect(await screen.findByText(/storage unavailable/i)).toBeInTheDocument();
   });
 
-  it('centre sur Paris par défaut si aucune position n\'est mémorisée', () => {
+  it('centers on Paris by default when no position is stored', () => {
     render(<App />);
     const map = screen.getByTestId('map-view-mock');
     expect(map).toHaveAttribute('data-lat', '48.8566');
@@ -73,7 +73,7 @@ describe('App', () => {
     expect(map).toHaveAttribute('data-zoom', '12');
   });
 
-  it('ignore toute position mémorisée et ouvre sur Paris', () => {
+  it('ignores any stored position and opens on Paris', () => {
     localStorage.setItem('mymap.mapstate', JSON.stringify({ lat: 48.85, lng: 2.35, zoom: 15 }));
     render(<App />);
     const map = screen.getByTestId('map-view-mock');
@@ -82,33 +82,33 @@ describe('App', () => {
     expect(map).toHaveAttribute('data-zoom', '12');
   });
 
-  it('masque les points faits quand le filtre est actif', async () => {
+  it('hides done places when the filter is active', async () => {
     vi.mocked(listPlaces).mockResolvedValueOnce([
-      makeAppPlace('p1', 'Musée fait', true),
-      makeAppPlace('p2', 'Café à faire', false),
+      makeAppPlace('p1', 'Museum done', true),
+      makeAppPlace('p2', 'Café to do', false),
     ]);
     render(<App />);
-    expect(await screen.findByText('Café à faire')).toBeInTheDocument();
-    expect(screen.getByText('Musée fait')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: /masquer les faits/i }));
-    expect(screen.queryByText('Musée fait')).not.toBeInTheDocument();
-    expect(screen.getByText('Café à faire')).toBeInTheDocument();
+    expect(await screen.findByText('Café to do')).toBeInTheDocument();
+    expect(screen.getByText('Museum done')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /hide done/i }));
+    expect(screen.queryByText('Museum done')).not.toBeInTheDocument();
+    expect(screen.getByText('Café to do')).toBeInTheDocument();
   });
 
-  it('filtre par milieu extérieur / intérieur', async () => {
+  it('filters by outdoor / indoor setting', async () => {
     vi.mocked(listPlaces).mockResolvedValueOnce([
-      makeAppPlace('p1', 'Jardin partagé', false, 'balade', true),
-      makeAppPlace('p2', 'Bibliothèque', false, 'visit', false),
+      makeAppPlace('p1', 'Community garden', false, 'balade', true),
+      makeAppPlace('p2', 'Library', false, 'visit', false),
     ]);
     render(<App />);
-    expect(await screen.findByText('Jardin partagé')).toBeInTheDocument();
-    expect(screen.getByText('Bibliothèque')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: /extérieur/i }));
-    expect(screen.queryByText('Jardin partagé')).not.toBeInTheDocument();
-    expect(screen.getByText('Bibliothèque')).toBeInTheDocument();
+    expect(await screen.findByText('Community garden')).toBeInTheDocument();
+    expect(screen.getByText('Library')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /outdoor/i }));
+    expect(screen.queryByText('Community garden')).not.toBeInTheDocument();
+    expect(screen.getByText('Library')).toBeInTheDocument();
   });
 
-  it('migre les anciens types au démarrage et les enregistre', async () => {
+  it('migrates legacy types on startup and saves them', async () => {
     vi.mocked(replaceAllPlaces).mockClear();
     vi.mocked(listPlaces).mockResolvedValueOnce([
       makeAppPlace('p1', 'Parc Monceau', false, 'outdoor' as PlaceTypeId),
@@ -123,7 +123,7 @@ describe('App', () => {
     ]);
   });
 
-  it('n\'enregistre rien quand les points sont déjà à jour', async () => {
+  it('saves nothing when places are already up to date', async () => {
     vi.mocked(replaceAllPlaces).mockClear();
     vi.mocked(listPlaces).mockResolvedValueOnce([
       makeAppPlace('p1', 'Café moderne', false, 'restaurant', false),
@@ -133,18 +133,18 @@ describe('App', () => {
     expect(replaceAllPlaces).not.toHaveBeenCalled();
   });
 
-  it('convertit les anciens filtres mémorisés', () => {
+  it('converts stored legacy filters', () => {
     localStorage.setItem('mymap.filters', JSON.stringify(['outdoor', 'food', 'museum']));
     render(<App />);
-    expect(screen.getByRole('button', { name: /balade/i })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: /walk/i })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: /restaurant/i })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: /visite/i })).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.getByRole('button', { name: /visit/i })).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('écarte les valeurs de milieu invalides', () => {
+  it('discards invalid setting values', () => {
     localStorage.setItem('mymap.milieu', JSON.stringify(['outdoor', 'nimporte']));
     render(<App />);
-    expect(screen.getByRole('button', { name: /extérieur/i })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: /intérieur/i })).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.getByRole('button', { name: /outdoor/i })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: /indoor/i })).toHaveAttribute('aria-pressed', 'false');
   });
 });

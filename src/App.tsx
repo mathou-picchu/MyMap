@@ -86,7 +86,7 @@ export default function App() {
   );
   const emptyHint =
     hideDone && places.some((p) => p.isDone)
-      ? 'Tous vos points sont faits ! Décochez « Masquer les faits » pour les revoir.'
+      ? 'All your places are done! Uncheck “Hide done” to see them again.'
       : undefined;
   const selectedPlace = places.find((p) => p.id === selectedPlaceId) ?? null;
 
@@ -177,7 +177,7 @@ export default function App() {
     try {
       const imported = parseImportFile(await file.text());
       const ok = window.confirm(
-        `Remplacer les ${places.length} points actuels par les ${imported.length} points du fichier ?`,
+        `Replace the ${places.length} current places with the ${imported.length} places from the file?`,
       );
       if (!ok) return;
       await replaceAllPlaces(imported);
@@ -185,9 +185,9 @@ export default function App() {
       setSelectedPlaceId(null);
     } catch (err) {
       if (err instanceof ImportError) {
-        window.alert(`Import impossible : ${err.message}`);
+        window.alert(`Import failed: ${err.message}`);
       } else {
-        window.alert('Import impossible : fichier illisible.');
+        window.alert('Import failed: unreadable file.');
       }
     }
   }
@@ -198,7 +198,7 @@ export default function App() {
       (pos) => {
         mapRef.current?.flyTo([pos.coords.latitude, pos.coords.longitude], 14);
       },
-      () => window.alert('Localisation impossible.'),
+      () => window.alert('Location unavailable.'),
     );
   }
 
@@ -216,7 +216,7 @@ export default function App() {
             setDraft(null);
           }}
         >
-          ＋ Ajouter un lieu
+          ＋ Add a place
         </button>
       </header>
       <TypeFilter
@@ -229,8 +229,7 @@ export default function App() {
       />
       {storageError && (
         <div className="storage-banner" role="alert">
-          ⚠️ Stockage indisponible : impossible d'enregistrer tes points dans ce navigateur (mode
-          privé ?).
+          ⚠️ Storage unavailable: cannot save your places in this browser (private mode?).
         </div>
       )}
       <main className="app-main" data-mobile-view={mobileView}>
@@ -272,14 +271,14 @@ export default function App() {
           className={mobileView === 'map' ? 'active' : ''}
           onClick={() => setMobileView('map')}
         >
-          Carte
+          Map
         </button>
         <button
           type="button"
           className={mobileView === 'list' ? 'active' : ''}
           onClick={() => setMobileView('list')}
         >
-          Liste ({filteredPlaces.length})
+          List ({filteredPlaces.length})
         </button>
       </nav>
       {(draft || editing) && (
