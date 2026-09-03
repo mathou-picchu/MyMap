@@ -23,9 +23,9 @@ export default function PlaceList({
         <p>
           {emptyHint ?? (
             <>
-              Aucun point pour l'instant.
+              No places yet.
               <br />
-              Utilise la recherche ou le bouton « ＋ Ajouter un lieu ».
+              Use the search or the “＋ Add a place” button.
             </>
           )}
         </p>
@@ -80,7 +80,7 @@ function PlaceCard({
           <span className="card-title">{place.name}</span>
           <span className="card-address">{place.address}</span>
           <span className="card-meta">
-            {place.isFree ? 'Gratuit' : place.price || 'Payant'}
+            {place.isFree ? 'Free' : place.price || 'Paid'}
             {place.hours ? ` · ${place.hours}` : ''}
           </span>
         </span>
@@ -89,7 +89,7 @@ function PlaceCard({
         type="button"
         className={`card-done${done ? ' done' : ''}`}
         aria-pressed={done}
-        aria-label={done ? 'Marquer comme à faire' : 'Marquer comme fait'}
+        aria-label={done ? 'Mark as to do' : 'Mark as done'}
         onClick={() => onToggleDone(place.id)}
       >
         ✓

@@ -37,36 +37,36 @@ function renderDetails() {
 }
 
 describe('PlaceDetails', () => {
-  it('affiche toutes les informations', () => {
+  it('displays all the information', () => {
     renderDetails();
     expect(screen.getByRole('heading', { name: 'Tour Eiffel' })).toBeInTheDocument();
     expect(screen.getByText(/5 Avenue Anatole France/)).toBeInTheDocument();
     expect(screen.getByText('Lun-Ven 9h-18h')).toBeInTheDocument();
     expect(screen.getByText('12 €')).toBeInTheDocument();
-    expect(screen.getByText(/visite/i)).toBeInTheDocument();
+    expect(screen.getByText(/visit/i)).toBeInTheDocument();
   });
 
-  it('demande confirmation avant suppression', async () => {
+  it('asks for confirmation before deleting', async () => {
     const { onDelete } = renderDetails();
-    await userEvent.click(screen.getByRole('button', { name: /^supprimer$/i }));
+    await userEvent.click(screen.getByRole('button', { name: /^delete$/i }));
     expect(onDelete).not.toHaveBeenCalled();
-    await userEvent.click(screen.getByRole('button', { name: /oui, supprimer/i }));
+    await userEvent.click(screen.getByRole('button', { name: /yes, delete/i }));
     expect(onDelete).toHaveBeenCalledWith('p1');
   });
 
-  it('déclenche la modification', async () => {
+  it('triggers edit', async () => {
     const { onEdit } = renderDetails();
-    await userEvent.click(screen.getByRole('button', { name: /modifier/i }));
+    await userEvent.click(screen.getByRole('button', { name: /edit/i }));
     expect(onEdit).toHaveBeenCalled();
   });
 
-  it('bascule le statut fait depuis la fiche', async () => {
+  it('toggles done status from the details view', async () => {
     const { onToggleDone } = renderDetails();
-    await userEvent.click(screen.getByRole('button', { name: '✓ Marquer comme fait' }));
+    await userEvent.click(screen.getByRole('button', { name: '✓ Mark as done' }));
     expect(onToggleDone).toHaveBeenCalledWith('p1');
   });
 
-  it('affiche « ✓ Fait » pour un lieu déjà coché', () => {
+  it('shows “✓ Done” for an already checked place', () => {
     render(
       <PlaceDetails
         place={{ ...place, isDone: true }}
@@ -76,15 +76,15 @@ describe('PlaceDetails', () => {
         onToggleDone={() => {}}
       />,
     );
-    expect(screen.getByRole('button', { name: '✓ Fait' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '✓ Done' })).toBeInTheDocument();
   });
 
-  it('affiche le badge milieu intérieur par défaut', () => {
+  it('shows the indoor setting badge by default', () => {
     renderDetails();
-    expect(screen.getByText(/intérieur/i)).toBeInTheDocument();
+    expect(screen.getByText(/indoor/i)).toBeInTheDocument();
   });
 
-  it('affiche le badge milieu extérieur', () => {
+  it('shows the outdoor setting badge', () => {
     render(
       <PlaceDetails
         place={{ ...place, isOutdoor: true }}
@@ -94,12 +94,12 @@ describe('PlaceDetails', () => {
         onToggleDone={() => {}}
       />,
     );
-    expect(screen.getByText(/extérieur/i)).toBeInTheDocument();
+    expect(screen.getByText(/outdoor/i)).toBeInTheDocument();
   });
 
-  it('ouvre et ferme la visionneuse photo', async () => {
+  it('opens and closes the photo viewer', async () => {
     renderDetails();
-    await userEvent.click(screen.getByRole('button', { name: /^voir la photo/i }));
+    await userEvent.click(screen.getByRole('button', { name: /^view photo/i }));
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();

@@ -21,7 +21,7 @@ export default function PlaceDetails({ place, onBack, onEdit, onDelete, onToggle
   return (
     <article className="place-details">
       <button type="button" className="details-back" onClick={onBack}>
-        ← Retour à la liste
+        ← Back to list
       </button>
       <header className="details-header">
         <div className="details-badges">
@@ -42,7 +42,7 @@ export default function PlaceDetails({ place, onBack, onEdit, onDelete, onToggle
               key={photo.id}
               type="button"
               className="gallery-thumb"
-              aria-label={`Voir la photo ${index + 1}`}
+              aria-label={`View photo ${index + 1}`}
               onClick={() => setViewerIndex(index)}
             >
               <ImgThumb blob={photo.blob} />
@@ -53,13 +53,13 @@ export default function PlaceDetails({ place, onBack, onEdit, onDelete, onToggle
       <dl className="details-info">
         {place.hours && (
           <div>
-            <dt>Horaires</dt>
+            <dt>Hours</dt>
             <dd>{place.hours}</dd>
           </div>
         )}
         <div>
-          <dt>Prix</dt>
-          <dd>{place.isFree ? 'Gratuit' : place.price || 'Payant'}</dd>
+          <dt>Price</dt>
+          <dd>{place.isFree ? 'Free' : place.price || 'Paid'}</dd>
         </div>
       </dl>
       <div className="details-actions">
@@ -68,24 +68,24 @@ export default function PlaceDetails({ place, onBack, onEdit, onDelete, onToggle
           className={`done-toggle${place.isDone ? ' done' : ''}`}
           onClick={() => onToggleDone(place.id)}
         >
-          {place.isDone ? '✓ Fait' : '✓ Marquer comme fait'}
+          {place.isDone ? '✓ Done' : '✓ Mark as done'}
         </button>
         <button type="button" onClick={onEdit}>
-          Modifier
+          Edit
         </button>
         {confirmDelete ? (
           <>
-            <span className="confirm-label">Supprimer ce point ?</span>
+            <span className="confirm-label">Delete this place?</span>
             <button type="button" className="danger" onClick={() => onDelete(place.id)}>
-              Oui, supprimer
+              Yes, delete
             </button>
             <button type="button" onClick={() => setConfirmDelete(false)}>
-              Annuler
+              Cancel
             </button>
           </>
         ) : (
           <button type="button" className="danger" onClick={() => setConfirmDelete(true)}>
-            Supprimer
+            Delete
           </button>
         )}
       </div>
@@ -130,7 +130,7 @@ function PhotoViewer({
           <button
             type="button"
             className="viewer-nav prev"
-            aria-label="Photo précédente"
+            aria-label="Previous photo"
             onClick={(e) => {
               e.stopPropagation();
               setIndex((i) => (i - 1 + photos.length) % photos.length);
@@ -141,7 +141,7 @@ function PhotoViewer({
           <button
             type="button"
             className="viewer-nav next"
-            aria-label="Photo suivante"
+            aria-label="Next photo"
             onClick={(e) => {
               e.stopPropagation();
               setIndex((i) => (i + 1) % photos.length);
@@ -151,7 +151,7 @@ function PhotoViewer({
           </button>
         </>
       )}
-      <button type="button" className="viewer-close" aria-label="Fermer" onClick={onClose}>
+      <button type="button" className="viewer-close" aria-label="Close" onClick={onClose}>
         ×
       </button>
     </div>

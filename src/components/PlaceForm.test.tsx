@@ -5,7 +5,7 @@ import type { Place } from '../types';
 import PlaceForm from './PlaceForm';
 
 vi.mock('../photoUtils', () => ({
-  compressPhoto: vi.fn(async (_file: Blob) => new Blob(['compresse'], { type: 'image/jpeg' })),
+  compressPhoto: vi.fn(async (_file: Blob) => new Blob(['compressed'], { type: 'image/jpeg' })),
 }));
 
 const draft = { lat: 48.85, lng: 2.29 };
@@ -26,40 +26,40 @@ function renderForm(props: Partial<Parameters<typeof PlaceForm>[0]> = {}) {
 }
 
 describe('PlaceForm', () => {
-  it('refuse la soumission sans adresse', async () => {
+  it('rejects submission without an address', async () => {
     const { onSave } = renderForm();
-    await userEvent.type(screen.getByLabelText(/nom \*/i), 'Parc des Buttes-Chaumont');
-    await userEvent.click(screen.getByRole('button', { name: /créer/i }));
-    expect(await screen.findByText(/l'adresse est obligatoire/i)).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText(/name \*/i), 'Parc des Buttes-Chaumont');
+    await userEvent.click(screen.getByRole('button', { name: /create/i }));
+    expect(await screen.findByText(/address is required/i)).toBeInTheDocument();
     expect(onSave).not.toHaveBeenCalled();
   });
 
-  it('refuse la soumission sans nom', async () => {
+  it('rejects submission without a name', async () => {
     const { onSave } = renderForm();
-    await userEvent.type(screen.getByLabelText(/adresse \*/i), 'Paris');
-    await userEvent.click(screen.getByRole('button', { name: /créer/i }));
-    expect(await screen.findByText(/le nom est obligatoire/i)).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText(/address \*/i), 'Paris');
+    await userEvent.click(screen.getByRole('button', { name: /create/i }));
+    expect(await screen.findByText(/name is required/i)).toBeInTheDocument();
     expect(onSave).not.toHaveBeenCalled();
   });
 
-  it('affiche le champ prix uniquement si non gratuit', async () => {
+  it('shows the price field only when not free', async () => {
     renderForm();
-    expect(screen.queryByLabelText(/^prix/i)).not.toBeInTheDocument();
-    await userEvent.click(screen.getByLabelText(/gratuit/i));
-    expect(screen.getByLabelText(/^prix/i)).toBeInTheDocument();
-    await userEvent.click(screen.getByLabelText(/gratuit/i));
-    expect(screen.queryByLabelText(/^prix/i)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/^price/i)).not.toBeInTheDocument();
+    await userEvent.click(screen.getByLabelText(/^free$/i));
+    expect(screen.getByLabelText(/^price/i)).toBeInTheDocument();
+    await userEvent.click(screen.getByLabelText(/^free$/i));
+    expect(screen.queryByLabelText(/^price/i)).not.toBeInTheDocument();
   });
 
-  it('appelle onSave avec le point complet', async () => {
+  it('calls onSave with the complete place', async () => {
     const { onSave } = renderForm({
       draft: { ...draft, name: 'Tour Eiffel', address: 'Paris' },
     });
     await userEvent.selectOptions(screen.getByLabelText(/^type/i), 'visit');
-    await userEvent.type(screen.getByLabelText(/horaires/i), 'Lun-Ven 9h-18h');
-    await userEvent.click(screen.getByLabelText(/gratuit/i));
-    await userEvent.type(screen.getByLabelText(/^prix/i), '12 €');
-    await userEvent.click(screen.getByRole('button', { name: /créer/i }));
+    await userEvent.type(screen.getByLabelText(/opening hours/i), 'Lun-Ven 9h-18h');
+    await userEvent.click(screen.getByLabelText(/^free$/i));
+    await userEvent.type(screen.getByLabelText(/^price/i), '12 €');
+    await userEvent.click(screen.getByRole('button', { name: /create/i }));
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
     const saved = onSave.mock.calls[0][0] as Place;
     expect(saved).toMatchObject({
@@ -78,7 +78,7 @@ describe('PlaceForm', () => {
     expect(saved.isOutdoor).toBe(false);
   });
 
-  it('pré-remplit le formulaire en édition', () => {
+  it('pre-fills the form in edit mode', () => {
     renderForm({
       place: {
         id: 'p1',
@@ -95,11 +95,11 @@ describe('PlaceForm', () => {
       },
       draft: null,
     });
-    expect(screen.getByLabelText(/nom \*/i)).toHaveValue('Musée d\'Orsay');
-    expect(screen.getByRole('button', { name: /enregistrer/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/name \*/i)).toHaveValue('Musée d\'Orsay');
+    expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument();
   });
 
-  it('conserve le statut fait en édition', async () => {
+  it('keeps the done status in edit mode', async () => {
     const { onSave } = renderForm({
       place: {
         id: 'p1',
@@ -117,22 +117,22 @@ describe('PlaceForm', () => {
       },
       draft: null,
     });
-    await userEvent.click(screen.getByRole('button', { name: /enregistrer/i }));
+    await userEvent.click(screen.getByRole('button', { name: /save/i }));
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
     expect((onSave.mock.calls[0][0] as Place).isDone).toBe(true);
   });
 
-  it('enregistre le milieu extérieur', async () => {
+  it('saves the outdoor setting', async () => {
     const { onSave } = renderForm({
       draft: { ...draft, name: 'Parc des Buttes-Chaumont', address: 'Paris' },
     });
-    await userEvent.click(screen.getByLabelText(/extérieur/i));
-    await userEvent.click(screen.getByRole('button', { name: /créer/i }));
+    await userEvent.click(screen.getByLabelText(/^outdoor$/i));
+    await userEvent.click(screen.getByRole('button', { name: /create/i }));
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
     expect((onSave.mock.calls[0][0] as Place).isOutdoor).toBe(true);
   });
 
-  it('pré-coche le milieu extérieur en édition et le conserve', async () => {
+  it('pre-checks the outdoor setting in edit mode and keeps it', async () => {
     const { onSave } = renderForm({
       place: {
         id: 'p1',
@@ -149,13 +149,13 @@ describe('PlaceForm', () => {
       },
       draft: null,
     });
-    expect(screen.getByLabelText(/extérieur/i)).toBeChecked();
-    await userEvent.click(screen.getByRole('button', { name: /enregistrer/i }));
+    expect(screen.getByLabelText(/^outdoor$/i)).toBeChecked();
+    await userEvent.click(screen.getByRole('button', { name: /save/i }));
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
     expect((onSave.mock.calls[0][0] as Place).isOutdoor).toBe(true);
   });
 
-  it('ajoute une photo compressée avec miniature', async () => {
+  it('adds a compressed photo with a thumbnail', async () => {
     renderForm();
     const file = new File(['abc'], 'photo.jpg', { type: 'image/jpeg' });
     await userEvent.upload(screen.getByLabelText(/photos/i), file);
@@ -163,7 +163,7 @@ describe('PlaceForm', () => {
     expect(img.getAttribute('src')).toMatch(/^blob:/);
   });
 
-  it('annule avec Esc', () => {
+  it('cancels with Esc', () => {
     const { onCancel } = renderForm();
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(onCancel).toHaveBeenCalled();

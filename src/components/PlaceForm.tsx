@@ -14,7 +14,7 @@ interface PlaceFormProps {
 export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormProps) {
   const origin = place ?? draft;
   if (!origin) {
-    throw new Error('PlaceForm requiert place ou draft');
+    throw new Error('PlaceForm requires place or draft');
   }
   const { lat, lng } = origin;
   const isEdit = place !== null;
@@ -44,7 +44,7 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
         const blob = await compressPhoto(file);
         setPhotos((prev) => [...prev, { id: crypto.randomUUID(), blob }]);
       } catch {
-        setError(`Photo illisible : ${file.name}`);
+        setError(`Unreadable photo: ${file.name}`);
       }
     }
   }
@@ -52,11 +52,11 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!name.trim()) {
-      setError('Le nom est obligatoire.');
+      setError('Name is required.');
       return;
     }
     if (!address.trim()) {
-      setError('L\'adresse est obligatoire.');
+      setError('Address is required.');
       return;
     }
     setBusy(true);
@@ -87,14 +87,14 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
   return (
     <div className="modal-overlay" onClick={onCancel}>
       <form className="place-form" onClick={(e) => e.stopPropagation()} onSubmit={handleSubmit}>
-        <h2>{isEdit ? 'Modifier le lieu' : 'Nouveau lieu'}</h2>
+        <h2>{isEdit ? 'Edit place' : 'New place'}</h2>
         {error && <p className="form-error">{error}</p>}
         <label>
-          Nom *
+          Name *
           <input value={name} onChange={(e) => setName(e.target.value)} autoFocus />
         </label>
         <label>
-          Adresse *
+          Address *
           <input value={address} onChange={(e) => setAddress(e.target.value)} />
         </label>
         <label>
@@ -108,26 +108,26 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
           </select>
         </label>
         <label>
-          Horaires d'ouverture
+          Opening hours
           <input
             value={hours}
             onChange={(e) => setHours(e.target.value)}
-            placeholder="ex : Lun-Ven 9h-18h"
+            placeholder="e.g. Mon-Fri 9am-6pm"
           />
         </label>
         <label className="checkbox">
           <input type="checkbox" checked={isFree} onChange={(e) => setIsFree(e.target.checked)} />
-          Gratuit
+          Free
         </label>
         {!isFree && (
           <label>
-            Prix
-            <input value={price} onChange={(e) => setPrice(e.target.value)} placeholder="ex : 12 €" />
+            Price
+            <input value={price} onChange={(e) => setPrice(e.target.value)} placeholder="e.g. 12 €" />
           </label>
         )}
         <label className="checkbox">
           <input type="checkbox" checked={isOutdoor} onChange={(e) => setIsOutdoor(e.target.checked)} />
-          Extérieur
+          Outdoor
         </label>
         <label>
           Photos
@@ -149,7 +149,7 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
                 <button
                   type="button"
                   onClick={() => setPhotos((prev) => prev.filter((p) => p.id !== photo.id))}
-                  aria-label="Retirer la photo"
+                  aria-label="Remove photo"
                 >
                   ×
                 </button>
@@ -159,10 +159,10 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
         )}
         <div className="form-actions">
           <button type="button" onClick={onCancel}>
-            Annuler
+            Cancel
           </button>
           <button type="submit" disabled={busy}>
-            {isEdit ? 'Enregistrer' : 'Créer'}
+            {isEdit ? 'Save' : 'Create'}
           </button>
         </div>
       </form>
