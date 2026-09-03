@@ -4177,7 +4177,7 @@ Nouveau `return` :
           <Button variant="ghost" onClick={onCancel}>
             Annuler
           </Button>
-          <Button type="submit" disabled={busy}>
+          <Button type="submit" loading={busy}>
             {isEdit ? 'Enregistrer' : 'Créer'}
           </Button>
         </div>
@@ -4250,7 +4250,8 @@ Nouveau `return` :
     color var(--transition-fast);
 }
 
-.place-form__photos:hover {
+.place-form__photos:hover,
+.place-form__photos:focus-within {
   border-color: var(--ha-iris);
   color: var(--ha-iris);
 }
@@ -4267,7 +4268,7 @@ Nouveau `return` :
 .form-error {
   color: var(--ha-danger-text);
   background: var(--ha-danger-bg);
-  border: 1px solid #f5c6c8;
+  border: 1px solid var(--ha-danger-border);
   border-radius: var(--radius-sm);
   padding: 8px 10px;
   margin: 0;
@@ -4287,6 +4288,8 @@ Nouveau `return` :
   margin-top: 6px;
 }
 ```
+
+> **Déviation (token)** : dans `.form-error`, `var(--ha-danger-border)` (token posé en Task 6, valeur `#f5c6c8` identique) remplace le `#f5c6c8` codé dur prévu initialement.
 
 - [ ] **Step 3: Retirer d'`App.css` les règles migrées**
 
@@ -4455,6 +4458,7 @@ git commit -m "feat: fin de migration DA — suppression d'App.css"
 
 - **A11y visionneuse photos** (PlaceDetails) : piège de focus à l'ouverture + restauration à la fermeture, `alt` de l'image pleine taille depuis `place.name` (prop à passer), masquage/`inert` de l'arrière-plan, tests clavier (flèches, clic backdrop). `aria-label="Visionneuse photo"` et cible tactile 58px déjà faits (review Task 13).
 - **Tokens de z-index** : remplacer les nombres magiques répartis (1100 SearchField, 1200 tabbar, 2000 modale, 3000 viewer) par des tokens `--z-*` centralisés dans tokens.css.
+- **Modales (formulaire + visionneuse) — harmonisation a11y/UX** : `role="dialog"`/`aria-modal`/`aria-label` sur la modale PlaceForm (la visionneuse les a), piège de focus + restauration à la fermeture, confirmation de fermeture du formulaire quand des saisies existent (clic overlay/Escape → perte totale du brouillon, hérité).
 - **`role="status"` sur EmptyState** (annonce du passage liste vide via filtres aux lecteurs d'écran).
 - **Exception contrastes assumée** : Button `danger` à 3.91:1 (exception DA HelloAsso documentée) ; verts balade/success proches (ΔE 4.30, contexts distincts).
 
