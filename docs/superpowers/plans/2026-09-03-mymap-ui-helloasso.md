@@ -62,6 +62,7 @@ Attendu : installation sans erreur, 3 deps dans `package.json`.
   --ha-danger: #e5484d;
   --ha-danger-bg: #fdecec;
   --ha-danger-text: #9c2327;
+  --ha-danger-border: #f5c6c8;
   --ha-success: #1a8247;
   --ha-success-bg: #f4fbf6;
 
@@ -1501,8 +1502,11 @@ describe('DoneToggle', () => {
   });
 
   it("variante ligne : libellé selon l'état", () => {
-    render(<DoneToggle done={false} onToggle={() => {}} variant="line" />);
+    const { rerender } = render(<DoneToggle done={false} onToggle={() => {}} variant="line" />);
     expect(screen.getByRole('button', { name: 'Marquer comme fait' })).toBeInTheDocument();
+    rerender(<DoneToggle done onToggle={() => {}} variant="line" />);
+    expect(screen.getByRole('button', { name: 'Fait' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Fait' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('déclenche onToggle', async () => {
@@ -1546,6 +1550,11 @@ describe('MilieuChip', () => {
   it('affiche le label du milieu', () => {
     render(<MilieuChip milieu="outdoor" />);
     expect(screen.getByText(/extérieur/i)).toBeInTheDocument();
+  });
+
+  it('affiche le label du milieu intérieur', () => {
+    render(<MilieuChip milieu="indoor" />);
+    expect(screen.getByText(/intérieur/i)).toBeInTheDocument();
   });
 });
 ```
@@ -1591,6 +1600,7 @@ export default function DoneToggle({ done, onToggle, variant = 'round' }: DoneTo
       <button
         type="button"
         className={`ha-done-toggle ha-done-toggle--line${done ? ' done' : ''}`}
+        aria-pressed={done}
         onClick={onToggle}
       >
         <Check size={16} aria-hidden="true" />
@@ -1654,14 +1664,14 @@ export default function DoneToggle({ done, onToggle, variant = 'round' }: DoneTo
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 14px;
+  padding: 6px 14px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--ha-border);
   background: var(--ha-surface);
   color: var(--ha-navy);
   font-size: 14px;
   font-weight: 600;
-  min-height: 38px;
+  min-height: 34px;
   transition:
     border-color var(--transition-fast),
     color var(--transition-fast),
@@ -1709,6 +1719,7 @@ export default function EmptyState({ icon, children, action }: EmptyStateProps) 
   text-align: center;
   color: var(--ha-navy);
   max-width: 320px;
+  margin-inline: auto;
 }
 
 .ha-empty-state__icon {
@@ -1742,7 +1753,7 @@ interface MilieuChipProps {
 }
 
 export default function MilieuChip({ milieu }: MilieuChipProps) {
-  const def = getMilieuDef(milieu);
+  const def = getMilieuDef(milieu === 'outdoor');
   const Icon = MILIEU_ICONS[milieu];
   return (
     <span className="ha-milieu-chip">
@@ -1798,7 +1809,7 @@ export default function StorageBanner({ children }: StorageBannerProps) {
   background: var(--ha-danger-bg);
   color: var(--ha-danger-text);
   font-size: 14px;
-  border-bottom: 1px solid #f5c6c8;
+  border-bottom: 1px solid var(--ha-danger-border);
 }
 ```
 
@@ -2345,7 +2356,7 @@ export default function PlaceCard({ place, selected, onSelect, onToggleDone }: P
   flex-direction: column;
   gap: 3px;
   align-items: flex-start;
-  padding-right: 32px;
+  padding-right: 40px;
 }
 
 .card-title {
