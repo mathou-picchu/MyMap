@@ -21,4 +21,14 @@ describe('useHashRoute', () => {
     });
     expect(result.current).toBe('#styleguide');
   });
+
+  it('revient au hash vide', () => {
+    window.location.hash = '#styleguide';
+    const { result } = renderHook(() => useHashRoute());
+    act(() => {
+      window.location.hash = '';
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    });
+    expect(result.current).toBe('');
+  });
 });

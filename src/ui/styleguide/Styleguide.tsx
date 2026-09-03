@@ -28,6 +28,7 @@ import PlaceCard from '../molecules/PlaceCard';
 import StorageBanner from '../molecules/StorageBanner';
 import { MILIEU_ICONS } from '../icons';
 import SearchFieldDoc from './SearchFieldDoc';
+import '../molecules/MarkerPin.css';
 import './Styleguide.css';
 
 const samplePlace: Place = {

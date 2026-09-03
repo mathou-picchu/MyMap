@@ -2627,6 +2627,16 @@ describe('useHashRoute', () => {
     });
     expect(result.current).toBe('#styleguide');
   });
+
+  it('revient au hash vide', () => {
+    window.location.hash = '#styleguide';
+    const { result } = renderHook(() => useHashRoute());
+    act(() => {
+      window.location.hash = '';
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    });
+    expect(result.current).toBe('');
+  });
 });
 ```
 
@@ -2709,6 +2719,7 @@ import PlaceCard from '../molecules/PlaceCard';
 import StorageBanner from '../molecules/StorageBanner';
 import { MILIEU_ICONS } from '../icons';
 import SearchFieldDoc from './SearchFieldDoc';
+import '../molecules/MarkerPin.css';
 import './Styleguide.css';
 
 const samplePlace: Place = {
@@ -3163,7 +3174,7 @@ export default function Styleguide() {
   max-width: 480px;
 }
 
-.mobile-tabbar--static {
+.mobile-tabbar.mobile-tabbar--static {
   position: static;
   transform: none;
   display: inline-flex;
@@ -3503,6 +3514,8 @@ Attendu : tout vert (App.test : bouton `/ajouter un lieu/i` ✓, heading `MyMap`
 git add src/App.tsx src/AppShell.css src/App.css src/components/Toolbar.tsx
 git commit -m "feat: header et toolbar façon HelloAsso + barre mobile flottante"
 ```
+
+Vérification visuelle : ouvrir `#styleguide` après le câblage d'AppShell.css — la section Onglets mobiles doit être stylée et l'aperçu ne doit pas être cassé par la cascade.
 
 ---
 
