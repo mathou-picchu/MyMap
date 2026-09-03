@@ -1,18 +1,10 @@
-import type { CSSProperties } from 'react';
 import { EyeOff } from 'lucide-react';
 import { MILIEUS, PLACE_TYPES } from '../constants';
 import type { MilieuId, PlaceTypeId } from '../types';
-import { MILIEU_ICONS, TYPE_ICONS } from '../ui/icons';
-
-function TypePillIcon({ type }: { type: PlaceTypeId }) {
-  const Icon = TYPE_ICONS[type];
-  return <Icon size={14} aria-hidden="true" />;
-}
-
-function MilieuPillIcon({ milieu }: { milieu: MilieuId }) {
-  const Icon = MILIEU_ICONS[milieu];
-  return <Icon size={14} aria-hidden="true" />;
-}
+import Pill from '../ui/atoms/Pill';
+import TypeIcon from '../ui/atoms/TypeIcon';
+import { MILIEU_ICONS } from '../ui/icons';
+import './TypeFilter.css';
 
 interface TypeFilterProps {
   active: Set<PlaceTypeId>;
@@ -34,38 +26,31 @@ export default function TypeFilter({
   return (
     <div className="type-filter" role="group" aria-label="Filtrer par type et milieu">
       {PLACE_TYPES.map((t) => (
-        <button
-          key={t.id}
-          type="button"
-          className={`filter-pill${active.has(t.id) ? ' active' : ''}`}
-          style={{ '--pill-color': t.color } as CSSProperties}
-          onClick={() => onToggle(t.id)}
-          aria-pressed={active.has(t.id)}
-        >
-          <TypePillIcon type={t.id} /> {t.label}
-        </button>
+        <Pill key={t.id} color={t.id} active={active.has(t.id)} onClick={() => onToggle(t.id)}>
+          <TypeIcon type={t.id} size={14} /> {t.label}
+        </Pill>
       ))}
-      {MILIEUS.map((m) => (
-        <button
-          key={m.id}
-          type="button"
-          className={`filter-pill milieu${activeMilieu.has(m.id) ? ' active' : ''}`}
-          style={{ '--pill-color': m.color } as CSSProperties}
-          onClick={() => onToggleMilieu(m.id)}
-          aria-pressed={activeMilieu.has(m.id)}
-        >
-          <MilieuPillIcon milieu={m.id} /> {m.label}
-        </button>
-      ))}
-      <button
-        type="button"
-        className={`filter-pill hide-done${hideDone ? ' active' : ''}`}
-        style={{ '--pill-color': '#16a34a' } as CSSProperties}
+      {MILIEUS.map((m) => {
+        const MilieuIcon = MILIEU_ICONS[m.id];
+        return (
+          <Pill
+            key={m.id}
+            color="navy"
+            active={activeMilieu.has(m.id)}
+            onClick={() => onToggleMilieu(m.id)}
+          >
+            <MilieuIcon size={14} aria-hidden="true" /> {m.label}
+          </Pill>
+        );
+      })}
+      <Pill
+        color="success"
+        active={hideDone}
         onClick={onToggleHideDone}
-        aria-pressed={hideDone}
+        className="type-filter__hide-done"
       >
         <EyeOff size={14} aria-hidden="true" /> Masquer les faits
-      </button>
+      </Pill>
     </div>
   );
 }

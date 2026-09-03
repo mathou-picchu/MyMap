@@ -3572,7 +3572,7 @@ export default function TypeFilter({
             active={activeMilieu.has(m.id)}
             onClick={() => onToggleMilieu(m.id)}
           >
-            <MilieuIcon size={14} /> {m.label}
+            <MilieuIcon size={14} aria-hidden="true" /> {m.label}
           </Pill>
         );
       })}
@@ -3588,6 +3588,8 @@ export default function TypeFilter({
   );
 }
 ```
+
+> **Déviation (markup)** : `aria-hidden="true"` conservé sur les `<MilieuIcon />` — icônes décoratives, cohérent avec le code existant et la styleguide (TypeIcon gère `aria-hidden` en interne).
 
 - [ ] **Step 2: Créer `src/components/TypeFilter.css`**
 
@@ -3611,6 +3613,8 @@ export default function TypeFilter({
 - [ ] **Step 3: Retirer d'`App.css` les règles migrées**
 
 Supprimer : `.type-filter`, `.filter-pill`, `.filter-pill.active`, `.filter-pill.hide-done`.
+
+> **Déviation (règles mortes supplémentaires)** : App.css contient aussi `.filter-pill.milieu` et `.filter-pill.milieu + .filter-pill.milieu` (non listées initialement) — mortes après la migration, à supprimer également. Vérification : `grep -n "filter-pill\|type-filter" src/App.css` doit être vide.
 
 - [ ] **Step 4: Vérifier et committer**
 
