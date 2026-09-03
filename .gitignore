@@ -8,3 +8,6 @@ coverage
 
 # worktrees
 .worktrees/
+
+# données personnelles d'import Instagram (photos, manifeste, JSON généré) — repo public !
+import-data/
