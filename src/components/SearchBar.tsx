@@ -52,9 +52,9 @@ export default function SearchBar({ onSelect }: SearchBarProps) {
       <input
         value={query}
         onChange={handleChange}
-        placeholder="Rechercher une adresse ou un lieu…"
+        placeholder="Search an address or a place…"
         type="search"
-        aria-label="Rechercher une adresse ou un lieu"
+        aria-label="Search an address or a place"
       />
       {open && results.length > 0 && (
         <ul className="searchbar-results">
@@ -76,7 +76,7 @@ export default function SearchBar({ onSelect }: SearchBarProps) {
       )}
       {status === 'error' && (
         <p className="searchbar-error" role="alert">
-          Recherche indisponible. Tu peux cliquer sur la carte pour placer un point.
+          Search unavailable. You can click the map to place a point.
         </p>
       )}
     </div>

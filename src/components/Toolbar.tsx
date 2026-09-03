@@ -10,19 +10,19 @@ export default function Toolbar({ onExport, onImport, onLocate }: ToolbarProps) 
   const fileRef = useRef<HTMLInputElement>(null);
   return (
     <div className="toolbar">
-      <button type="button" aria-label="Me localiser" title="Me localiser" onClick={onLocate}>
-        📍<span className="btn-label"> Me localiser</span>
+      <button type="button" aria-label="Locate me" title="Locate me" onClick={onLocate}>
+        📍<span className="btn-label"> Locate me</span>
       </button>
-      <button type="button" aria-label="Exporter mes points" title="Exporter mes points" onClick={onExport}>
-        ⬇️<span className="btn-label"> Exporter</span>
+      <button type="button" aria-label="Export my places" title="Export my places" onClick={onExport}>
+        ⬇️<span className="btn-label"> Export</span>
       </button>
       <button
         type="button"
-        aria-label="Importer un fichier"
-        title="Importer un fichier"
+        aria-label="Import a file"
+        title="Import a file"
         onClick={() => fileRef.current?.click()}
       >
-        ⬆️<span className="btn-label"> Importer</span>
+        ⬆️<span className="btn-label"> Import</span>
       </button>
       <input
         ref={fileRef}

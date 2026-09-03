@@ -2,15 +2,15 @@ import { describe, expect, it } from 'vitest';
 import { getMilieuDef, getPlaceTypeDef, MILIEUS, PLACE_TYPES } from './constants';
 
 describe('constants', () => {
-  it('définit exactement 7 types', () => {
+  it('defines exactly 7 types', () => {
     expect(PLACE_TYPES).toHaveLength(7);
   });
 
-  it('a des identifiants uniques', () => {
+  it('has unique ids', () => {
     expect(new Set(PLACE_TYPES.map((t) => t.id)).size).toBe(PLACE_TYPES.length);
   });
 
-  it('a des labels, couleurs et emojis valides', () => {
+  it('has valid labels, colors and emojis', () => {
     for (const t of PLACE_TYPES) {
       expect(t.label.length).toBeGreaterThan(0);
       expect(t.color).toMatch(/^#[0-9a-f]{6}$/i);
@@ -18,19 +18,19 @@ describe('constants', () => {
     }
   });
 
-  it('retourne la définition d\'un type', () => {
+  it('returns a type definition', () => {
     expect(getPlaceTypeDef('restaurant').label).toBe('Restaurant');
   });
 
-  it('retombe sur « Autre » pour un type inconnu', () => {
+  it('falls back to Other for an unknown type', () => {
     expect(getPlaceTypeDef('unknown' as never).id).toBe('other');
   });
 
-  it('définit exactement 2 milieux', () => {
+  it('defines exactly 2 settings', () => {
     expect(MILIEUS).toHaveLength(2);
   });
 
-  it('retourne la définition d\'un milieu', () => {
+  it('returns a setting definition', () => {
     expect(getMilieuDef(true).id).toBe('outdoor');
     expect(getMilieuDef(false).id).toBe('indoor');
   });

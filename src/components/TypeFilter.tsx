@@ -20,7 +20,7 @@ export default function TypeFilter({
   onToggleHideDone,
 }: TypeFilterProps) {
   return (
-    <div className="type-filter" role="group" aria-label="Filtrer par type et milieu">
+    <div className="type-filter" role="group" aria-label="Filter by type and setting">
       {PLACE_TYPES.map((t) => (
         <button
           key={t.id}
@@ -52,7 +52,7 @@ export default function TypeFilter({
         onClick={onToggleHideDone}
         aria-pressed={hideDone}
       >
-        <span aria-hidden="true">✓</span> Masquer les faits
+        <span aria-hidden="true">✓</span> Hide done
       </button>
     </div>
   );
