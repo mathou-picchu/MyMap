@@ -3,18 +3,17 @@ import type { MilieuId, PlaceTypeId } from './types';
 export interface PlaceTypeDef {
   id: PlaceTypeId;
   label: string;
-  emoji: string;
   color: string;
 }
 
 export const PLACE_TYPES: PlaceTypeDef[] = [
-  { id: 'visit', label: 'Visite', emoji: '🏛️', color: '#3b82f6' },
-  { id: 'balade', label: 'Balade', emoji: '🌳', color: '#22c55e' },
-  { id: 'restaurant', label: 'Restaurant', emoji: '🍽️', color: '#f97316' },
-  { id: 'gourmandise', label: 'Gourmandise', emoji: '🍰', color: '#a855f7' },
-  { id: 'lodging', label: 'Hébergement', emoji: '🛏️', color: '#14b8a6' },
-  { id: 'shopping', label: 'Shopping', emoji: '🛍️', color: '#ec4899' },
-  { id: 'other', label: 'Autre', emoji: '📍', color: '#64748b' },
+  { id: 'visit', label: 'Visite', color: '#4c40cf' },
+  { id: 'balade', label: 'Balade', color: '#27995c' },
+  { id: 'restaurant', label: 'Restaurant', color: '#d96a06' },
+  { id: 'gourmandise', label: 'Gourmandise', color: '#c2449c' },
+  { id: 'lodging', label: 'Hébergement', color: '#11788c' },
+  { id: 'shopping', label: 'Shopping', color: '#d93b55' },
+  { id: 'other', label: 'Autre', color: '#6e7691' },
 ];
 
 export const PLACE_TYPE_IDS: PlaceTypeId[] = PLACE_TYPES.map((t) => t.id);
@@ -26,13 +25,12 @@ export function getPlaceTypeDef(id: PlaceTypeId): PlaceTypeDef {
 export interface MilieuDef {
   id: MilieuId;
   label: string;
-  emoji: string;
   color: string;
 }
 
 export const MILIEUS: MilieuDef[] = [
-  { id: 'outdoor', label: 'Extérieur', emoji: '🌳', color: '#22c55e' },
-  { id: 'indoor', label: 'Intérieur', emoji: '🏠', color: '#f59e0b' },
+  { id: 'outdoor', label: 'Extérieur', color: '#131445' },
+  { id: 'indoor', label: 'Intérieur', color: '#131445' },
 ];
 
 export function getMilieuDef(isOutdoor: boolean): MilieuDef {

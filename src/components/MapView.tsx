@@ -3,6 +3,7 @@ import { divIcon } from 'leaflet';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 import { getPlaceTypeDef } from '../constants';
 import type { MapState, Place, PlaceTypeId } from '../types';
+import { checkSvg, markerSvg } from '../ui/icons';
 import 'leaflet/dist/leaflet.css';
 
 interface MapViewProps {
@@ -17,10 +18,9 @@ interface MapViewProps {
 }
 
 function placeIcon(type: PlaceTypeId, selected: boolean, done: boolean) {
-  const def = getPlaceTypeDef(type);
   return divIcon({
     className: 'marker-wrapper',
-    html: `<div class="marker-pin${selected ? ' selected' : ''}${done ? ' done' : ''}" style="background:${def.color}"><span>${def.emoji}</span>${done ? '<span class="marker-check">✓</span>' : ''}</div>`,
+    html: `<div class="marker-pin${selected ? ' selected' : ''}${done ? ' done' : ''}" style="background:${getPlaceTypeDef(type).color}">${markerSvg(type, 15)}${done ? `<span class="marker-check">${checkSvg(10)}</span>` : ''}</div>`,
     iconSize: [36, 44],
     iconAnchor: [18, 42],
   });
@@ -28,7 +28,7 @@ function placeIcon(type: PlaceTypeId, selected: boolean, done: boolean) {
 
 const draftIcon = divIcon({
   className: 'marker-wrapper',
-  html: '<div class="marker-pin draft"><span>📍</span></div>',
+  html: `<div class="marker-pin draft" style="background:#131445">${markerSvg('other', 15)}</div>`,
   iconSize: [36, 44],
   iconAnchor: [18, 42],
 });

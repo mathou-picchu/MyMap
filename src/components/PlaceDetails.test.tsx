@@ -62,11 +62,11 @@ describe('PlaceDetails', () => {
 
   it('bascule le statut fait depuis la fiche', async () => {
     const { onToggleDone } = renderDetails();
-    await userEvent.click(screen.getByRole('button', { name: '✓ Marquer comme fait' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Marquer comme fait' }));
     expect(onToggleDone).toHaveBeenCalledWith('p1');
   });
 
-  it('affiche « ✓ Fait » pour un lieu déjà coché', () => {
+  it('affiche « Fait » pour un lieu déjà coché', () => {
     render(
       <PlaceDetails
         place={{ ...place, isDone: true }}
@@ -76,7 +76,7 @@ describe('PlaceDetails', () => {
         onToggleDone={() => {}}
       />,
     );
-    expect(screen.getByRole('button', { name: '✓ Fait' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Fait' })).toBeInTheDocument();
   });
 
   it('affiche le badge milieu intérieur par défaut', () => {

@@ -26,10 +26,10 @@ export default function PlaceDetails({ place, onBack, onEdit, onDelete, onToggle
       <header className="details-header">
         <div className="details-badges">
           <span className="type-badge" style={{ background: def.color }}>
-            {def.emoji} {def.label}
+            {def.label}
           </span>
           <span className="type-badge" style={{ background: milieu.color }}>
-            {milieu.emoji} {milieu.label}
+            {milieu.label}
           </span>
         </div>
         <h2>{place.name}</h2>
@@ -68,7 +68,7 @@ export default function PlaceDetails({ place, onBack, onEdit, onDelete, onToggle
           className={`done-toggle${place.isDone ? ' done' : ''}`}
           onClick={() => onToggleDone(place.id)}
         >
-          {place.isDone ? '✓ Fait' : '✓ Marquer comme fait'}
+          {place.isDone ? 'Fait' : 'Marquer comme fait'}
         </button>
         <button type="button" onClick={onEdit}>
           Modifier

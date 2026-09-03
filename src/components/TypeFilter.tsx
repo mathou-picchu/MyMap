@@ -1,6 +1,18 @@
 import type { CSSProperties } from 'react';
+import { EyeOff } from 'lucide-react';
 import { MILIEUS, PLACE_TYPES } from '../constants';
 import type { MilieuId, PlaceTypeId } from '../types';
+import { MILIEU_ICONS, TYPE_ICONS } from '../ui/icons';
+
+function TypePillIcon({ type }: { type: PlaceTypeId }) {
+  const Icon = TYPE_ICONS[type];
+  return <Icon size={14} aria-hidden="true" />;
+}
+
+function MilieuPillIcon({ milieu }: { milieu: MilieuId }) {
+  const Icon = MILIEU_ICONS[milieu];
+  return <Icon size={14} aria-hidden="true" />;
+}
 
 interface TypeFilterProps {
   active: Set<PlaceTypeId>;
@@ -30,7 +42,7 @@ export default function TypeFilter({
           onClick={() => onToggle(t.id)}
           aria-pressed={active.has(t.id)}
         >
-          <span aria-hidden="true">{t.emoji}</span> {t.label}
+          <TypePillIcon type={t.id} /> {t.label}
         </button>
       ))}
       {MILIEUS.map((m) => (
@@ -42,7 +54,7 @@ export default function TypeFilter({
           onClick={() => onToggleMilieu(m.id)}
           aria-pressed={activeMilieu.has(m.id)}
         >
-          <span aria-hidden="true">{m.emoji}</span> {m.label}
+          <MilieuPillIcon milieu={m.id} /> {m.label}
         </button>
       ))}
       <button
@@ -52,7 +64,7 @@ export default function TypeFilter({
         onClick={onToggleHideDone}
         aria-pressed={hideDone}
       >
-        <span aria-hidden="true">✓</span> Masquer les faits
+        <EyeOff size={14} aria-hidden="true" /> Masquer les faits
       </button>
     </div>
   );

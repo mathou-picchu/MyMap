@@ -102,7 +102,7 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
           <select value={type} onChange={(e) => setType(e.target.value as PlaceTypeId)}>
             {PLACE_TYPES.map((t) => (
               <option key={t.id} value={t.id}>
-                {t.emoji} {t.label}
+                {t.label}
               </option>
             ))}
           </select>

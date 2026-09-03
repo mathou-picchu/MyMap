@@ -1,5 +1,6 @@
 import { getPlaceTypeDef } from '../constants';
 import type { Place } from '../types';
+import { TYPE_ICONS } from '../ui/icons';
 import ImgThumb from './ImgThumb';
 
 interface PlaceListProps {
@@ -47,6 +48,11 @@ export default function PlaceList({
   );
 }
 
+function CardFallbackIcon({ type }: { type: Place['type'] }) {
+  const Icon = TYPE_ICONS[type];
+  return <Icon size={24} aria-hidden="true" />;
+}
+
 function PlaceCard({
   place,
   selected,
@@ -68,14 +74,14 @@ function PlaceCard({
             blob={place.photos[0]?.blob ?? null}
             fallback={
               <span className="card-fallback" style={{ background: def.color }}>
-                {def.emoji}
+                <CardFallbackIcon type={place.type} />
               </span>
             }
           />
         </span>
         <span className="card-body">
           <span className="type-badge" style={{ background: def.color }}>
-            {def.emoji} {def.label}
+            {def.label}
           </span>
           <span className="card-title">{place.name}</span>
           <span className="card-address">{place.address}</span>
