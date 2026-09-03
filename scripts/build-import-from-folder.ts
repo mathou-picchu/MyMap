@@ -9,6 +9,7 @@ import { PLACE_TYPE_IDS } from '../src/constants.ts';
 export interface ManifestPlace {
   name: string;
   address: string;
+  description?: string;
   lat: number;
   lng: number;
   type: string;
@@ -33,6 +34,7 @@ interface SerializedPlace {
   id: string;
   name: string;
   address: string;
+  description?: string;
   lat: number;
   lng: number;
   hours?: string;
@@ -88,6 +90,7 @@ export function buildImportFile(manifestPath: string): string {
       id: randomUUID(),
       name: place.name.trim(),
       address: place.address.trim(),
+      description: place.description?.trim() || undefined,
       lat: place.lat,
       lng: place.lng,
       hours: place.hours?.trim() || undefined,

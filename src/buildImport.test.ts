@@ -72,7 +72,29 @@ describe('build-import-from-folder', () => {
         isDone: false,
         isOutdoor: false,
       });
+      expect(places[0].description).toBeUndefined();
       expect(places[0].photos).toEqual([]);
+    } finally {
+      cleanup(manifestPath);
+    }
+  });
+
+  it('passes the description through, trimmed', () => {
+    const manifestPath = writeManifest({
+      places: [
+        {
+          name: 'X',
+          address: 'Paris',
+          lat: 1,
+          lng: 2,
+          type: 'visit',
+          description: '  Le café des lettres  ',
+        },
+      ],
+    });
+    try {
+      const places = parseImportFile(buildImportFile(manifestPath));
+      expect(places[0].description).toBe('Le café des lettres');
     } finally {
       cleanup(manifestPath);
     }
