@@ -1389,6 +1389,13 @@ export default function Select({ className = '', ...rest }: SelectHTMLAttributes
 .ha-textarea::placeholder {
   color: var(--ha-muted);
 }
+
+.ha-input:disabled,
+.ha-textarea:disabled,
+.ha-select:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
 ```
 
 `src/ui/atoms/Checkbox.tsx` :
@@ -1444,6 +1451,11 @@ export default function Checkbox({ className = '', ...rest }: InputHTMLAttribute
 .ha-checkbox:focus-visible {
   outline: 2px solid var(--ha-iris);
   outline-offset: 2px;
+}
+
+.ha-checkbox:disabled {
+  opacity: 0.55;
+  cursor: default;
 }
 ```
 
