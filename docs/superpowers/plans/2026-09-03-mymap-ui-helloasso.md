@@ -776,7 +776,13 @@ export default function Button({
       className={`ha-button ha-button--${variant} ha-button--${size}${className ? ` ${className}` : ''}`}
       {...rest}
     >
-      {loading ? <Spinner size={16} /> : iconLeft}
+      {loading ? (
+        <span aria-hidden="true">
+          <Spinner size={16} />
+        </span>
+      ) : (
+        iconLeft
+      )}
       {children}
       {iconRight}
     </button>
