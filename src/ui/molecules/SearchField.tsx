@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { searchAddress, type GeoResult } from '../geocoding';
+import { Search } from 'lucide-react';
+import { searchAddress, type GeoResult } from '../../geocoding';
+import Input from '../atoms/Input';
+import Spinner from '../atoms/Spinner';
+import './SearchField.css';
 
-interface SearchBarProps {
+interface SearchFieldProps {
   onSelect: (result: GeoResult) => void;
 }
 
-export default function SearchBar({ onSelect }: SearchBarProps) {
+export default function SearchField({ onSelect }: SearchFieldProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<GeoResult[]>([]);
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
@@ -44,20 +48,29 @@ export default function SearchBar({ onSelect }: SearchBarProps) {
       setResults([]);
       setStatus('idle');
       setOpen(false);
+    } else {
+      setStatus('loading');
     }
   }
 
   return (
-    <div className="searchbar">
-      <input
+    <div className="ha-searchfield">
+      <Search size={18} className="ha-searchfield__icon" aria-hidden="true" />
+      <Input
+        className="ha-searchfield__input"
         value={query}
         onChange={handleChange}
         placeholder="Rechercher une adresse ou un lieu…"
         type="search"
         aria-label="Rechercher une adresse ou un lieu"
       />
+      {status === 'loading' && (
+        <span className="ha-searchfield__spinner">
+          <Spinner size={16} label="Recherche en cours…" />
+        </span>
+      )}
       {open && results.length > 0 && (
-        <ul className="searchbar-results">
+        <ul className="ha-searchfield__results">
           {results.map((result, index) => (
             <li key={index}>
               <button
@@ -75,7 +88,7 @@ export default function SearchBar({ onSelect }: SearchBarProps) {
         </ul>
       )}
       {status === 'error' && (
-        <p className="searchbar-error" role="alert">
+        <p className="ha-searchfield__error" role="alert">
           Recherche indisponible. Tu peux cliquer sur la carte pour placer un point.
         </p>
       )}

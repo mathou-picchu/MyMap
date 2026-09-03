@@ -4,7 +4,7 @@ import MapView from './components/MapView';
 import PlaceDetails from './components/PlaceDetails';
 import PlaceForm from './components/PlaceForm';
 import PlaceList from './components/PlaceList';
-import SearchBar from './components/SearchBar';
+import SearchField from './ui/molecules/SearchField';
 import Toolbar from './components/Toolbar';
 import TypeFilter from './components/TypeFilter';
 import { PLACE_TYPE_IDS } from './constants';
@@ -206,7 +206,7 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <h1 className="app-title">MyMap</h1>
-        <SearchBar onSelect={handleSearchSelect} />
+        <SearchField onSelect={handleSearchSelect} />
         <Toolbar onExport={handleExport} onImport={handleImport} onLocate={handleLocate} />
         <button
           type="button"

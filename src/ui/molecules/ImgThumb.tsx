@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useObjectUrl } from '../hooks/useObjectUrl';
+import { useObjectUrl } from '../../hooks/useObjectUrl';
 
 interface ImgThumbProps {
   blob: Blob | null;

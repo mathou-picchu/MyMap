@@ -1,7 +1,7 @@
 import { getPlaceTypeDef } from '../constants';
 import type { Place } from '../types';
 import { TYPE_ICONS } from '../ui/icons';
-import ImgThumb from './ImgThumb';
+import ImgThumb from '../ui/molecules/ImgThumb';
 
 interface PlaceListProps {
   places: Place[];

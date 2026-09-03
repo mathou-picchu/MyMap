@@ -1,0 +1,66 @@
+.ha-searchfield {
+  position: relative;
+  flex: 1 1 260px;
+  max-width: 480px;
+}
+
+.ha-searchfield__icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ha-muted);
+  pointer-events: none;
+}
+
+.ha-searchfield__input {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.ha-searchfield__spinner {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+}
+
+.ha-searchfield__results {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 1100;
+  background: var(--ha-surface);
+  border: 1px solid var(--ha-border);
+  border-radius: var(--radius-thumb);
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  box-shadow: var(--shadow-md);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.ha-searchfield__results button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: none;
+  background: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--ha-navy);
+}
+
+.ha-searchfield__results button:hover {
+  background: var(--ha-iris-10);
+}
+
+.ha-searchfield__error {
+  color: var(--ha-danger);
+  font-size: 13px;
+  margin: 6px 0 0;
+}

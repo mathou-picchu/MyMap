@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { PLACE_TYPES } from '../constants';
 import { compressPhoto } from '../photoUtils';
 import type { Place, PlaceDraft, PlacePhoto, PlaceTypeId } from '../types';
-import ImgThumb from './ImgThumb';
+import ImgThumb from '../ui/molecules/ImgThumb';
 
 interface PlaceFormProps {
   place: Place | null;

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getMilieuDef, getPlaceTypeDef } from '../constants';
 import { useObjectUrl } from '../hooks/useObjectUrl';
 import type { Place, PlacePhoto } from '../types';
-import ImgThumb from './ImgThumb';
+import ImgThumb from '../ui/molecules/ImgThumb';
 
 interface PlaceDetailsProps {
   place: Place;

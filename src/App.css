@@ -31,64 +31,6 @@
   white-space: nowrap;
 }
 
-.searchbar {
-  position: relative;
-  flex: 1 1 260px;
-  max-width: 480px;
-}
-
-.searchbar input {
-  width: 100%;
-  padding: 9px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  font: inherit;
-  background: var(--bg);
-}
-
-.searchbar input:focus {
-  outline: 2px solid var(--primary);
-  outline-offset: -1px;
-}
-
-.searchbar-results {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
-  z-index: 1100;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  list-style: none;
-  margin: 0;
-  padding: 4px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
-  max-height: 320px;
-  overflow-y: auto;
-}
-
-.searchbar-results button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 8px 10px;
-  border: none;
-  background: none;
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-.searchbar-results button:hover {
-  background: var(--bg);
-}
-
-.searchbar-error {
-  color: var(--danger);
-  font-size: 13px;
-  margin: 6px 0 0;
-}
-
 .toolbar {
   display: flex;
   gap: 8px;
