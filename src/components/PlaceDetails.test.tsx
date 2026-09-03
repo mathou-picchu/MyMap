@@ -97,6 +97,24 @@ describe('PlaceDetails', () => {
     expect(screen.getByText(/outdoor/i)).toBeInTheDocument();
   });
 
+  it('shows the description when present', () => {
+    render(
+      <PlaceDetails
+        place={{ ...place, description: 'Un café pas comme les autres' }}
+        onBack={() => {}}
+        onEdit={() => {}}
+        onDelete={() => {}}
+        onToggleDone={() => {}}
+      />,
+    );
+    expect(screen.getByText('Un café pas comme les autres')).toBeInTheDocument();
+  });
+
+  it('hides the description block when absent', () => {
+    renderDetails();
+    expect(screen.queryByText('Description')).not.toBeInTheDocument();
+  });
+
   it('opens and closes the photo viewer', async () => {
     renderDetails();
     await userEvent.click(screen.getByRole('button', { name: /^view photo/i }));

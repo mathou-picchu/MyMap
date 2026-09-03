@@ -35,6 +35,7 @@ export default function PlaceDetails({ place, onBack, onEdit, onDelete, onToggle
         <h2>{place.name}</h2>
         <p className="details-address">{place.address}</p>
       </header>
+      {place.description && <p className="details-description">{place.description}</p>}
       {place.photos.length > 0 && (
         <div className="details-gallery">
           {place.photos.map((photo, index) => (
