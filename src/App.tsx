@@ -284,6 +284,7 @@ export default function App() {
         <button
           type="button"
           className={`mobile-tabbar__seg${mobileView === 'map' ? ' active' : ''}`}
+          aria-pressed={mobileView === 'map'}
           onClick={() => setMobileView('map')}
         >
           <Map size={18} aria-hidden="true" /> Carte
@@ -291,6 +292,7 @@ export default function App() {
         <button
           type="button"
           className={`mobile-tabbar__seg${mobileView === 'list' ? ' active' : ''}`}
+          aria-pressed={mobileView === 'list'}
           onClick={() => setMobileView('list')}
         >
           <List size={18} aria-hidden="true" /> Liste
