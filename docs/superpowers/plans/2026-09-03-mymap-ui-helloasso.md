@@ -242,6 +242,7 @@ button {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
@@ -678,7 +679,12 @@ describe('Button', () => {
         Go
       </Button>,
     );
-    expect(screen.getByRole('button', { name: 'Go' })).toBeDisabled();
+    const btn = screen.getByRole('button', { name: 'Go' });
+    expect(btn).toBeDisabled();
+    expect(btn).toHaveAttribute('aria-busy', 'true');
+    const spinner = btn.querySelector('.ha-spinner');
+    expect(spinner).not.toBeNull();
+    expect(spinner?.parentElement).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('transmet type submit', () => {
@@ -773,12 +779,19 @@ export default function Button({
     <button
       type={type}
       disabled={disabled || loading}
+      aria-busy={loading}
       className={`ha-button ha-button--${variant} ha-button--${size}${className ? ` ${className}` : ''}`}
       {...rest}
     >
-      {loading ? <Spinner size={16} /> : iconLeft}
+      {loading ? (
+        <span aria-hidden="true">
+          <Spinner size={16} />
+        </span>
+      ) : (
+        iconLeft
+      )}
       {children}
-      {iconRight}
+      {loading ? null : iconRight}
     </button>
   );
 }
@@ -834,7 +847,7 @@ export default function Button({
 .ha-button--accent {
   background: var(--ha-sun);
   border-color: var(--ha-sun);
-  color: #fff;
+  color: var(--ha-navy);
   border-radius: var(--radius-pill);
 }
 
@@ -940,6 +953,11 @@ export default function IconButton({ label, children, className = '', ...rest }:
 .ha-icon-button:hover:not(:disabled) {
   background: var(--ha-iris-10);
   color: var(--ha-iris);
+}
+
+.ha-icon-button:disabled {
+  opacity: 0.55;
+  cursor: default;
 }
 ```
 
