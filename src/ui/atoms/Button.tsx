@@ -29,6 +29,7 @@ export default function Button({
     <button
       type={type}
       disabled={disabled || loading}
+      aria-busy={loading}
       className={`ha-button ha-button--${variant} ha-button--${size}${className ? ` ${className}` : ''}`}
       {...rest}
     >
@@ -40,7 +41,7 @@ export default function Button({
         iconLeft
       )}
       {children}
-      {iconRight}
+      {loading ? null : iconRight}
     </button>
   );
 }

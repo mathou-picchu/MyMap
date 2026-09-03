@@ -47,7 +47,7 @@
 .ha-button--accent {
   background: var(--ha-sun);
   border-color: var(--ha-sun);
-  color: #fff;
+  color: var(--ha-navy);
   border-radius: var(--radius-pill);
 }
 

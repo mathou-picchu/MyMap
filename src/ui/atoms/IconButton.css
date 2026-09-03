@@ -18,3 +18,8 @@
   background: var(--ha-iris-10);
   color: var(--ha-iris);
 }
+
+.ha-icon-button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}

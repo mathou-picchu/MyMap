@@ -20,7 +20,12 @@ describe('Button', () => {
         Go
       </Button>,
     );
-    expect(screen.getByRole('button', { name: 'Go' })).toBeDisabled();
+    const btn = screen.getByRole('button', { name: 'Go' });
+    expect(btn).toBeDisabled();
+    expect(btn).toHaveAttribute('aria-busy', 'true');
+    const spinner = btn.querySelector('.ha-spinner');
+    expect(spinner).not.toBeNull();
+    expect(spinner?.parentElement).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('transmet type submit', () => {
