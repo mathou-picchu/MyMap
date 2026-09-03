@@ -125,6 +125,7 @@
   border: none;
   color: #fff;
   display: flex;
+  padding: 12px;
 }
 
 .viewer-nav {

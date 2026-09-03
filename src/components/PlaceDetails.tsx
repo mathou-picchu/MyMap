@@ -121,7 +121,7 @@ function PhotoViewer({
   }, [onClose, photos.length]);
 
   return (
-    <div className="photo-viewer" role="dialog" aria-modal="true" onClick={onClose}>
+    <div className="photo-viewer" role="dialog" aria-modal="true" aria-label="Visionneuse photo" onClick={onClose}>
       {url && <img src={url} alt="" onClick={(e) => e.stopPropagation()} />}
       {photos.length > 1 && (
         <>

@@ -263,6 +263,7 @@ export default function App() {
         <section className="side-column">
           {selectedPlace ? (
             <PlaceDetails
+              key={selectedPlace.id}
               place={selectedPlace}
               onBack={() => setSelectedPlaceId(null)}
               onEdit={() => setEditing(selectedPlace)}

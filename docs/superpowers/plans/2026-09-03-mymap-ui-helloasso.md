@@ -3866,7 +3866,7 @@ function PhotoViewer({
   }, [onClose, photos.length]);
 
   return (
-    <div className="photo-viewer" role="dialog" aria-modal="true" onClick={onClose}>
+    <div className="photo-viewer" role="dialog" aria-modal="true" aria-label="Visionneuse photo" onClick={onClose}>
       {url && <img src={url} alt="" onClick={(e) => e.stopPropagation()} />}
       {photos.length > 1 && (
         <>
@@ -4032,6 +4032,7 @@ function PhotoViewer({
   border: none;
   color: #fff;
   display: flex;
+  padding: 12px;
 }
 
 .viewer-nav {
@@ -4068,6 +4069,8 @@ Attendu : tout vert (PlaceDetails.test déjà mis à jour en tâche 2 : `'Marque
 git add src/components/PlaceDetails.tsx src/components/PlaceDetails.css src/App.css
 git commit -m "feat: fiche détaillée et visionneuse façon HelloAsso"
 ```
+
+**Correctif de suivi (review Task 13)** : ajouter `key={selectedPlace.id}` sur `<PlaceDetails>` dans App.tsx — sans clé, l'état local `confirmDelete` persiste au changement de lieu et « Oui, supprimer » peut détruire le mauvais point. Commit séparé : `fix: reset l'état de la fiche au changement de lieu (key)`.
 
 ---
 
@@ -4447,6 +4450,13 @@ git commit -m "feat: fin de migration DA — suppression d'App.css"
 | 1 — Fondations | 1-2 | Tokens DA, polices self-hostées, PWA re-teintée, icônes centralisées |
 | 2 — Design system | 3-9 | 10 atomes, 8 molécules, styleguide `#styleguide`, tests DS |
 | 3 — Écrans | 10-16 | Header, filtres, liste, fiche, formulaire, carte, onglets mobiles, `App.css` supprimé |
+
+### Backlog identifié en cours de route (hors scope, à traiter ultérieurement)
+
+- **A11y visionneuse photos** (PlaceDetails) : piège de focus à l'ouverture + restauration à la fermeture, `alt` de l'image pleine taille depuis `place.name` (prop à passer), masquage/`inert` de l'arrière-plan, tests clavier (flèches, clic backdrop). `aria-label="Visionneuse photo"` et cible tactile 58px déjà faits (review Task 13).
+- **Tokens de z-index** : remplacer les nombres magiques répartis (1100 SearchField, 1200 tabbar, 2000 modale, 3000 viewer) par des tokens `--z-*` centralisés dans tokens.css.
+- **`role="status"` sur EmptyState** (annonce du passage liste vide via filtres aux lecteurs d'écran).
+- **Exception contrastes assumée** : Button `danger` à 3.91:1 (exception DA HelloAsso documentée) ; verts balade/success proches (ΔE 4.30, contexts distincts).
 
 
 
