@@ -7,7 +7,7 @@ Application web installable (PWA) façon Google Maps pour créer vos propres poi
 - **Vos données restent chez vous** : les points sont stockés dans le navigateur (IndexedDB) et ne sont jamais envoyés nulle part. Le projet est partageable, vos données non.
 - **Carte OpenStreetMap** (Leaflet) : gratuite, sans clé API, ouverte sur Paris.
 - **Création de points** par recherche d'adresse (Nominatim) ou clic sur la carte.
-- **Double vue** carte / liste de cartes, façon Airbnb.
+- **Double vue** carte / liste de cartes, façon HelloAsso.
 - **Filtres** par type (Visite, Balade, Restaurant, Gourmandise, Hébergement, Shopping, Autre) et par milieu **Extérieur / Intérieur**, plus l'option « Masquer les faits ».
 - **Photos** multiples avec compression automatique.
 - **Export / import** JSON pour sauvegarder ou transférer vos points vers un autre appareil.

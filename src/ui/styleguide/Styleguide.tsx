@@ -19,6 +19,7 @@ import IconButton from '../atoms/IconButton';
 import Input from '../atoms/Input';
 import Pill from '../atoms/Pill';
 import Select from '../atoms/Select';
+import Textarea from '../atoms/Textarea';
 import Spinner from '../atoms/Spinner';
 import TypeIcon from '../atoms/TypeIcon';
 import DoneToggle from '../molecules/DoneToggle';
@@ -205,6 +206,10 @@ export default function Styleguide() {
                 <option key={t.id}>{t.label}</option>
               ))}
             </Select>
+          </label>
+          <label>
+            Notes
+            <Textarea rows={3} placeholder="ex : Réserver à l'avance" />
           </label>
           <label className="sg-checkbox">
             <Checkbox defaultChecked /> Gratuit

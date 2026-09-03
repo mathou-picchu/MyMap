@@ -1,31 +1,13 @@
 import {
-  AlertTriangle,
-  ArrowLeft,
   BedDouble,
   CakeSlice,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  EyeOff,
   Home,
-  ImagePlus,
   Landmark,
-  List,
-  LocateFixed,
-  Map,
   MapPin,
-  MapPinned,
-  Pencil,
-  Plus,
-  Search,
   ShoppingBag,
   Sun,
-  Trash2,
   TreePine,
-  Upload,
   UtensilsCrossed,
-  X,
   type LucideIcon,
 } from 'lucide-react';
 import type { MilieuId, PlaceTypeId } from '../types';
@@ -46,28 +28,6 @@ export const MILIEU_ICONS: Record<MilieuId, LucideIcon> = {
   outdoor: Sun,
   indoor: Home,
 };
-
-/** Icônes d'action (usage React). */
-export const ACTION_ICONS = {
-  add: Plus,
-  search: Search,
-  locate: LocateFixed,
-  export: Download,
-  import: Upload,
-  delete: Trash2,
-  edit: Pencil,
-  done: Check,
-  back: ArrowLeft,
-  close: X,
-  addPhoto: ImagePlus,
-  prev: ChevronLeft,
-  next: ChevronRight,
-  hideDone: EyeOff,
-  list: List,
-  map: Map,
-  logo: MapPinned,
-  alert: AlertTriangle,
-} as const;
 
 /**
  * Tracés SVG vendored (source d'origine : lucide-static v0.544.0, licence ISC)
