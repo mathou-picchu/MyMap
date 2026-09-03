@@ -1,4 +1,6 @@
 import { useRef } from 'react';
+import { Download, LocateFixed, Upload } from 'lucide-react';
+import IconButton from '../ui/atoms/IconButton';
 
 interface ToolbarProps {
   onExport: () => void;
@@ -10,20 +12,15 @@ export default function Toolbar({ onExport, onImport, onLocate }: ToolbarProps) 
   const fileRef = useRef<HTMLInputElement>(null);
   return (
     <div className="toolbar">
-      <button type="button" aria-label="Me localiser" title="Me localiser" onClick={onLocate}>
-        📍<span className="btn-label"> Me localiser</span>
-      </button>
-      <button type="button" aria-label="Exporter mes points" title="Exporter mes points" onClick={onExport}>
-        ⬇️<span className="btn-label"> Exporter</span>
-      </button>
-      <button
-        type="button"
-        aria-label="Importer un fichier"
-        title="Importer un fichier"
-        onClick={() => fileRef.current?.click()}
-      >
-        ⬆️<span className="btn-label"> Importer</span>
-      </button>
+      <IconButton label="Me localiser" onClick={onLocate}>
+        <LocateFixed size={18} />
+      </IconButton>
+      <IconButton label="Exporter mes points" onClick={onExport}>
+        <Download size={18} />
+      </IconButton>
+      <IconButton label="Importer un fichier" onClick={() => fileRef.current?.click()}>
+        <Upload size={18} />
+      </IconButton>
       <input
         ref={fileRef}
         type="file"

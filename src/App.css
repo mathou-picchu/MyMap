@@ -7,63 +7,6 @@
   --bg: var(--ha-bg);
 }
 
-.app {
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-}
-
-.app-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 16px;
-  min-height: 60px;
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  flex-wrap: wrap;
-}
-
-.app-title {
-  font-size: 20px;
-  margin: 0 8px 0 0;
-  color: var(--primary);
-  white-space: nowrap;
-}
-
-.toolbar {
-  display: flex;
-  gap: 8px;
-}
-
-.toolbar button {
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: #fff;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-.toolbar button:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.add-button {
-  padding: 9px 16px;
-  border-radius: 10px;
-  border: none;
-  background: var(--primary);
-  color: #fff;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.add-button.active {
-  background: var(--danger);
-}
-
 .type-filter {
   display: flex;
   align-items: center;
@@ -106,45 +49,6 @@
 
 .filter-pill.milieu + .filter-pill.milieu {
   margin-left: 0;
-}
-
-.storage-banner {
-  padding: 10px 16px;
-  background: #fef3c7;
-  color: #92400e;
-  font-size: 14px;
-  border-bottom: 1px solid #fde68a;
-}
-
-.app-main {
-  flex: 1;
-  display: flex;
-  min-height: 0;
-}
-
-.map-pane {
-  flex: 1 1 60%;
-  min-width: 0;
-  position: relative;
-}
-
-.map-container {
-  height: 100%;
-  width: 100%;
-}
-
-.map-container.add-mode,
-.map-container.add-mode .leaflet-grab {
-  cursor: crosshair !important;
-}
-
-.side-column {
-  flex: 0 0 400px;
-  width: 400px;
-  max-width: 45%;
-  background: #fff;
-  border-left: 1px solid var(--border);
-  overflow-y: auto;
 }
 
 .place-list {
@@ -571,10 +475,6 @@
   cursor: default;
 }
 
-.mobile-tabs {
-  display: none;
-}
-
 .marker-wrapper {
   background: transparent;
   border: none;
@@ -637,61 +537,5 @@
   }
   50% {
     transform: rotate(-45deg) scale(1.15);
-  }
-}
-
-@media (max-width: 900px) {
-  .app-header {
-    gap: 8px;
-    padding: 8px 12px;
-  }
-
-  .toolbar button {
-    padding: 8px;
-    font-size: 13px;
-  }
-
-  .toolbar .btn-label {
-    display: none;
-  }
-
-  .app-main {
-    position: relative;
-  }
-
-  .map-pane,
-  .side-column {
-    display: none;
-  }
-
-  .app-main[data-mobile-view='map'] .map-pane {
-    display: block;
-  }
-
-  .app-main[data-mobile-view='list'] .side-column {
-    display: block;
-    flex: 1 1 auto;
-    width: 100%;
-    max-width: none;
-    border-left: none;
-  }
-
-  .mobile-tabs {
-    display: flex;
-  }
-
-  .mobile-tabs button {
-    flex: 1;
-    padding: 14px;
-    border: none;
-    background: #fff;
-    border-top: 2px solid transparent;
-    font-weight: 600;
-    color: var(--muted);
-  }
-
-  .mobile-tabs button.active {
-    color: var(--primary);
-    border-top-color: var(--primary);
   }
 }

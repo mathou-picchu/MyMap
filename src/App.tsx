@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Map as LeafletMap } from 'leaflet';
+import { List, Map, MapPinned, Plus, X } from 'lucide-react';
 import MapView from './components/MapView';
 import PlaceDetails from './components/PlaceDetails';
 import PlaceForm from './components/PlaceForm';
 import PlaceList from './components/PlaceList';
+import Button from './ui/atoms/Button';
 import SearchField from './ui/molecules/SearchField';
+import StorageBanner from './ui/molecules/StorageBanner';
 import Toolbar from './components/Toolbar';
 import TypeFilter from './components/TypeFilter';
 import { PLACE_TYPE_IDS } from './constants';
@@ -17,6 +20,7 @@ import type { MapState, MilieuId, Place, PlaceDraft, PlaceTypeId } from './types
 import { useHashRoute } from './hooks/useHashRoute';
 import Styleguide from './ui/styleguide/Styleguide';
 import './App.css';
+import './AppShell.css';
 
 const PARIS_MAP_STATE: MapState = { lat: 48.8566, lng: 2.3522, zoom: 12 };
 
@@ -212,19 +216,22 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1 className="app-title">MyMap</h1>
+        <div className="app-brand">
+          <MapPinned size={26} aria-hidden="true" />
+          <h1 className="app-title">MyMap</h1>
+        </div>
         <SearchField onSelect={handleSearchSelect} />
         <Toolbar onExport={handleExport} onImport={handleImport} onLocate={handleLocate} />
-        <button
-          type="button"
-          className={`add-button${addMode ? ' active' : ''}`}
+        <Button
+          variant={addMode ? 'danger' : 'primary'}
+          iconLeft={addMode ? <X size={18} /> : <Plus size={18} />}
           onClick={() => {
             setAddMode((v) => !v);
             setDraft(null);
           }}
         >
-          ＋ Ajouter un lieu
-        </button>
+          {addMode ? 'Annuler' : 'Ajouter un lieu'}
+        </Button>
       </header>
       <TypeFilter
         active={activeTypes}
@@ -235,10 +242,10 @@ export default function App() {
         onToggleHideDone={() => setHideDone((v) => !v)}
       />
       {storageError && (
-        <div className="storage-banner" role="alert">
-          ⚠️ Stockage indisponible : impossible d'enregistrer tes points dans ce navigateur (mode
+        <StorageBanner>
+          Stockage indisponible : impossible d'enregistrer tes points dans ce navigateur (mode
           privé ?).
-        </div>
+        </StorageBanner>
       )}
       <main className="app-main" data-mobile-view={mobileView}>
         <div className="map-pane">
@@ -273,20 +280,21 @@ export default function App() {
           )}
         </section>
       </main>
-      <nav className="mobile-tabs">
+      <nav className="mobile-tabbar" aria-label="Basculer la vue mobile">
         <button
           type="button"
-          className={mobileView === 'map' ? 'active' : ''}
+          className={`mobile-tabbar__seg${mobileView === 'map' ? ' active' : ''}`}
           onClick={() => setMobileView('map')}
         >
-          Carte
+          <Map size={18} aria-hidden="true" /> Carte
         </button>
         <button
           type="button"
-          className={mobileView === 'list' ? 'active' : ''}
+          className={`mobile-tabbar__seg${mobileView === 'list' ? ' active' : ''}`}
           onClick={() => setMobileView('list')}
         >
-          Liste ({filteredPlaces.length})
+          <List size={18} aria-hidden="true" /> Liste
+          <span className="mobile-tabbar__count">{filteredPlaces.length}</span>
         </button>
       </nav>
       {(draft || editing) && (
