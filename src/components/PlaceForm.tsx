@@ -20,6 +20,7 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
   const isEdit = place !== null;
   const [name, setName] = useState(place?.name ?? draft?.name ?? '');
   const [address, setAddress] = useState(place?.address ?? draft?.address ?? '');
+  const [description, setDescription] = useState(place?.description ?? '');
   const [type, setType] = useState<PlaceTypeId>(place?.type ?? 'other');
   const [hours, setHours] = useState(place?.hours ?? '');
   const [isFree, setIsFree] = useState(place?.isFree ?? true);
@@ -66,6 +67,7 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
         id: place?.id ?? crypto.randomUUID(),
         name: name.trim(),
         address: address.trim(),
+        description: description.trim() || undefined,
         lat,
         lng,
         hours: hours.trim() || undefined,
@@ -96,6 +98,14 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
         <label>
           Address *
           <input value={address} onChange={(e) => setAddress(e.target.value)} />
+        </label>
+        <label>
+          Description
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={3}
+          />
         </label>
         <label>
           Type

@@ -84,6 +84,7 @@ describe('PlaceForm', () => {
         id: 'p1',
         name: 'Musée d\'Orsay',
         address: 'Paris',
+        description: 'Les horloges géantes',
         lat: 1,
         lng: 2,
         isFree: false,
@@ -95,7 +96,8 @@ describe('PlaceForm', () => {
       },
       draft: null,
     });
-    expect(screen.getByLabelText(/name \*/i)).toHaveValue('Musée d\'Orsay');
+    expect(screen.getByLabelText(/nom \*/i)).toHaveValue('Musée d\'Orsay');
+    expect(screen.getByLabelText(/description/i)).toHaveValue('Les horloges géantes');
     expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument();
   });
 
@@ -130,6 +132,25 @@ describe('PlaceForm', () => {
     await userEvent.click(screen.getByRole('button', { name: /create/i }));
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
     expect((onSave.mock.calls[0][0] as Place).isOutdoor).toBe(true);
+  });
+
+  it('saves the description', async () => {
+    const { onSave } = renderForm({
+      draft: { ...draft, name: 'Café pli', address: 'Paris' },
+    });
+    await userEvent.type(screen.getByLabelText(/description/i), '  Le café des lettres  ');
+    await userEvent.click(screen.getByRole('button', { name: /create/i }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
+    expect((onSave.mock.calls[0][0] as Place).description).toBe('Le café des lettres');
+  });
+
+  it('keeps the description undefined when left empty', async () => {
+    const { onSave } = renderForm({
+      draft: { ...draft, name: 'X', address: 'Paris' },
+    });
+    await userEvent.click(screen.getByRole('button', { name: /create/i }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
+    expect((onSave.mock.calls[0][0] as Place).description).toBeUndefined();
   });
 
   it('pre-checks the outdoor setting in edit mode and keeps it', async () => {
