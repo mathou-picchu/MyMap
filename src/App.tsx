@@ -14,6 +14,8 @@ import type { GeoResult } from './geocoding';
 import { isKnownTypeId, migratePlace, migrateTypeId } from './migrations';
 import { loadJSON, saveJSON } from './storage';
 import type { MapState, MilieuId, Place, PlaceDraft, PlaceTypeId } from './types';
+import { useHashRoute } from './hooks/useHashRoute';
+import Styleguide from './ui/styleguide/Styleguide';
 import './App.css';
 
 const PARIS_MAP_STATE: MapState = { lat: 48.8566, lng: 2.3522, zoom: 12 };
@@ -77,6 +79,11 @@ export default function App() {
   useEffect(() => {
     saveJSON('mymap.hidedone', hideDone);
   }, [hideDone]);
+
+  const hash = useHashRoute();
+  if (hash === '#styleguide') {
+    return <Styleguide />;
+  }
 
   const filteredPlaces = places.filter(
     (p) =>

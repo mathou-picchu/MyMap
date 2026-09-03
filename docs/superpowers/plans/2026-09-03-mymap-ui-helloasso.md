@@ -3179,7 +3179,7 @@ import { useHashRoute } from './hooks/useHashRoute';
 import Styleguide from './ui/styleguide/Styleguide';
 ```
 
-En tête du composant `App`, juste après les déclarations de state (avant `refreshPlaces`) :
+Dans le composant `App`, **après le dernier `useEffect` (celui de `hideDone`), juste avant `const filteredPlaces = ...`** :
 
 ```tsx
   const hash = useHashRoute();
@@ -3187,6 +3187,8 @@ En tête du composant `App`, juste après les déclarations de state (avant `ref
     return <Styleguide />;
   }
 ```
+
+> **Note (correction)** : ne PAS insérer ce early return avant `refreshPlaces` (placement initialement prévu) : App.tsx a 4 `useEffect` après `refreshPlaces`, et un early return avant ces hooks casserait l'ordre des hooks React au changement de route (« Rendered more hooks than during the previous render »). Le early return doit se trouver après tous les hooks.
 
 - [ ] **Step 8: Documenter dans `README.md`** (à la fin de la section « Points clés »)
 

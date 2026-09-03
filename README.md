@@ -12,6 +12,7 @@ Application web installable (PWA) façon Google Maps pour créer vos propres poi
 - **Photos** multiples avec compression automatique.
 - **Export / import** JSON pour sauvegarder ou transférer vos points vers un autre appareil.
 - Installable sur mobile et ordinateur (PWA), fonctionne hors ligne pour l'application et les tuiles déjà visitées.
+- **Styleguide** : ouvrez l'app avec `#styleguide` dans l'URL (ex : `http://localhost:5173/#styleguide`) pour consulter le design system complet (couleurs, typo, icônes, composants).
 
 ## Démarrage
 
