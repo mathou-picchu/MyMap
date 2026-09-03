@@ -255,11 +255,11 @@ button {
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import '@fontsource/open-sans/400.css';
-import '@fontsource/open-sans/600.css';
-import '@fontsource/open-sans/700.css';
-import '@fontsource/open-sans/800.css';
-import '@fontsource/besley/500-italic.css';
+import '@fontsource/open-sans/latin-400.css';
+import '@fontsource/open-sans/latin-600.css';
+import '@fontsource/open-sans/latin-700.css';
+import '@fontsource/open-sans/latin-800.css';
+import '@fontsource/besley/latin-500-italic.css';
 import './ui/tokens.css';
 import './ui/type-colors.css';
 import './ui/base.css';
@@ -430,28 +430,6 @@ export const MILIEU_ICONS: Record<MilieuId, LucideIcon> = {
   outdoor: Sun,
   indoor: Home,
 };
-
-/** Icônes d'action (usage React). */
-export const ACTION_ICONS = {
-  add: Plus,
-  search: Search,
-  locate: LocateFixed,
-  export: Download,
-  import: Upload,
-  delete: Trash2,
-  edit: Pencil,
-  done: Check,
-  back: ArrowLeft,
-  close: X,
-  addPhoto: ImagePlus,
-  prev: ChevronLeft,
-  next: ChevronRight,
-  hideDone: EyeOff,
-  list: List,
-  map: Map,
-  logo: MapPinned,
-  alert: AlertTriangle,
-} as const;
 
 /**
  * Tracés SVG vendored (source d'origine : lucide-static v0.544.0, licence ISC)
@@ -4457,7 +4435,7 @@ git commit -m "feat: fin de migration DA — suppression d'App.css"
 | Phase | Tasks | Résultat |
 |---|---|---|
 | 1 — Fondations | 1-2 | Tokens DA, polices self-hostées, PWA re-teintée, icônes centralisées |
-| 2 — Design system | 3-9 | 10 atomes, 8 molécules, styleguide `#styleguide`, tests DS |
+| 2 — Design system | 3-9 | 10 atomes, 9 molécules, styleguide `#styleguide`, tests DS |
 | 3 — Écrans | 10-16 | Header, filtres, liste, fiche, formulaire, carte, onglets mobiles, `App.css` supprimé |
 
 ### Backlog identifié en cours de route (hors scope, à traiter ultérieurement)
@@ -4466,6 +4444,8 @@ git commit -m "feat: fin de migration DA — suppression d'App.css"
 - **Tokens de z-index** : remplacer les nombres magiques répartis (1100 SearchField, 1200 tabbar, 2000 modale, 3000 viewer) par des tokens `--z-*` centralisés dans tokens.css.
 - **Modales (formulaire + visionneuse) — harmonisation a11y/UX** : `role="dialog"`/`aria-modal`/`aria-label` sur la modale PlaceForm (la visionneuse les a), piège de focus + restauration à la fermeture, confirmation de fermeture du formulaire quand des saisies existent (clic overlay/Escape → perte totale du brouillon, hérité).
 - **`role="status"` sur EmptyState** (annonce du passage liste vide via filtres aux lecteurs d'écran).
+- **Couverture tests résiduelle** : `MapView.tsx` (Leaflet/jsdom — justifiable) et `useHashRoute` côté hook testé mais `useObjectUrl` sans test direct.
+- **Correctifs post-revue finale** : `ACTION_ICONS` supprimé d'`icons.ts` (code mort — les écrans importent lucide-react directement, pattern assumé) ; imports fontsource par subset latin (évite ~384 KB de subsets grec/cyrillique/hébreu/vietnamien précachés par le SW) ; favicon re-teint iris `#4c40cf` ; README « façon Airbnb » → « façon HelloAsso » ; Textarea ajouté à la styleguide.
 - **Exception contrastes assumée** : Button `danger` à 3.91:1 (exception DA HelloAsso documentée) ; verts balade/success proches (ΔE 4.30, contexts distincts).
 
 
