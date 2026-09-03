@@ -9,6 +9,40 @@
   flex-wrap: nowrap;
 }
 
-.type-filter__hide-done {
-  margin-left: 12px;
+.type-filter__modifiers {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 4px;
+  padding-left: 12px;
+  border-left: 1px solid var(--ha-border);
+}
+
+.setting-toggle {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--ha-border);
+  border-radius: var(--radius-pill);
+}
+
+.setting-toggle__seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ha-muted);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.setting-toggle__seg.active {
+  background: var(--ha-navy);
+  color: #fff;
 }

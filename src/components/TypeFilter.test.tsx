@@ -59,6 +59,16 @@ describe('TypeFilter', () => {
     expect(pill).toHaveAttribute('aria-pressed', 'false');
   });
 
+  it('groups setting segments and Hide done in a modifiers zone', () => {
+    renderFilter(PLACE_TYPES.map((t) => t.id), vi.fn(), ['outdoor']);
+    const modifiers = screen.getByRole('group', { name: 'Filter modifiers' });
+    expect(modifiers).toBeInTheDocument();
+    expect(modifiers).toContainElement(screen.getByRole('button', { name: /outdoor/i }));
+    expect(modifiers).toContainElement(screen.getByRole('button', { name: /hide done/i }));
+    expect(screen.getByRole('button', { name: /outdoor/i })).toHaveClass('active');
+    expect(screen.getByRole('button', { name: /indoor/i })).not.toHaveClass('active');
+  });
+
   it('renders setting pills active by default', () => {
     renderFilter(PLACE_TYPES.map((t) => t.id));
     expect(screen.getByRole('button', { name: /outdoor/i })).toHaveAttribute('aria-pressed', 'true');

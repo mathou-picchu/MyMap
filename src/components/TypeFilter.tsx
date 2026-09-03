@@ -30,27 +30,27 @@ export default function TypeFilter({
           <TypeIcon type={t.id} size={14} /> {t.label}
         </Pill>
       ))}
-      {MILIEUS.map((m) => {
-        const MilieuIcon = MILIEU_ICONS[m.id];
-        return (
-          <Pill
-            key={m.id}
-            color="navy"
-            active={activeMilieu.has(m.id)}
-            onClick={() => onToggleMilieu(m.id)}
-          >
-            <MilieuIcon size={14} aria-hidden="true" /> {m.label}
-          </Pill>
-        );
-      })}
-      <Pill
-        color="success"
-        active={hideDone}
-        onClick={onToggleHideDone}
-        className="type-filter__hide-done"
-      >
-        <EyeOff size={14} aria-hidden="true" /> Hide done
-      </Pill>
+      <div className="type-filter__modifiers" role="group" aria-label="Filter modifiers">
+        <div className="setting-toggle">
+          {MILIEUS.map((m) => {
+            const MilieuIcon = MILIEU_ICONS[m.id];
+            return (
+              <button
+                key={m.id}
+                type="button"
+                className={`setting-toggle__seg${activeMilieu.has(m.id) ? ' active' : ''}`}
+                aria-pressed={activeMilieu.has(m.id)}
+                onClick={() => onToggleMilieu(m.id)}
+              >
+                <MilieuIcon size={14} aria-hidden="true" /> {m.label}
+              </button>
+            );
+          })}
+        </div>
+        <Pill color="success" active={hideDone} onClick={onToggleHideDone}>
+          <EyeOff size={14} aria-hidden="true" /> Hide done
+        </Pill>
+      </div>
     </div>
   );
 }
