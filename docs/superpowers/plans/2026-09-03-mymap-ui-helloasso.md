@@ -223,7 +223,6 @@ button {
 :focus-visible {
   outline: 2px solid var(--ha-iris);
   outline-offset: 2px;
-  border-radius: 4px;
 }
 
 ::selection {
