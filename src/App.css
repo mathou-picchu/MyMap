@@ -1,8 +1,0 @@
-:root {
-  --primary: var(--ha-iris);
-  --danger: var(--ha-danger);
-  --text: var(--ha-navy);
-  --muted: var(--ha-muted);
-  --border: var(--ha-border);
-  --bg: var(--ha-bg);
-}

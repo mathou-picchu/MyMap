@@ -19,7 +19,6 @@ import { loadJSON, saveJSON } from './storage';
 import type { MapState, MilieuId, Place, PlaceDraft, PlaceTypeId } from './types';
 import { useHashRoute } from './hooks/useHashRoute';
 import Styleguide from './ui/styleguide/Styleguide';
-import './App.css';
 import './AppShell.css';
 
 const PARIS_MAP_STATE: MapState = { lat: 48.8566, lng: 2.3522, zoom: 12 };
