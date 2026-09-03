@@ -1,8 +1,14 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { ImagePlus } from 'lucide-react';
 import { PLACE_TYPES } from '../constants';
 import { compressPhoto } from '../photoUtils';
 import type { Place, PlaceDraft, PlacePhoto, PlaceTypeId } from '../types';
-import ImgThumb from '../ui/molecules/ImgThumb';
+import Button from '../ui/atoms/Button';
+import Checkbox from '../ui/atoms/Checkbox';
+import Input from '../ui/atoms/Input';
+import Select from '../ui/atoms/Select';
+import PhotoThumb from '../ui/molecules/PhotoThumb';
+import './PlaceForm.css';
 
 interface PlaceFormProps {
   place: Place | null;
@@ -87,50 +93,55 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
   return (
     <div className="modal-overlay" onClick={onCancel}>
       <form className="place-form" onClick={(e) => e.stopPropagation()} onSubmit={handleSubmit}>
-        <h2>{isEdit ? 'Modifier le lieu' : 'Nouveau lieu'}</h2>
-        {error && <p className="form-error">{error}</p>}
+        <h2 className="place-form__title">{isEdit ? 'Modifier le lieu' : 'Nouveau lieu'}</h2>
+        {error && (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        )}
         <label>
           Nom *
-          <input value={name} onChange={(e) => setName(e.target.value)} autoFocus />
+          <Input value={name} onChange={(e) => setName(e.target.value)} autoFocus />
         </label>
         <label>
           Adresse *
-          <input value={address} onChange={(e) => setAddress(e.target.value)} />
+          <Input value={address} onChange={(e) => setAddress(e.target.value)} />
         </label>
         <label>
           Type
-          <select value={type} onChange={(e) => setType(e.target.value as PlaceTypeId)}>
+          <Select value={type} onChange={(e) => setType(e.target.value as PlaceTypeId)}>
             {PLACE_TYPES.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.label}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <label>
           Horaires d'ouverture
-          <input
+          <Input
             value={hours}
             onChange={(e) => setHours(e.target.value)}
             placeholder="ex : Lun-Ven 9h-18h"
           />
         </label>
-        <label className="checkbox">
-          <input type="checkbox" checked={isFree} onChange={(e) => setIsFree(e.target.checked)} />
+        <label className="place-form__check">
+          <Checkbox checked={isFree} onChange={(e) => setIsFree(e.target.checked)} />
           Gratuit
         </label>
         {!isFree && (
           <label>
             Prix
-            <input value={price} onChange={(e) => setPrice(e.target.value)} placeholder="ex : 12 €" />
+            <Input value={price} onChange={(e) => setPrice(e.target.value)} placeholder="ex : 12 €" />
           </label>
         )}
-        <label className="checkbox">
-          <input type="checkbox" checked={isOutdoor} onChange={(e) => setIsOutdoor(e.target.checked)} />
+        <label className="place-form__check">
+          <Checkbox checked={isOutdoor} onChange={(e) => setIsOutdoor(e.target.checked)} />
           Extérieur
         </label>
-        <label>
-          Photos
+        <label className="place-form__photos">
+          <ImagePlus size={20} aria-hidden="true" />
+          <span>Photos — cliquer pour ajouter</span>
           <input
             type="file"
             accept="image/*"
@@ -144,26 +155,21 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
         {photos.length > 0 && (
           <div className="photo-thumbs">
             {photos.map((photo) => (
-              <div key={photo.id} className="photo-thumb">
-                <ImgThumb blob={photo.blob} />
-                <button
-                  type="button"
-                  onClick={() => setPhotos((prev) => prev.filter((p) => p.id !== photo.id))}
-                  aria-label="Retirer la photo"
-                >
-                  ×
-                </button>
-              </div>
+              <PhotoThumb
+                key={photo.id}
+                blob={photo.blob}
+                onRemove={() => setPhotos((prev) => prev.filter((p) => p.id !== photo.id))}
+              />
             ))}
           </div>
         )}
         <div className="form-actions">
-          <button type="button" onClick={onCancel}>
+          <Button variant="ghost" onClick={onCancel}>
             Annuler
-          </button>
-          <button type="submit" disabled={busy}>
+          </Button>
+          <Button type="submit" disabled={busy}>
             {isEdit ? 'Enregistrer' : 'Créer'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

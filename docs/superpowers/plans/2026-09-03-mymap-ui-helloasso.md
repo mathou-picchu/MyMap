@@ -4267,7 +4267,7 @@ Nouveau `return` :
 .form-error {
   color: var(--ha-danger-text);
   background: var(--ha-danger-bg);
-  border: 1px solid #f5c6c8;
+  border: 1px solid var(--ha-danger-border);
   border-radius: var(--radius-sm);
   padding: 8px 10px;
   margin: 0;
@@ -4287,6 +4287,8 @@ Nouveau `return` :
   margin-top: 6px;
 }
 ```
+
+> **Déviation (token)** : dans `.form-error`, `var(--ha-danger-border)` (token posé en Task 6, valeur `#f5c6c8` identique) remplace le `#f5c6c8` codé dur prévu initialement.
 
 - [ ] **Step 3: Retirer d'`App.css` les règles migrées**
 
