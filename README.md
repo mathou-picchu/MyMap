@@ -10,6 +10,7 @@ Installable web app (PWA) in the style of Google Maps to create your own places 
 - **Dual view** map / card list, Airbnb-style.
 - **Filters** by type (Visit, Walk, Restaurant, Dessert, Lodging, Shopping, Other) and by **Outdoor / Indoor** setting, plus a “Hide done” option.
 - **Multiple photos** with automatic compression.
+- **Descriptions**: free-text notes on every place — what makes it special, tips…
 - **JSON export / import** to back up or transfer your places to another device.
 - Installable on mobile and desktop (PWA), works offline for the app and already-visited tiles.
 
