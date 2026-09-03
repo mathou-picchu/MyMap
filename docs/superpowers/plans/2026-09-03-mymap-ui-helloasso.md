@@ -3716,7 +3716,9 @@ export default function PlaceList({
 
 - [ ] **Step 3: Retirer d'`App.css` les règles migrées**
 
-Supprimer : `.place-list`, `.place-list.empty`, `.place-card` (et toutes ses sous-règles : `.card-select`, `.card-done`, `.done`, `.card-thumb`, `.card-fallback`, `.card-body`, `.card-title`, `.card-address`, `.card-meta`), `.type-badge`.
+Supprimer : `.place-list`, `.place-list.empty`, `.place-card` (et toutes ses sous-règles : `.card-select`, `.card-done`, `.done`, `.card-thumb`, `.card-fallback`, `.card-body`, `.card-title`, `.card-address`, `.card-meta`).
+
+**Note (correction)** : `.type-badge` est encore utilisé par `PlaceDetails.tsx` — le conserver ici ; il sera retiré en Task 13 avec la migration de la fiche détaillée.
 
 - [ ] **Step 4: Vérifier et committer**
 
@@ -4052,7 +4054,7 @@ function PhotoViewer({
 
 - [ ] **Step 3: Retirer d'`App.css` les règles migrées**
 
-Supprimer : `.place-details`, `.details-back`, `.details-header h2`, `.details-address`, `.details-gallery`, `.gallery-thumb` (et `.gallery-thumb .img-thumb`), `.details-info` (et `dt`/`dd`), `.details-actions` (et ses boutons), `.confirm-label`, `.photo-viewer` (et `img`), `.viewer-close`, `.viewer-nav` (et `.prev`/`.next`).
+Supprimer : `.place-details`, `.details-back`, `.details-header h2`, `.details-address`, `.details-gallery`, `.gallery-thumb` (et `.gallery-thumb .img-thumb`), `.details-info` (et `dt`/`dd`), `.details-actions` (et ses boutons), `.confirm-label`, `.photo-viewer` (et `img`), `.viewer-close`, `.viewer-nav` (et `.prev`/`.next`), `.type-badge` (conservé depuis la Task 12).
 
 - [ ] **Step 4: Vérifier et committer**
 
