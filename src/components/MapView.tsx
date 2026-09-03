@@ -5,6 +5,8 @@ import { draftPinIcon, placePinIcon } from '../ui/molecules/MarkerPin';
 import 'leaflet/dist/leaflet.css';
 import './MapView.css';
 
+const draftIcon = draftPinIcon();
+
 interface MapViewProps {
   places: Place[];
   selectedId: string | null;
@@ -58,7 +60,7 @@ export default function MapView({
         />
       ))}
       {draftPos && (
-        <Marker position={[draftPos.lat, draftPos.lng]} icon={draftPinIcon()} interactive={false} />
+        <Marker position={[draftPos.lat, draftPos.lng]} icon={draftIcon} interactive={false} />
       )}
     </MapContainer>
   );

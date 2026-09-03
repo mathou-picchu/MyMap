@@ -23,5 +23,5 @@
 .leaflet-container .leaflet-control-attribution {
   background: rgba(255, 251, 245, 0.85) !important;
   color: var(--ha-muted);
-  font-size: 10px;
+  font-size: 11px;
 }

@@ -4338,7 +4338,13 @@ import './MapView.css';
 et :
 
 ```tsx
-        <Marker position={[draftPos.lat, draftPos.lng]} icon={draftPinIcon()} interactive={false} />
+        <Marker position={[draftPos.lat, draftPos.lng]} icon={draftIcon} interactive={false} />
+```
+
+avec, au niveau module (évite de recréer l'icône à chaque render — redémarrerait l'animation pulse) :
+
+```tsx
+const draftIcon = draftPinIcon();
 ```
 
 - [ ] **Step 2: Créer `src/components/MapView.css`**
@@ -4369,7 +4375,7 @@ et :
 .leaflet-container .leaflet-control-attribution {
   background: rgba(255, 251, 245, 0.85) !important;
   color: var(--ha-muted);
-  font-size: 10px;
+  font-size: 11px;
 }
 ```
 
