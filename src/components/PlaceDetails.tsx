@@ -1,8 +1,15 @@
 import { useEffect, useState } from 'react';
-import { getMilieuDef, getPlaceTypeDef } from '../constants';
+import { ArrowLeft, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { getPlaceTypeDef } from '../constants';
 import { useObjectUrl } from '../hooks/useObjectUrl';
 import type { Place, PlacePhoto } from '../types';
-import ImgThumb from './ImgThumb';
+import Badge from '../ui/atoms/Badge';
+import Button from '../ui/atoms/Button';
+import TypeIcon from '../ui/atoms/TypeIcon';
+import DoneToggle from '../ui/molecules/DoneToggle';
+import ImgThumb from '../ui/molecules/ImgThumb';
+import MilieuChip from '../ui/molecules/MilieuChip';
+import './PlaceDetails.css';
 
 interface PlaceDetailsProps {
   place: Place;
@@ -14,25 +21,22 @@ interface PlaceDetailsProps {
 
 export default function PlaceDetails({ place, onBack, onEdit, onDelete, onToggleDone }: PlaceDetailsProps) {
   const def = getPlaceTypeDef(place.type);
-  const milieu = getMilieuDef(place.isOutdoor ?? false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
 
   return (
     <article className="place-details">
       <button type="button" className="details-back" onClick={onBack}>
-        ← Back to list
+        <ArrowLeft size={16} aria-hidden="true" /> Back to list
       </button>
       <header className="details-header">
         <div className="details-badges">
-          <span className="type-badge" style={{ background: def.color }}>
-            {def.emoji} {def.label}
-          </span>
-          <span className="type-badge" style={{ background: milieu.color }}>
-            {milieu.emoji} {milieu.label}
-          </span>
+          <Badge color={place.type} icon={<TypeIcon type={place.type} size={12} />}>
+            {def.label}
+          </Badge>
+          <MilieuChip milieu={place.isOutdoor ? 'outdoor' : 'indoor'} />
         </div>
-        <h2>{place.name}</h2>
+        <h2 className="details-title">{place.name}</h2>
         <p className="details-address">{place.address}</p>
       </header>
       {place.description && <p className="details-description">{place.description}</p>}
@@ -64,30 +68,24 @@ export default function PlaceDetails({ place, onBack, onEdit, onDelete, onToggle
         </div>
       </dl>
       <div className="details-actions">
-        <button
-          type="button"
-          className={`done-toggle${place.isDone ? ' done' : ''}`}
-          onClick={() => onToggleDone(place.id)}
-        >
-          {place.isDone ? '✓ Done' : '✓ Mark as done'}
-        </button>
-        <button type="button" onClick={onEdit}>
+        <DoneToggle done={place.isDone === true} onToggle={() => onToggleDone(place.id)} variant="line" />
+        <Button variant="outline" size="sm" onClick={onEdit}>
           Edit
-        </button>
+        </Button>
         {confirmDelete ? (
           <>
             <span className="confirm-label">Delete this place?</span>
-            <button type="button" className="danger" onClick={() => onDelete(place.id)}>
+            <Button variant="danger" size="sm" onClick={() => onDelete(place.id)}>
               Yes, delete
-            </button>
-            <button type="button" onClick={() => setConfirmDelete(false)}>
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(false)}>
               Cancel
-            </button>
+            </Button>
           </>
         ) : (
-          <button type="button" className="danger" onClick={() => setConfirmDelete(true)}>
+          <Button variant="danger" size="sm" onClick={() => setConfirmDelete(true)}>
             Delete
-          </button>
+          </Button>
         )}
       </div>
       {viewerIndex !== null && (
@@ -124,7 +122,7 @@ function PhotoViewer({
   }, [onClose, photos.length]);
 
   return (
-    <div className="photo-viewer" role="dialog" aria-modal="true" onClick={onClose}>
+    <div className="photo-viewer" role="dialog" aria-modal="true" aria-label="Photo viewer" onClick={onClose}>
       {url && <img src={url} alt="" onClick={(e) => e.stopPropagation()} />}
       {photos.length > 1 && (
         <>
@@ -137,7 +135,7 @@ function PhotoViewer({
               setIndex((i) => (i - 1 + photos.length) % photos.length);
             }}
           >
-            ‹
+            <ChevronLeft size={44} aria-hidden="true" />
           </button>
           <button
             type="button"
@@ -148,12 +146,12 @@ function PhotoViewer({
               setIndex((i) => (i + 1) % photos.length);
             }}
           >
-            ›
+            <ChevronRight size={44} aria-hidden="true" />
           </button>
         </>
       )}
       <button type="button" className="viewer-close" aria-label="Close" onClick={onClose}>
-        ×
+        <X size={34} aria-hidden="true" />
       </button>
     </div>
   );

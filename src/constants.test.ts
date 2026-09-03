@@ -10,11 +10,10 @@ describe('constants', () => {
     expect(new Set(PLACE_TYPES.map((t) => t.id)).size).toBe(PLACE_TYPES.length);
   });
 
-  it('has valid labels, colors and emojis', () => {
+  it('has valid labels and colors', () => {
     for (const t of PLACE_TYPES) {
       expect(t.label.length).toBeGreaterThan(0);
       expect(t.color).toMatch(/^#[0-9a-f]{6}$/i);
-      expect(t.emoji.length).toBeGreaterThan(0);
     }
   });
 

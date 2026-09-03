@@ -1,0 +1,51 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -0.2px;
+  color: var(--ha-navy);
+  background: var(--ha-bg);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ha-iris);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--ha-iris-20);
+}
+
+/* Accent éditorial signature HelloAsso (Besley italique) */
+.ha-accent {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 500;
+  text-transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

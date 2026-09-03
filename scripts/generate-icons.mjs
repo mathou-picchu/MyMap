@@ -40,7 +40,7 @@ function makePng(size) {
   const r = size * 0.22;
   const tipY = size * 0.74;
   const tailLen = tipY - cy;
-  const bg = [79, 70, 229];
+  const bg = [76, 64, 207];
   const fg = [255, 255, 255];
   const rowLen = size * 3;
   const raw = Buffer.alloc((rowLen + 1) * size);

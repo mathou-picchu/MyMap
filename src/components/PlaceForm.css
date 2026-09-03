@@ -1,0 +1,102 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(19, 20, 69, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.place-form {
+  background: var(--ha-surface);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  width: min(560px, 100%);
+  max-height: 92dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow-lg);
+}
+
+.place-form__title {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.8px;
+  color: var(--ha-navy);
+}
+
+.place-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.place-form__check {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.place-form__photos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 2px dashed var(--ha-iris-20);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  color: var(--ha-muted);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.place-form__photos:hover {
+  border-color: var(--ha-iris);
+  color: var(--ha-iris);
+}
+
+.place-form__photos:focus-within {
+  border-color: var(--ha-iris);
+  color: var(--ha-iris);
+}
+
+.place-form__photos input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.form-error {
+  color: var(--ha-danger-text);
+  background: var(--ha-danger-bg);
+  border: 1px solid var(--ha-danger-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  margin: 0;
+  font-size: 14px;
+}
+
+.photo-thumbs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}

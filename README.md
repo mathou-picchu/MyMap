@@ -7,12 +7,13 @@ Installable web app (PWA) in the style of Google Maps to create your own places 
 - **Your data stays with you**: places are stored in your browser (IndexedDB) and never sent anywhere. The project is shareable, your data is not.
 - **OpenStreetMap map** (Leaflet): free, no API key, opens on Paris.
 - **Place creation** by address search (Nominatim) or by clicking the map.
-- **Dual view** map / card list, Airbnb-style.
+- **Dual view** map / card list, HelloAsso-style design system.
 - **Filters** by type (Visit, Walk, Restaurant, Dessert, Lodging, Shopping, Other) and by **Outdoor / Indoor** setting, plus a “Hide done” option.
 - **Multiple photos** with automatic compression.
 - **Descriptions**: free-text notes on every place — what makes it special, tips…
 - **JSON export / import** to back up or transfer your places to another device.
 - Installable on mobile and desktop (PWA), works offline for the app and already-visited tiles.
+- **Styleguide**: open the app with `#styleguide` in the URL (e.g. `http://localhost:5173/#styleguide`) to browse the full design system (colors, type, icons, components).
 
 ## Getting started
 

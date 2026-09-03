@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Map as LeafletMap } from 'leaflet';
+import { List, Map, MapPinned, Plus, X } from 'lucide-react';
 import MapView from './components/MapView';
 import PlaceDetails from './components/PlaceDetails';
 import PlaceForm from './components/PlaceForm';
 import PlaceList from './components/PlaceList';
-import SearchBar from './components/SearchBar';
+import Button from './ui/atoms/Button';
+import SearchField from './ui/molecules/SearchField';
+import StorageBanner from './ui/molecules/StorageBanner';
 import Toolbar from './components/Toolbar';
 import TypeFilter from './components/TypeFilter';
 import { PLACE_TYPE_IDS } from './constants';
@@ -14,7 +17,9 @@ import type { GeoResult } from './geocoding';
 import { isKnownTypeId, migratePlace, migrateTypeId } from './migrations';
 import { loadJSON, saveJSON } from './storage';
 import type { MapState, MilieuId, Place, PlaceDraft, PlaceTypeId } from './types';
-import './App.css';
+import { useHashRoute } from './hooks/useHashRoute';
+import Styleguide from './ui/styleguide/Styleguide';
+import './AppShell.css';
 
 const PARIS_MAP_STATE: MapState = { lat: 48.8566, lng: 2.3522, zoom: 12 };
 
@@ -77,6 +82,11 @@ export default function App() {
   useEffect(() => {
     saveJSON('mymap.hidedone', hideDone);
   }, [hideDone]);
+
+  const hash = useHashRoute();
+  if (hash === '#styleguide') {
+    return <Styleguide />;
+  }
 
   const filteredPlaces = places.filter(
     (p) =>
@@ -205,19 +215,22 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1 className="app-title">MyMap</h1>
-        <SearchBar onSelect={handleSearchSelect} />
+        <div className="app-brand">
+          <MapPinned size={26} aria-hidden="true" />
+          <h1 className="app-title">MyMap</h1>
+        </div>
+        <SearchField onSelect={handleSearchSelect} />
         <Toolbar onExport={handleExport} onImport={handleImport} onLocate={handleLocate} />
-        <button
-          type="button"
-          className={`add-button${addMode ? ' active' : ''}`}
+        <Button
+          variant={addMode ? 'danger' : 'primary'}
+          iconLeft={addMode ? <X size={18} /> : <Plus size={18} />}
           onClick={() => {
             setAddMode((v) => !v);
             setDraft(null);
           }}
         >
-          ＋ Add a place
-        </button>
+          {addMode ? 'Cancel' : 'Add a place'}
+        </Button>
       </header>
       <TypeFilter
         active={activeTypes}
@@ -228,9 +241,9 @@ export default function App() {
         onToggleHideDone={() => setHideDone((v) => !v)}
       />
       {storageError && (
-        <div className="storage-banner" role="alert">
-          ⚠️ Storage unavailable: cannot save your places in this browser (private mode?).
-        </div>
+        <StorageBanner>
+          Storage unavailable: cannot save your places in this browser (private mode?).
+        </StorageBanner>
       )}
       <main className="app-main" data-mobile-view={mobileView}>
         <div className="map-pane">
@@ -248,6 +261,7 @@ export default function App() {
         <section className="side-column">
           {selectedPlace ? (
             <PlaceDetails
+              key={selectedPlace.id}
               place={selectedPlace}
               onBack={() => setSelectedPlaceId(null)}
               onEdit={() => setEditing(selectedPlace)}
@@ -265,20 +279,23 @@ export default function App() {
           )}
         </section>
       </main>
-      <nav className="mobile-tabs">
+      <nav className="mobile-tabbar" aria-label="Switch between map and list">
         <button
           type="button"
-          className={mobileView === 'map' ? 'active' : ''}
+          className={`mobile-tabbar__seg${mobileView === 'map' ? ' active' : ''}`}
+          aria-pressed={mobileView === 'map'}
           onClick={() => setMobileView('map')}
         >
-          Map
+          <Map size={18} aria-hidden="true" /> Map
         </button>
         <button
           type="button"
-          className={mobileView === 'list' ? 'active' : ''}
+          className={`mobile-tabbar__seg${mobileView === 'list' ? ' active' : ''}`}
+          aria-pressed={mobileView === 'list'}
           onClick={() => setMobileView('list')}
         >
-          List ({filteredPlaces.length})
+          <List size={18} aria-hidden="true" /> List
+          <span className="mobile-tabbar__count">{filteredPlaces.length}</span>
         </button>
       </nav>
       {(draft || editing) && (

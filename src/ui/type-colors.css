@@ -1,0 +1,85 @@
+.ha-badge--visit,
+.type-surface--visit {
+  background: var(--type-visit-soft);
+  color: var(--type-visit);
+}
+.ha-badge--balade,
+.type-surface--balade {
+  background: var(--type-balade-soft);
+  color: var(--type-balade);
+}
+.ha-badge--restaurant,
+.type-surface--restaurant {
+  background: var(--type-restaurant-soft);
+  color: var(--type-restaurant);
+}
+.ha-badge--gourmandise,
+.type-surface--gourmandise {
+  background: var(--type-gourmandise-soft);
+  color: var(--type-gourmandise);
+}
+.ha-badge--lodging,
+.type-surface--lodging {
+  background: var(--type-lodging-soft);
+  color: var(--type-lodging);
+}
+.ha-badge--shopping,
+.type-surface--shopping {
+  background: var(--type-shopping-soft);
+  color: var(--type-shopping);
+}
+.ha-badge--other,
+.type-surface--other {
+  background: var(--type-other-soft);
+  color: var(--type-other);
+}
+
+.ha-pill--visit {
+  border-color: var(--type-visit);
+  color: var(--type-visit);
+}
+.ha-pill--visit.active {
+  background: var(--type-visit);
+}
+.ha-pill--balade {
+  border-color: var(--type-balade);
+  color: var(--type-balade);
+}
+.ha-pill--balade.active {
+  background: var(--type-balade);
+}
+.ha-pill--restaurant {
+  border-color: var(--type-restaurant);
+  color: var(--type-restaurant);
+}
+.ha-pill--restaurant.active {
+  background: var(--type-restaurant);
+}
+.ha-pill--gourmandise {
+  border-color: var(--type-gourmandise);
+  color: var(--type-gourmandise);
+}
+.ha-pill--gourmandise.active {
+  background: var(--type-gourmandise);
+}
+.ha-pill--lodging {
+  border-color: var(--type-lodging);
+  color: var(--type-lodging);
+}
+.ha-pill--lodging.active {
+  background: var(--type-lodging);
+}
+.ha-pill--shopping {
+  border-color: var(--type-shopping);
+  color: var(--type-shopping);
+}
+.ha-pill--shopping.active {
+  background: var(--type-shopping);
+}
+.ha-pill--other {
+  border-color: var(--type-other);
+  color: var(--type-other);
+}
+.ha-pill--other.active {
+  background: var(--type-other);
+}

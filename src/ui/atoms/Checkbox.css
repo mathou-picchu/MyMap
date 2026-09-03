@@ -1,0 +1,45 @@
+.ha-checkbox {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 1.5px solid var(--ha-border);
+  border-radius: 4px;
+  background: var(--ha-surface);
+  display: inline-grid;
+  place-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.ha-checkbox::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  transform: scale(0);
+  transition: transform var(--transition-fast);
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  background: #fff;
+}
+
+.ha-checkbox:checked {
+  background: var(--ha-iris);
+  border-color: var(--ha-iris);
+}
+
+.ha-checkbox:checked::before {
+  transform: scale(1);
+}
+
+.ha-checkbox:focus-visible {
+  outline: 2px solid var(--ha-iris);
+  outline-offset: 2px;
+}
+
+.ha-checkbox:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
