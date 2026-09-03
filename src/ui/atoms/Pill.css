@@ -1,0 +1,47 @@
+.ha-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-pill);
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 40px;
+  background: var(--ha-surface);
+  border: 1.5px solid var(--ha-muted);
+  color: var(--ha-navy);
+  white-space: nowrap;
+  transition:
+    transform var(--transition-fast),
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.ha-pill:hover {
+  transform: scale(1.05);
+}
+
+.ha-pill.active {
+  color: #fff;
+}
+
+/* Les variantes par type (ha-pill--visit, etc.) sont dans ui/type-colors.css */
+
+.ha-pill--navy {
+  border-color: var(--ha-navy);
+  color: var(--ha-navy);
+}
+
+.ha-pill--navy.active {
+  background: var(--ha-navy);
+}
+
+.ha-pill--success {
+  border-color: var(--ha-success);
+  color: var(--ha-success);
+}
+
+.ha-pill--success.active {
+  background: var(--ha-success);
+}

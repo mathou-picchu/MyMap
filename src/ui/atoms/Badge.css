@@ -1,0 +1,28 @@
+.ha-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  width: fit-content;
+  line-height: 1.2;
+}
+
+/* Les variantes par type (ha-badge--visit, etc.) sont dans ui/type-colors.css */
+
+.ha-badge--success {
+  background: var(--ha-success-bg);
+  color: var(--ha-success);
+}
+
+.ha-badge--milieu {
+  background: var(--ha-iris-10);
+  color: var(--ha-navy);
+}
+
+.ha-badge--iris {
+  background: var(--ha-iris-20);
+  color: var(--ha-iris);
+}
