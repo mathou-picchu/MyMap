@@ -167,7 +167,7 @@ export default function PlaceForm({ place, draft, onCancel, onSave }: PlaceFormP
           <Button variant="ghost" onClick={onCancel}>
             Annuler
           </Button>
-          <Button type="submit" disabled={busy}>
+          <Button type="submit" loading={busy}>
             {isEdit ? 'Enregistrer' : 'Créer'}
           </Button>
         </div>

@@ -64,6 +64,11 @@
   color: var(--ha-iris);
 }
 
+.place-form__photos:focus-within {
+  border-color: var(--ha-iris);
+  color: var(--ha-iris);
+}
+
 .place-form__photos input {
   position: absolute;
   width: 1px;
