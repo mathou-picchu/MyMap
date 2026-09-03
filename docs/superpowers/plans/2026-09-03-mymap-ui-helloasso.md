@@ -1948,13 +1948,14 @@ git mv src/components/SearchBar.tsx src/ui/molecules/SearchField.tsx
 git mv src/components/SearchBar.test.tsx src/ui/molecules/SearchField.test.tsx
 ```
 
-Réécrire `src/ui/molecules/SearchField.tsx` (logique identique, markup DA, spinner pendant le debounce) :
+Réécrire `src/ui/molecules/SearchField.tsx` (logique identique, markup DA, spinner pendant le debounce ; review Task 7 : fermeture Escape/clic extérieur, a11y combobox `aria-expanded`/`aria-controls`, `setOpen(false)` au loading pour masquer les résultats périmés pendant le debounce, `reset()` extrait pour l'hygiène d'état) :
 
 ```tsx
-import { useEffect, useState } from 'react';
-import type { ChangeEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
 import { Search } from 'lucide-react';
 import { searchAddress, type GeoResult } from '../../geocoding';
+import Input from '../atoms/Input';
 import Spinner from '../atoms/Spinner';
 import './SearchField.css';
 
@@ -1967,13 +1968,26 @@ export default function SearchField({ onSelect }: SearchFieldProps) {
   const [results, setResults] = useState<GeoResult[]>([]);
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    function handlePointerDown(e: PointerEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
+  }, [open]);
 
   useEffect(() => {
     const q = query.trim();
     if (q.length < 3) {
       return;
     }
-    setStatus('loading');
     const controller = new AbortController();
     const timer = setTimeout(() => {
       searchAddress(q, controller.signal)
@@ -1994,26 +2008,42 @@ export default function SearchField({ onSelect }: SearchFieldProps) {
     };
   }, [query]);
 
+  function reset() {
+    setResults([]);
+    setStatus('idle');
+    setOpen(false);
+  }
+
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setQuery(value);
     if (value.trim().length < 3) {
-      setResults([]);
-      setStatus('idle');
+      reset();
+    } else {
+      setStatus('loading');
+      setOpen(false);
+    }
+  }
+
+  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Escape') {
       setOpen(false);
     }
   }
 
   return (
-    <div className="ha-searchfield">
+    <div className="ha-searchfield" ref={rootRef}>
       <Search size={18} className="ha-searchfield__icon" aria-hidden="true" />
-      <input
-        className="ha-input ha-searchfield__input"
+      <Input
+        className="ha-searchfield__input"
         value={query}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         placeholder="Rechercher une adresse ou un lieu…"
         type="search"
         aria-label="Rechercher une adresse ou un lieu"
+        aria-expanded={open}
+        aria-controls="searchfield-results"
       />
       {status === 'loading' && (
         <span className="ha-searchfield__spinner">
@@ -2021,14 +2051,14 @@ export default function SearchField({ onSelect }: SearchFieldProps) {
         </span>
       )}
       {open && results.length > 0 && (
-        <ul className="ha-searchfield__results">
+        <ul className="ha-searchfield__results" id="searchfield-results">
           {results.map((result, index) => (
             <li key={index}>
               <button
                 type="button"
                 onClick={() => {
                   onSelect(result);
-                  setOpen(false);
+                  reset();
                   setQuery('');
                 }}
               >
@@ -2048,7 +2078,7 @@ export default function SearchField({ onSelect }: SearchFieldProps) {
 }
 ```
 
-Note : `setStatus('loading')` au début de l'effet n'impacte pas les tests existants (aucun ne vérifie le statut intermédiaire ; le mock de `searchAddress` reste utilisé).
+Note : `setStatus('loading')` est posé dans `handleChange` (pas dans le corps de l'effet — règle lint `react-hooks/set-state-in-effect`) ; l'effet `pointerdown` n'appelle `setOpen` que dans le callback d'événement (lint-safe) ; l'atome `Input` est utilisé pour garantir le chargement de `Input.css`.
 
 `src/ui/molecules/SearchField.css` :
 
@@ -2122,6 +2152,77 @@ Note : `setStatus('loading')` au début de l'effet n'impacte pas les tests exist
 ```
 
 Dans `src/ui/molecules/SearchField.test.tsx`, corriger les imports : `from './SearchBar'` → `from './SearchField'` et `from '../geocoding'` → `from '../../geocoding'`.
+
++ 4 tests (review Task 7 — machine à états et fermeture du dropdown) : spinner debounce, sélection, reset < 3, Escape. Imports à ajouter : `act`, `fireEvent` depuis `@testing-library/react`, `afterEach` depuis `vitest` ; fixture partagée `tourEiffel` ; `afterEach(() => { vi.useRealTimers(); })`.
+
+```tsx
+afterEach(() => {
+  vi.useRealTimers();
+});
+
+it('affiche le spinner pendant le debounce puis remplace par les résultats', async () => {
+  vi.useFakeTimers();
+  searchAddressMock.mockResolvedValue([tourEiffel]);
+  render(<SearchField onSelect={vi.fn()} />);
+  const input = screen.getByLabelText(/rechercher une adresse/i);
+  fireEvent.change(input, { target: { value: 'tour eiffel' } });
+  act(() => {
+    vi.advanceTimersByTime(200);
+  });
+  expect(screen.getByRole('status')).toBeInTheDocument();
+  await act(async () => {
+    vi.advanceTimersByTime(200);
+  });
+  expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /tour eiffel — 5 avenue/i })).toBeInTheDocument();
+});
+
+it('vide le champ et ferme le dropdown après sélection', async () => {
+  vi.useFakeTimers();
+  searchAddressMock.mockResolvedValue([tourEiffel]);
+  const onSelect = vi.fn();
+  render(<SearchField onSelect={onSelect} />);
+  const input = screen.getByLabelText(/rechercher une adresse/i);
+  fireEvent.change(input, { target: { value: 'tour eiffel' } });
+  await act(async () => {
+    vi.advanceTimersByTime(400);
+  });
+  fireEvent.click(screen.getByRole('button', { name: /tour eiffel — 5 avenue/i }));
+  expect(onSelect).toHaveBeenCalledWith(tourEiffel);
+  expect(input).toHaveValue('');
+  expect(screen.queryByRole('button', { name: /tour eiffel — 5 avenue/i })).not.toBeInTheDocument();
+});
+
+it('ferme le dropdown et repasse en idle sous 3 caractères', async () => {
+  vi.useFakeTimers();
+  searchAddressMock.mockResolvedValue([tourEiffel]);
+  render(<SearchField onSelect={vi.fn()} />);
+  const input = screen.getByLabelText(/rechercher une adresse/i);
+  fireEvent.change(input, { target: { value: 'tour eiffel' } });
+  await act(async () => {
+    vi.advanceTimersByTime(400);
+  });
+  expect(screen.getByRole('button', { name: /tour eiffel — 5 avenue/i })).toBeInTheDocument();
+  fireEvent.change(input, { target: { value: 'to' } });
+  expect(screen.queryByRole('button', { name: /tour eiffel — 5 avenue/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole('status')).not.toBeInTheDocument();
+});
+
+it('ferme le dropdown avec Escape sans vider le champ', async () => {
+  vi.useFakeTimers();
+  searchAddressMock.mockResolvedValue([tourEiffel]);
+  render(<SearchField onSelect={vi.fn()} />);
+  const input = screen.getByLabelText(/rechercher une adresse/i);
+  fireEvent.change(input, { target: { value: 'tour eiffel' } });
+  await act(async () => {
+    vi.advanceTimersByTime(400);
+  });
+  expect(screen.getByRole('button', { name: /tour eiffel — 5 avenue/i })).toBeInTheDocument();
+  fireEvent.keyDown(input, { key: 'Escape' });
+  expect(screen.queryByRole('button', { name: /tour eiffel — 5 avenue/i })).not.toBeInTheDocument();
+  expect(input).toHaveValue('tour eiffel');
+});
+```
 
 - [ ] **Step 6: Mettre à jour `src/App.tsx`**
 

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import type { ChangeEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
 import { Search } from 'lucide-react';
 import { searchAddress, type GeoResult } from '../../geocoding';
 import Input from '../atoms/Input';
@@ -15,6 +15,20 @@ export default function SearchField({ onSelect }: SearchFieldProps) {
   const [results, setResults] = useState<GeoResult[]>([]);
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    function handlePointerDown(e: PointerEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
+  }, [open]);
 
   useEffect(() => {
     const q = query.trim();
@@ -41,28 +55,42 @@ export default function SearchField({ onSelect }: SearchFieldProps) {
     };
   }, [query]);
 
+  function reset() {
+    setResults([]);
+    setStatus('idle');
+    setOpen(false);
+  }
+
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setQuery(value);
     if (value.trim().length < 3) {
-      setResults([]);
-      setStatus('idle');
-      setOpen(false);
+      reset();
     } else {
       setStatus('loading');
+      setOpen(false);
+    }
+  }
+
+  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Escape') {
+      setOpen(false);
     }
   }
 
   return (
-    <div className="ha-searchfield">
+    <div className="ha-searchfield" ref={rootRef}>
       <Search size={18} className="ha-searchfield__icon" aria-hidden="true" />
       <Input
         className="ha-searchfield__input"
         value={query}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         placeholder="Rechercher une adresse ou un lieu…"
         type="search"
         aria-label="Rechercher une adresse ou un lieu"
+        aria-expanded={open}
+        aria-controls="searchfield-results"
       />
       {status === 'loading' && (
         <span className="ha-searchfield__spinner">
@@ -70,14 +98,14 @@ export default function SearchField({ onSelect }: SearchFieldProps) {
         </span>
       )}
       {open && results.length > 0 && (
-        <ul className="ha-searchfield__results">
+        <ul className="ha-searchfield__results" id="searchfield-results">
           {results.map((result, index) => (
             <li key={index}>
               <button
                 type="button"
                 onClick={() => {
                   onSelect(result);
-                  setOpen(false);
+                  reset();
                   setQuery('');
                 }}
               >
