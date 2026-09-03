@@ -14,6 +14,7 @@ interface SerializedPlace {
   id: string;
   name: string;
   address: string;
+  description?: string;
   lat: number;
   lng: number;
   hours?: string;
@@ -132,6 +133,9 @@ function parsePlace(place: SerializedPlace, index: number): Place {
   if (place.price !== undefined && typeof place.price !== 'string') {
     throw new ImportError(`${prefix}: invalid price.`);
   }
+  if (place.description !== undefined && typeof place.description !== 'string') {
+    throw new ImportError(`${prefix}: invalid description.`);
+  }
   if (place.isDone !== undefined && typeof place.isDone !== 'boolean') {
     throw new ImportError(`${prefix} : invalid “isDone” field.`);
   }
@@ -160,6 +164,7 @@ function parsePlace(place: SerializedPlace, index: number): Place {
     id: place.id,
     name: place.name,
     address: place.address,
+    description: place.description,
     lat: place.lat,
     lng: place.lng,
     hours: place.hours,

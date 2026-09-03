@@ -129,6 +129,29 @@ describe('exportImport', () => {
     expect(restored[1].isOutdoor).toBe(false);
   });
 
+  it('round-trips the description', async () => {
+    const original = [makePlace({ description: 'Le café où l’on s’écrit une lettre.' })];
+    const json = await exportPlaces(original);
+    const restored = parseImportFile(json);
+    expect(restored[0].description).toBe('Le café où l’on s’écrit une lettre.');
+  });
+
+  it('keeps the description undefined when absent', async () => {
+    const original = [makePlace()];
+    const json = await exportPlaces(original);
+    const restored = parseImportFile(json);
+    expect(restored[0].description).toBeUndefined();
+  });
+
+  it('rejects an invalid description', () => {
+    const file = JSON.stringify({
+      version: 3,
+      exportedAt: 0,
+      places: [{ ...makePlace(), description: 42 }],
+    });
+    expect(() => parseImportFile(file)).toThrow(/description/);
+  });
+
   it('rejects a file that is not valid JSON', () => {
     expect(() => parseImportFile('not json')).toThrow(ImportError);
   });
