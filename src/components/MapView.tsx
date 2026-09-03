@@ -1,10 +1,9 @@
 import type { Map as LeafletMap } from 'leaflet';
-import { divIcon } from 'leaflet';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
-import { getPlaceTypeDef } from '../constants';
-import type { MapState, Place, PlaceTypeId } from '../types';
-import { checkSvg, markerSvg } from '../ui/icons';
+import type { MapState, Place } from '../types';
+import { draftPinIcon, placePinIcon } from '../ui/molecules/MarkerPin';
 import 'leaflet/dist/leaflet.css';
+import './MapView.css';
 
 interface MapViewProps {
   places: Place[];
@@ -16,22 +15,6 @@ interface MapViewProps {
   onMarkerClick: (id: string) => void;
   initialMapState?: MapState;
 }
-
-function placeIcon(type: PlaceTypeId, selected: boolean, done: boolean) {
-  return divIcon({
-    className: 'marker-wrapper',
-    html: `<div class="marker-pin${selected ? ' selected' : ''}${done ? ' done' : ''}" style="background:${getPlaceTypeDef(type).color}">${markerSvg(type, 15)}${done ? `<span class="marker-check">${checkSvg(10)}</span>` : ''}</div>`,
-    iconSize: [36, 44],
-    iconAnchor: [18, 42],
-  });
-}
-
-const draftIcon = divIcon({
-  className: 'marker-wrapper',
-  html: `<div class="marker-pin draft" style="background:#131445">${markerSvg('other', 15)}</div>`,
-  iconSize: [36, 44],
-  iconAnchor: [18, 42],
-});
 
 function MapEvents({ addMode, onMapClick }: Pick<MapViewProps, 'addMode' | 'onMapClick'>) {
   useMapEvents({
@@ -69,13 +52,13 @@ export default function MapView({
         <Marker
           key={place.id}
           position={[place.lat, place.lng]}
-          icon={placeIcon(place.type, place.id === selectedId, place.isDone === true)}
+          icon={placePinIcon(place.type, place.id === selectedId, place.isDone === true)}
           zIndexOffset={place.id === selectedId ? 1000 : 0}
           eventHandlers={{ click: () => onMarkerClick(place.id) }}
         />
       ))}
       {draftPos && (
-        <Marker position={[draftPos.lat, draftPos.lng]} icon={draftIcon} interactive={false} />
+        <Marker position={[draftPos.lat, draftPos.lng]} icon={draftPinIcon()} interactive={false} />
       )}
     </MapContainer>
   );
