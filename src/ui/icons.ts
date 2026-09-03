@@ -70,8 +70,12 @@ export const ACTION_ICONS = {
 } as const;
 
 /**
- * Tracés SVG lucide (lucide-static v0.544.0, licence ISC) pour les marqueurs
- * Leaflet, qui exigent du HTML string et non du React.
+ * Tracés SVG vendored (source d'origine : lucide-static v0.544.0, licence ISC)
+ * pour les marqueurs Leaflet, qui exigent du HTML string et non du React.
+ * Couplage : chaque entrée doit représenter la même icône que son homologue
+ * dans TYPE_ICONS (lucide-react). Les tracés peuvent différer légèrement de
+ * la version de lucide-react installée — à vérifier visuellement en cas de
+ * mise à jour de lucide-react.
  */
 const PIN_PATHS: Record<PlaceTypeId | 'check', string> = {
   visit:
