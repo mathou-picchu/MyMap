@@ -3391,7 +3391,7 @@ export default function Toolbar({ onExport, onImport, onLocate }: ToolbarProps) 
 }
 
 .mobile-tabbar__seg.active .mobile-tabbar__count {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
 }
 
@@ -3483,6 +3483,7 @@ Remplacer les onglets mobiles par :
         <button
           type="button"
           className={`mobile-tabbar__seg${mobileView === 'map' ? ' active' : ''}`}
+          aria-pressed={mobileView === 'map'}
           onClick={() => setMobileView('map')}
         >
           <Map size={18} aria-hidden="true" /> Carte
@@ -3490,6 +3491,7 @@ Remplacer les onglets mobiles par :
         <button
           type="button"
           className={`mobile-tabbar__seg${mobileView === 'list' ? ' active' : ''}`}
+          aria-pressed={mobileView === 'list'}
           onClick={() => setMobileView('list')}
         >
           <List size={18} aria-hidden="true" /> Liste
@@ -4069,6 +4071,8 @@ git commit -m "feat: fiche détaillée et visionneuse façon HelloAsso"
 - Modify: `src/components/PlaceForm.tsx`
 - Create: `src/components/PlaceForm.css`
 - Modify: `src/App.css` (retrait des règles migrées)
+
+Note : conserver un z-index > 1200 pour la modale (au-dessus de la mobile-tabbar flottante ; l'overlay existant est à 2000).
 
 - [ ] **Step 1: Réécrire le JSX de `src/components/PlaceForm.tsx`** (états, `handleFiles`, `handleSubmit` conservés à l'identique — seul le `return` change)
 
