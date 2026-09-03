@@ -1,0 +1,26 @@
+.ha-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  color: var(--ha-navy);
+  max-width: 320px;
+}
+
+.ha-empty-state__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-pill);
+  background: var(--ha-iris-10);
+  color: var(--ha-iris);
+}
+
+.ha-empty-state__text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}

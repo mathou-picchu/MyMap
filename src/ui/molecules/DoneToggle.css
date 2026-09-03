@@ -1,0 +1,60 @@
+.ha-done-toggle--round {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--ha-border);
+  background: var(--ha-surface);
+  color: var(--ha-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+/* Zone de clic élargie à 40px (cible tactile) */
+.ha-done-toggle--round::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
+.ha-done-toggle--round:hover {
+  border-color: var(--ha-success);
+  color: var(--ha-success);
+}
+
+.ha-done-toggle--round.done {
+  background: var(--ha-success);
+  border-color: var(--ha-success);
+  color: #fff;
+}
+
+.ha-done-toggle--line {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--ha-border);
+  background: var(--ha-surface);
+  color: var(--ha-navy);
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 38px;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.ha-done-toggle--line.done {
+  border-color: var(--ha-success);
+  color: var(--ha-success);
+  background: var(--ha-success-bg);
+}
