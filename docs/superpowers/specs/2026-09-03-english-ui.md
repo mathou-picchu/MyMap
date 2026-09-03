@@ -12,6 +12,7 @@ This supersedes the « UI française » decision from the original MyMap spec.
 ## What does NOT change (stability guarantees)
 
 - **Type ids** (`'visit'`, `'balade'`, `'restaurant'`, `'gourmandise'`, `'lodging'`, `'shopping'`, `'other'`) and **legacy migration keys** (`'outdoor'`, `'food'`, `'drink'`) — they are data/API identifiers, only display labels are translated.
+- **Code identifiers** containing French words (`MilieuId`, `MILIEUS`, `activeMilieu`, `.milieu` CSS class, …) — kept for consistency with the stable type ids; renaming them is churn with no user-facing benefit.
 - **localStorage keys** (`mymap.filters`, `mymap.milieu`, `mymap.hidedone`) and the removed `mymap.mapstate`.
 - **Export format v3** and the IndexedDB schema — no data migration needed.
 - **Existing user data**: place names, addresses and hours stay as entered (real-world data, e.g. French addresses).

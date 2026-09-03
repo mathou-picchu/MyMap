@@ -1,19 +1,19 @@
-# MyMap — Ma carte de lieux
+# MyMap — My Places Map
 
-Application web installable (PWA) façon Google Maps pour créer vos propres points d'intérêt : lieux à visiter, restaurants, parcs, hébergements…
+Installable web app (PWA) in the style of Google Maps to create your own places of interest: sights, restaurants, parks, lodging…
 
-## Points clés
+## Highlights
 
-- **Vos données restent chez vous** : les points sont stockés dans le navigateur (IndexedDB) et ne sont jamais envoyés nulle part. Le projet est partageable, vos données non.
-- **Carte OpenStreetMap** (Leaflet) : gratuite, sans clé API, ouverte sur Paris.
-- **Création de points** par recherche d'adresse (Nominatim) ou clic sur la carte.
-- **Double vue** carte / liste de cartes, façon Airbnb.
-- **Filtres** par type (Visite, Balade, Restaurant, Gourmandise, Hébergement, Shopping, Autre) et par milieu **Extérieur / Intérieur**, plus l'option « Masquer les faits ».
-- **Photos** multiples avec compression automatique.
-- **Export / import** JSON pour sauvegarder ou transférer vos points vers un autre appareil.
-- Installable sur mobile et ordinateur (PWA), fonctionne hors ligne pour l'application et les tuiles déjà visitées.
+- **Your data stays with you**: places are stored in your browser (IndexedDB) and never sent anywhere. The project is shareable, your data is not.
+- **OpenStreetMap map** (Leaflet): free, no API key, opens on Paris.
+- **Place creation** by address search (Nominatim) or by clicking the map.
+- **Dual view** map / card list, Airbnb-style.
+- **Filters** by type (Visit, Walk, Restaurant, Dessert, Lodging, Shopping, Other) and by **Outdoor / Indoor** setting, plus a “Hide done” option.
+- **Multiple photos** with automatic compression.
+- **JSON export / import** to back up or transfer your places to another device.
+- Installable on mobile and desktop (PWA), works offline for the app and already-visited tiles.
 
-## Démarrage
+## Getting started
 
 ```bash
 npm install
@@ -22,34 +22,34 @@ npm run dev
 
 ## Scripts
 
-| Commande | Description |
+| Command | Description |
 |---|---|
-| `npm run dev` | Serveur de développement |
-| `npm run build` | Build de production (vérification TypeScript incluse) |
-| `npm run preview` | Prévisualise le build |
-| `npm run test` | Lance les tests (Vitest) |
-| `npm run lint` | Vérifie le code (ESLint) |
-| `npm run icons` | Régénère les icônes PWA |
+| `npm run dev` | Development server |
+| `npm run build` | Production build (TypeScript check included) |
+| `npm run preview` | Preview the build |
+| `npm run test` | Run the tests (Vitest) |
+| `npm run lint` | Lint the code (ESLint) |
+| `npm run icons` | Regenerate the PWA icons |
 
-## Où sont mes données ?
+## Where is my data?
 
-Dans le stockage IndexedDB **de votre navigateur**, sous la base `mymap`. Elles ne quittent jamais votre machine, sauf si vous exportez explicitement.
+In the IndexedDB storage **of your browser**, under the `mymap` database. It never leaves your machine unless you explicitly export it.
 
-Pour les sauvegarder ou les transférer sur un autre appareil : bouton **⬇️ Exporter** (télécharge un fichier JSON avec vos points et photos) puis **⬆️ Importer** sur l'autre appareil.
+To back it up or transfer it to another device: **⬇️ Export** button (downloads a JSON file with your places and photos) then **⬆️ Import** on the other device.
 
-⚠️ Vider les données du navigateur supprime vos points : pensez à exporter régulièrement.
+⚠️ Clearing browser data deletes your places: remember to export regularly.
 
-## Installer l'application
+## Installing the app
 
-- **Chrome / Edge (ordinateur)** : icône d'installation dans la barre d'adresse.
-- **iOS Safari** : Partager → « Sur l'écran d'accueil ».
-- **Android Chrome** : menu → « Installer l'application ».
+- **Chrome / Edge (desktop)**: install icon in the address bar.
+- **iOS Safari**: Share → “Add to Home Screen”.
+- **Android Chrome**: menu → “Install app”.
 
-## Déploiement (GitHub Pages)
+## Deployment (GitHub Pages)
 
-1. Dans `vite.config.ts`, ajouter `base: '/MyMap/'` (le nom de votre dépôt) à la racine de la config.
-2. `npm run build` puis publier le contenu de `dist/`.
+1. In `vite.config.ts`, add `base: '/MyMap/'` (your repository name) at the root of the config.
+2. `npm run build`, then publish the contents of `dist/`.
 
-## Crédits
+## Credits
 
-- Cartes et géocodage : [OpenStreetMap](https://www.openstreetmap.org/copyright) et [Nominatim](https://nominatim.org/)
+- Maps and geocoding: [OpenStreetMap](https://www.openstreetmap.org/copyright) and [Nominatim](https://nominatim.org/)
