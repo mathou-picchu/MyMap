@@ -1,0 +1,20 @@
+.ha-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ha-navy);
+  flex-shrink: 0;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.ha-icon-button:hover:not(:disabled) {
+  background: var(--ha-iris-10);
+  color: var(--ha-iris);
+}
