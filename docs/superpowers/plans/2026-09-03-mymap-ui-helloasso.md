@@ -63,23 +63,23 @@ Attendu : installation sans erreur, 3 deps dans `package.json`.
   --ha-danger-bg: #fdecec;
   --ha-danger-text: #9c2327;
   --ha-success: #1a8247;
-  --ha-success-bg: #e3f4ea;
+  --ha-success-bg: #f4fbf6;
 
   /* Couleurs des types de lieux */
   --type-visit: #4c40cf;
-  --type-visit-soft: #eeecfb;
+  --type-visit-soft: #f9f9fe;
   --type-balade: #21824e;
-  --type-balade-soft: #e2f4ea;
+  --type-balade-soft: #f3fbf6;
   --type-restaurant: #b55805;
-  --type-restaurant-soft: #fdeeda;
-  --type-gourmandise: #c2449c;
-  --type-gourmandise-soft: #f9e3f2;
+  --type-restaurant-soft: #fef8f1;
+  --type-gourmandise: #bf3e99;
+  --type-gourmandise-soft: #fdf8fc;
   --type-lodging: #11788c;
-  --type-lodging-soft: #dcf0f4;
+  --type-lodging-soft: #f4fafb;
   --type-shopping: #d62e4a;
-  --type-shopping-soft: #fbe2e6;
-  --type-other: #6e7691;
-  --type-other-soft: #eef0f5;
+  --type-shopping-soft: #fef8f9;
+  --type-other: #6a718b;
+  --type-other-soft: #f8f9fb;
 
   /* Typographie */
   --font-main: 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -504,10 +504,10 @@ export const PLACE_TYPES: PlaceTypeDef[] = [
   { id: 'visit', label: 'Visite', color: '#4c40cf' },
   { id: 'balade', label: 'Balade', color: '#21824e' },
   { id: 'restaurant', label: 'Restaurant', color: '#b55805' },
-  { id: 'gourmandise', label: 'Gourmandise', color: '#c2449c' },
+  { id: 'gourmandise', label: 'Gourmandise', color: '#bf3e99' },
   { id: 'lodging', label: 'Hébergement', color: '#11788c' },
   { id: 'shopping', label: 'Shopping', color: '#d62e4a' },
-  { id: 'other', label: 'Autre', color: '#6e7691' },
+  { id: 'other', label: 'Autre', color: '#6a718b' },
 ];
 
 export const PLACE_TYPE_IDS: PlaceTypeId[] = PLACE_TYPES.map((t) => t.id);
@@ -978,7 +978,7 @@ git commit -m "feat: atomes Button, IconButton, Spinner (DS HelloAsso)"
 
 ### Task 4: Atomes — Badge, Pill, TypeIcon
 
-> a11y — couleurs de types assombries pour WCAG AA ≥ 4.5:1 (balade, restaurant, shopping, success).
+> a11y — couleurs de types assombries pour WCAG AA ≥ 4.5:1 (balade, restaurant, shopping, success) ; fonds `-soft` éclaircis (L≈0.94) et gourmandise/other assombris pour le AA du texte Badge sur fond soft.
 
 **Files:**
 - Create: `src/ui/atoms/Badge.tsx`, `src/ui/atoms/Badge.css`
@@ -1245,7 +1245,7 @@ export default function Pill({
 npm run test -- src/ui/atoms/ && npm run lint && npm run build
 ```
 
-Attendu : PASS partout — 112 tests au total (107 + 5 nouveaux).
+Attendu : PASS partout — 113 tests au total (107 + 6 nouveaux, dont le test inactif par défaut ajouté au durcissement).
 
 ```bash
 git add src/ui/atoms/

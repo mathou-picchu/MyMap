@@ -10,10 +10,10 @@ export const PLACE_TYPES: PlaceTypeDef[] = [
   { id: 'visit', label: 'Visite', color: '#4c40cf' },
   { id: 'balade', label: 'Balade', color: '#21824e' },
   { id: 'restaurant', label: 'Restaurant', color: '#b55805' },
-  { id: 'gourmandise', label: 'Gourmandise', color: '#c2449c' },
+  { id: 'gourmandise', label: 'Gourmandise', color: '#bf3e99' },
   { id: 'lodging', label: 'Hébergement', color: '#11788c' },
   { id: 'shopping', label: 'Shopping', color: '#d62e4a' },
-  { id: 'other', label: 'Autre', color: '#6e7691' },
+  { id: 'other', label: 'Autre', color: '#6a718b' },
 ];
 
 export const PLACE_TYPE_IDS: PlaceTypeId[] = PLACE_TYPES.map((t) => t.id);
