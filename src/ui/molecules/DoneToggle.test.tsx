@@ -14,8 +14,11 @@ describe('DoneToggle', () => {
   });
 
   it("variante ligne : libellé selon l'état", () => {
-    render(<DoneToggle done={false} onToggle={() => {}} variant="line" />);
+    const { rerender } = render(<DoneToggle done={false} onToggle={() => {}} variant="line" />);
     expect(screen.getByRole('button', { name: 'Marquer comme fait' })).toBeInTheDocument();
+    rerender(<DoneToggle done onToggle={() => {}} variant="line" />);
+    expect(screen.getByRole('button', { name: 'Fait' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Fait' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('déclenche onToggle', async () => {

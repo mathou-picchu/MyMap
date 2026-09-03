@@ -6,5 +6,5 @@
   background: var(--ha-danger-bg);
   color: var(--ha-danger-text);
   font-size: 14px;
-  border-bottom: 1px solid #f5c6c8;
+  border-bottom: 1px solid var(--ha-danger-border);
 }

@@ -6,6 +6,7 @@
   text-align: center;
   color: var(--ha-navy);
   max-width: 320px;
+  margin-inline: auto;
 }
 
 .ha-empty-state__icon {

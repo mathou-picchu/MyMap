@@ -13,6 +13,7 @@ export default function DoneToggle({ done, onToggle, variant = 'round' }: DoneTo
       <button
         type="button"
         className={`ha-done-toggle ha-done-toggle--line${done ? ' done' : ''}`}
+        aria-pressed={done}
         onClick={onToggle}
       >
         <Check size={16} aria-hidden="true" />

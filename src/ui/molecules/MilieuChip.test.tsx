@@ -7,4 +7,9 @@ describe('MilieuChip', () => {
     render(<MilieuChip milieu="outdoor" />);
     expect(screen.getByText(/extérieur/i)).toBeInTheDocument();
   });
+
+  it('affiche le label du milieu intérieur', () => {
+    render(<MilieuChip milieu="indoor" />);
+    expect(screen.getByText(/intérieur/i)).toBeInTheDocument();
+  });
 });
