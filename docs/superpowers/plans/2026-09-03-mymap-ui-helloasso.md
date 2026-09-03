@@ -2627,6 +2627,16 @@ describe('useHashRoute', () => {
     });
     expect(result.current).toBe('#styleguide');
   });
+
+  it('revient au hash vide', () => {
+    window.location.hash = '#styleguide';
+    const { result } = renderHook(() => useHashRoute());
+    act(() => {
+      window.location.hash = '';
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    });
+    expect(result.current).toBe('');
+  });
 });
 ```
 
@@ -2709,6 +2719,7 @@ import PlaceCard from '../molecules/PlaceCard';
 import StorageBanner from '../molecules/StorageBanner';
 import { MILIEU_ICONS } from '../icons';
 import SearchFieldDoc from './SearchFieldDoc';
+import '../molecules/MarkerPin.css';
 import './Styleguide.css';
 
 const samplePlace: Place = {
@@ -3163,7 +3174,7 @@ export default function Styleguide() {
   max-width: 480px;
 }
 
-.mobile-tabbar--static {
+.mobile-tabbar.mobile-tabbar--static {
   position: static;
   transform: none;
   display: inline-flex;
@@ -3179,7 +3190,7 @@ import { useHashRoute } from './hooks/useHashRoute';
 import Styleguide from './ui/styleguide/Styleguide';
 ```
 
-En tête du composant `App`, juste après les déclarations de state (avant `refreshPlaces`) :
+Dans le composant `App`, **après le dernier `useEffect` (celui de `hideDone`), juste avant `const filteredPlaces = ...`** :
 
 ```tsx
   const hash = useHashRoute();
@@ -3187,6 +3198,8 @@ En tête du composant `App`, juste après les déclarations de state (avant `ref
     return <Styleguide />;
   }
 ```
+
+> **Note (correction)** : ne PAS insérer ce early return avant `refreshPlaces` (placement initialement prévu) : App.tsx a 4 `useEffect` après `refreshPlaces`, et un early return avant ces hooks casserait l'ordre des hooks React au changement de route (« Rendered more hooks than during the previous render »). Le early return doit se trouver après tous les hooks.
 
 - [ ] **Step 8: Documenter dans `README.md`** (à la fin de la section « Points clés »)
 
@@ -3501,6 +3514,8 @@ Attendu : tout vert (App.test : bouton `/ajouter un lieu/i` ✓, heading `MyMap`
 git add src/App.tsx src/AppShell.css src/App.css src/components/Toolbar.tsx
 git commit -m "feat: header et toolbar façon HelloAsso + barre mobile flottante"
 ```
+
+Vérification visuelle : ouvrir `#styleguide` après le câblage d'AppShell.css — la section Onglets mobiles doit être stylée et l'aperçu ne doit pas être cassé par la cascade.
 
 ---
 
