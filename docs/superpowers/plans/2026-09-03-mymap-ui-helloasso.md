@@ -62,21 +62,21 @@ Attendu : installation sans erreur, 3 deps dans `package.json`.
   --ha-danger: #e5484d;
   --ha-danger-bg: #fdecec;
   --ha-danger-text: #9c2327;
-  --ha-success: #1f9d55;
+  --ha-success: #1a8247;
   --ha-success-bg: #e3f4ea;
 
   /* Couleurs des types de lieux */
   --type-visit: #4c40cf;
   --type-visit-soft: #eeecfb;
-  --type-balade: #27995c;
+  --type-balade: #21824e;
   --type-balade-soft: #e2f4ea;
-  --type-restaurant: #d96a06;
+  --type-restaurant: #b55805;
   --type-restaurant-soft: #fdeeda;
   --type-gourmandise: #c2449c;
   --type-gourmandise-soft: #f9e3f2;
   --type-lodging: #11788c;
   --type-lodging-soft: #dcf0f4;
-  --type-shopping: #d93b55;
+  --type-shopping: #d62e4a;
   --type-shopping-soft: #fbe2e6;
   --type-other: #6e7691;
   --type-other-soft: #eef0f5;
@@ -502,11 +502,11 @@ export interface PlaceTypeDef {
 
 export const PLACE_TYPES: PlaceTypeDef[] = [
   { id: 'visit', label: 'Visite', color: '#4c40cf' },
-  { id: 'balade', label: 'Balade', color: '#27995c' },
-  { id: 'restaurant', label: 'Restaurant', color: '#d96a06' },
+  { id: 'balade', label: 'Balade', color: '#21824e' },
+  { id: 'restaurant', label: 'Restaurant', color: '#b55805' },
   { id: 'gourmandise', label: 'Gourmandise', color: '#c2449c' },
   { id: 'lodging', label: 'Hébergement', color: '#11788c' },
-  { id: 'shopping', label: 'Shopping', color: '#d93b55' },
+  { id: 'shopping', label: 'Shopping', color: '#d62e4a' },
   { id: 'other', label: 'Autre', color: '#6e7691' },
 ];
 
@@ -978,6 +978,8 @@ git commit -m "feat: atomes Button, IconButton, Spinner (DS HelloAsso)"
 
 ### Task 4: Atomes — Badge, Pill, TypeIcon
 
+> a11y — couleurs de types assombries pour WCAG AA ≥ 4.5:1 (balade, restaurant, shopping, success).
+
 **Files:**
 - Create: `src/ui/atoms/Badge.tsx`, `src/ui/atoms/Badge.css`
 - Create: `src/ui/atoms/Pill.tsx`, `src/ui/atoms/Pill.css`
@@ -1029,6 +1031,13 @@ describe('Pill', () => {
   it('applique la couleur demandée', () => {
     render(<Pill color="balade">Balade</Pill>);
     expect(screen.getByRole('button', { name: 'Balade' })).toHaveClass('ha-pill--balade');
+  });
+
+  it("n'est pas actif par défaut", () => {
+    render(<Pill>Visite</Pill>);
+    const pill = screen.getByRole('button', { name: 'Visite' });
+    expect(pill).not.toHaveClass('active');
+    expect(pill).toHaveAttribute('aria-pressed', 'false');
   });
 });
 ```
@@ -1088,19 +1097,10 @@ export default function TypeIcon({ type, size = 16 }: TypeIconProps) {
 
 ```tsx
 import type { HTMLAttributes, ReactNode } from 'react';
+import type { PlaceTypeId } from '../../types';
 import './Badge.css';
 
-type BadgeColor =
-  | 'visit'
-  | 'balade'
-  | 'restaurant'
-  | 'gourmandise'
-  | 'lodging'
-  | 'shopping'
-  | 'other'
-  | 'success'
-  | 'milieu'
-  | 'iris';
+type BadgeColor = PlaceTypeId | 'success' | 'milieu' | 'iris';
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   color?: BadgeColor;
@@ -1153,18 +1153,10 @@ export default function Badge({ color = 'iris', icon, children, className = '', 
 
 ```tsx
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { PlaceTypeId } from '../../types';
 import './Pill.css';
 
-type PillColor =
-  | 'visit'
-  | 'balade'
-  | 'restaurant'
-  | 'gourmandise'
-  | 'lodging'
-  | 'shopping'
-  | 'other'
-  | 'navy'
-  | 'success';
+type PillColor = PlaceTypeId | 'navy' | 'success';
 
 interface PillProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   active?: boolean;
@@ -1182,9 +1174,9 @@ export default function Pill({
   return (
     <button
       type="button"
-      aria-pressed={active}
       className={`ha-pill ha-pill--${color}${active ? ' active' : ''}${className ? ` ${className}` : ''}`}
       {...rest}
+      aria-pressed={active}
     >
       {children}
     </button>
@@ -1213,8 +1205,13 @@ export default function Pill({
     border-color var(--transition-fast);
 }
 
-.ha-pill:hover {
+.ha-pill:hover:not(:disabled) {
   transform: scale(1.05);
+}
+
+.ha-pill:disabled {
+  opacity: 0.55;
+  cursor: default;
 }
 
 .ha-pill.active {
@@ -1248,7 +1245,7 @@ export default function Pill({
 npm run test -- src/ui/atoms/ && npm run lint && npm run build
 ```
 
-Attendu : PASS partout.
+Attendu : PASS partout — 112 tests au total (107 + 5 nouveaux).
 
 ```bash
 git add src/ui/atoms/
