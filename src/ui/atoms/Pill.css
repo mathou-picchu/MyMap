@@ -18,8 +18,13 @@
     border-color var(--transition-fast);
 }
 
-.ha-pill:hover {
+.ha-pill:hover:not(:disabled) {
   transform: scale(1.05);
+}
+
+.ha-pill:disabled {
+  opacity: 0.55;
+  cursor: default;
 }
 
 .ha-pill.active {

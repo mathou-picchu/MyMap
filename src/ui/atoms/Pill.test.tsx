@@ -14,4 +14,11 @@ describe('Pill', () => {
     render(<Pill color="balade">Balade</Pill>);
     expect(screen.getByRole('button', { name: 'Balade' })).toHaveClass('ha-pill--balade');
   });
+
+  it("n'est pas actif par défaut", () => {
+    render(<Pill>Visite</Pill>);
+    const pill = screen.getByRole('button', { name: 'Visite' });
+    expect(pill).not.toHaveClass('active');
+    expect(pill).toHaveAttribute('aria-pressed', 'false');
+  });
 });

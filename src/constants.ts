@@ -8,11 +8,11 @@ export interface PlaceTypeDef {
 
 export const PLACE_TYPES: PlaceTypeDef[] = [
   { id: 'visit', label: 'Visite', color: '#4c40cf' },
-  { id: 'balade', label: 'Balade', color: '#27995c' },
-  { id: 'restaurant', label: 'Restaurant', color: '#d96a06' },
+  { id: 'balade', label: 'Balade', color: '#21824e' },
+  { id: 'restaurant', label: 'Restaurant', color: '#b55805' },
   { id: 'gourmandise', label: 'Gourmandise', color: '#c2449c' },
   { id: 'lodging', label: 'Hébergement', color: '#11788c' },
-  { id: 'shopping', label: 'Shopping', color: '#d93b55' },
+  { id: 'shopping', label: 'Shopping', color: '#d62e4a' },
   { id: 'other', label: 'Autre', color: '#6e7691' },
 ];
 

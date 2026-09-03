@@ -14,21 +14,21 @@
   --ha-danger: #e5484d;
   --ha-danger-bg: #fdecec;
   --ha-danger-text: #9c2327;
-  --ha-success: #1f9d55;
+  --ha-success: #1a8247;
   --ha-success-bg: #e3f4ea;
 
   /* Couleurs des types de lieux */
   --type-visit: #4c40cf;
   --type-visit-soft: #eeecfb;
-  --type-balade: #27995c;
+  --type-balade: #21824e;
   --type-balade-soft: #e2f4ea;
-  --type-restaurant: #d96a06;
+  --type-restaurant: #b55805;
   --type-restaurant-soft: #fdeeda;
   --type-gourmandise: #c2449c;
   --type-gourmandise-soft: #f9e3f2;
   --type-lodging: #11788c;
   --type-lodging-soft: #dcf0f4;
-  --type-shopping: #d93b55;
+  --type-shopping: #d62e4a;
   --type-shopping-soft: #fbe2e6;
   --type-other: #6e7691;
   --type-other-soft: #eef0f5;

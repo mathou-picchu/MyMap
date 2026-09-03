@@ -1,17 +1,8 @@
 import type { HTMLAttributes, ReactNode } from 'react';
+import type { PlaceTypeId } from '../../types';
 import './Badge.css';
 
-type BadgeColor =
-  | 'visit'
-  | 'balade'
-  | 'restaurant'
-  | 'gourmandise'
-  | 'lodging'
-  | 'shopping'
-  | 'other'
-  | 'success'
-  | 'milieu'
-  | 'iris';
+type BadgeColor = PlaceTypeId | 'success' | 'milieu' | 'iris';
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   color?: BadgeColor;
